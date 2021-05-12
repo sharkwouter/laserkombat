@@ -1,0 +1,18 @@
+About Laser Kombat
+
+Laser Kombat is currently in the Alpha testing stage. When Alpha testing and
+level design are complete, the release version will be available for download
+from http://www.olympus.net/personal/dewey/laser/. If you would like to
+be an official Alpha tester and level designer, email David Dewey at dd@olympus.net.
+You may also send levels, bug reports, questions, and comments and suggestions
+to this address.
+
+Making levels
+
+Please make some levels for Laser Kombat using the LevelEditor. If you send your
+levels to me at dd@olympus.net, they may be incorporated in the final release
+of the game and you will get your name in the credits and/or help file.
+
+To be played, levels must be saved in the directory containing LaserKombat.exe. The first
+level must be named level001.lvl, and subsequent levels must follow the same
+format, with successively higher numbers. You may not skip numbers.
