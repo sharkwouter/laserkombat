@@ -1,5 +1,4 @@
 // sound.cpp
-#include <ddraw.h>
 #include <time.h>
 #include "pix.h"
 #include "sound.h"

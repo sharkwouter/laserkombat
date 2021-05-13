@@ -7,7 +7,6 @@ Shows some basic DirectDraw features
 #ifndef USEDDRAW_H
 #define USEDDRAW_H
 
-#include <ddrawex.h>
 class CUseDdraw
 {
 

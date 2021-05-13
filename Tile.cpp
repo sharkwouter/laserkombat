@@ -1,5 +1,4 @@
 //Tile.cpp
-#include <ddraw.h>
 #include "pix.h"
 #include "sound.h"
 

@@ -6,14 +6,8 @@ Sample class to demonstrate DirectDraw ...
 By: Jose Carlos Ramos - 1996
 ---------------------------------------------------------------------*/
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <windowsx.h>
 #include <stdio.h>
 #include <time.h>
-#include <mmsystem.h>
-#include <ddraw.h>
-#include <ddraw.h>
 #include "pix.h"
 
 #include "sound.h"

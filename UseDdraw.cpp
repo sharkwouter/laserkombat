@@ -6,7 +6,6 @@ Shows some basic DirectDraw features
 --------------------------------------------------------------------*/
 #include "UseDdraw.h"
 #include "pix.h"
-#include "ddutil.h"
 
 LPDIRECTDRAW CUseDdraw::lpDD=NULL; 
 LPDIRECTDRAWSURFACE CUseDdraw::lpDDSPrimary=NULL;

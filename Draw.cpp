@@ -1,7 +1,5 @@
 // Draw.cpp
 
-#include <ddraw.h>
-#include "ddutil.h"
 #include "pix.h"
 #include "sound.h"
 
