@@ -13,7 +13,6 @@ set(SOURCES
     sound.cpp
     Square.h
     Tile.cpp
-    UseDdraw.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
