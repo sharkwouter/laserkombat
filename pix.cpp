@@ -27,7 +27,7 @@ By: Jose Carlos Ramos - 1996
 
 
 HINSTANCE gb_hInstance;
-BOOL gb_bActive;
+bool gb_bActive;
 int gb_nCmdShow;
 Draw draw;
 Board board;
@@ -52,7 +52,7 @@ break;
 
 case WM_SETCURSOR:
 SetCursor(NULL);
-return TRUE;
+return true;
 
 case WM_CREATE:
 break;

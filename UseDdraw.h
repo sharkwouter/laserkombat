@@ -23,12 +23,12 @@ static LPDIRECTDRAWPALETTE lpDDPal;        // DirectDraw palette
 static Tile array[COLUMNS][ROWS][2];
 
 
-BOOL Start();
+bool Start();
 void Finish();
 
 HRESULT RestoreAll();
 
-BOOL ok;
+bool ok;
 
 public:
 static int x;
@@ -39,7 +39,7 @@ CUseDdraw();
 
 void Update();
 
-BOOL Ok()
+bool Ok()
 {
 return ok;
 }

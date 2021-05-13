@@ -13,13 +13,13 @@ void Sound::Play()
 	sound=NULL;
 
 }
-BOOL Sound::PlayASound(const char* name, SoundPriority priority)
+bool Sound::PlayASound(const char* name, SoundPriority priority)
 {
 	if (priority>maxx) {
 		maxx=priority;
 		sound=name;
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 

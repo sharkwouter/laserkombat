@@ -11,7 +11,7 @@
 
 LPDIRECTDRAWSURFACE Board::help_surface=NULL;
 
-void Board::FillArray(BOOL credits)
+void Board::FillArray(bool credits)
 {
 
 	ClearArray();
@@ -88,16 +88,16 @@ void Board::CreateSquare(int x, int y)
 	array[x][y]= new Square(block, ground);
 }
 
-BOOL Board::Previous()
+bool Board::Previous()
 {
 	//died=defeated=finished=tank_x=tank_y=origin_x=origin_y=0;
 	level-=2;
-	if (level<0) {level=1; return FALSE;}
+	if (level<0) {level=1; return false;}
 	return LoadLevel();
 }
 
 
-BOOL Board::LoadLevel() {
+bool Board::LoadLevel() {
 	level++;
 	char filename[255]="level";
 
@@ -125,7 +125,7 @@ BOOL Board::LoadLevel() {
 
 	}
 	else FillDefault();
-	return FALSE;
+	return false;
 
 }
 
@@ -156,7 +156,7 @@ void Board::YouDied() {
 			if (temp) array[x][y]->ground->AddDead(temp);
 		}
 	}
-	died=TRUE;
+	died=true;
 
 }
 
@@ -172,7 +172,7 @@ void Board::YouDefeated() {
 			if (temp) array[x][y]->ground->AddDead(temp);
 		}
 	}
-	defeated=TRUE;
+	defeated=true;
 
 }
 
@@ -184,7 +184,7 @@ void Board::Credits() {
 			if (temp) array[x][y]->ground->AddDead(temp);
 		}
 	}
-	finished=TRUE;
+	finished=true;
 
 }
 
@@ -208,14 +208,14 @@ void Board::CheckArray()
 	}
 }
 
-BOOL Board::swap(int x, int y, int x1, int y1)
+bool Board::swap(int x, int y, int x1, int y1)
 {
-	if (x>=COLUMNS||x<0) return FALSE;
-	if (y>=ROWS||y<0) return FALSE;
-	if (!array[x][y]->block) return TRUE;	//if you are nothing you can move anywhere
-	if (x1>=COLUMNS||x1<0) return FALSE;
-	if (y1>=ROWS||y1<0) return FALSE;
-	if (array[x1][y1]->block) return FALSE; //cannot move into occupied space
+	if (x>=COLUMNS||x<0) return false;
+	if (y>=ROWS||y<0) return false;
+	if (!array[x][y]->block) return true;	//if you are nothing you can move anywhere
+	if (x1>=COLUMNS||x1<0) return false;
+	if (y1>=ROWS||y1<0) return false;
+	if (array[x1][y1]->block) return false; //cannot move into occupied space
 	Tile* temp=array[x][y]->block;
 	array[x][y]->block=array[x1][y1]->block;
 	array[x1][y1]->block=temp;
@@ -225,30 +225,30 @@ BOOL Board::swap(int x, int y, int x1, int y1)
 	if (x==tank_x && y==tank_y) tank_x=x1, tank_y=y1;
 	//array[x1][y1]->ground->ClearOver();
 	array[x1][y1]->ground->BlockOver(array[x1][y1]->block, array[x1][y1]->ground);
-	return TRUE;
+	return true;
 }
 
-BOOL Board::MoveRight()
+bool Board::MoveRight()
 {
-	BOOL retvalue=array[tank_x][tank_y]->block->PushLeft();
+	bool retvalue=array[tank_x][tank_y]->block->PushLeft();
 	return retvalue;
 }
 
-BOOL Board::MoveLeft()
+bool Board::MoveLeft()
 {
-	BOOL retvalue=array[tank_x][tank_y]->block->PushRight();
+	bool retvalue=array[tank_x][tank_y]->block->PushRight();
 	return retvalue;
 }
 
-BOOL Board::MoveUp()
+bool Board::MoveUp()
 {
-	BOOL retvalue=array[tank_x][tank_y]->block->PushBottom();
+	bool retvalue=array[tank_x][tank_y]->block->PushBottom();
 	return retvalue;
 }
 
-BOOL Board::MoveDown()
+bool Board::MoveDown()
 {
-	BOOL retvalue=array[tank_x][tank_y]->block->PushTop();
+	bool retvalue=array[tank_x][tank_y]->block->PushTop();
 	return retvalue;
 }
 
@@ -337,15 +337,15 @@ void Board::FillDefault()
 	blockTypeArray[1][1]=TANK;
 	blockRotationArray[1][1]=2;
 	tank_x=tank_y=origin_x=origin_y=1;
-	FillArray(TRUE);
+	FillArray(true);
 	//GroundTile::SetChanged(1);
 	//SetGroundTypes();
 	Credits();
 }
 
 int Board::AnyKey(int key) {
-	if (key==VK_F1&&!help) {help=TRUE; return 0;}
-	if (help) {help=FALSE; return 0;}
+	if (key==VK_F1&&!help) {help=true; return 0;}
+	if (help) {help=false; return 0;}
 	if (key==VK_ESCAPE||key==VK_F12) return 666;
 	if (defeated&&key==VK_RETURN) {LoadLevel(); return 0;}
 	else if (defeated) return 0;

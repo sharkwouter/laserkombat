@@ -34,7 +34,7 @@ public:
 		FiringUp=FiringDown=FiringLeft=FiringRight=Firing=0;
 		WasHitLeft=WasHitRight=WasHitTop=WasHitBottom=WasHit=0;
 		HadFiredLeft=HadFiredRight=HadFiredUp=HadFiredDown=HadFired=0;
-		moved=FALSE;
+		moved=false;
 
 
 	}
@@ -46,122 +46,122 @@ public:
 
 	virtual void SetOtherBlocks (unsigned int around) {}
 
-	virtual BOOL Kill();
-	virtual BOOL KillOver();
+	virtual bool Kill();
+	virtual bool KillOver();
 
-	virtual BOOL Drown() {Tile::Kill(); return TRUE;}
-	virtual BOOL DrownOver() {Tile::KillOver(); return TRUE;}
+	virtual bool Drown() {Tile::Kill(); return true;}
+	virtual bool DrownOver() {Tile::KillOver(); return true;}
 
-	virtual BOOL WillKill(int flag=2);
+	virtual bool WillKill(int flag=2);
 
 	virtual BlockType GetBlockType() {
 		return NONE;
 	}
 
-	virtual BOOL BlockOver(Tile* &block, Tile* &ground)
+	virtual bool BlockOver(Tile* &block, Tile* &ground)
 	{
 		if (ground) ground->ClearOver();
-		return FALSE;
+		return false;
 	}
 
 	void ClearOver();	//make sure the over layer is clear
 
 
 	int GetRotation() {return rotation;}
-	virtual BOOL SetRotation(int r) {
+	virtual bool SetRotation(int r) {
 		rotation=r;
 		rotation%=4;
-		return TRUE;
+		return true;
 	}
 
-	virtual BOOL PushLeft() {return MoveRight();}
-	virtual BOOL PushRight() {return MoveLeft();}
-	virtual BOOL PushTop() {return MoveDown();}
-	virtual BOOL PushBottom() {return MoveUp();}
+	virtual bool PushLeft() {return MoveRight();}
+	virtual bool PushRight() {return MoveLeft();}
+	virtual bool PushTop() {return MoveDown();}
+	virtual bool PushBottom() {return MoveUp();}
 
-	virtual BOOL HitLeft() {
+	virtual bool HitLeft() {
 		Tile* ground=GetGround();
 		if (ground) ground->WasHit=ground->WasHitLeft=BEAM_PERSISTANCE;
-		return TRUE;
+		return true;
 	}
-	virtual BOOL HitTop() {
+	virtual bool HitTop() {
 		Tile* ground=GetGround();
 		if (ground) ground->WasHit=ground->WasHitTop=BEAM_PERSISTANCE;
-		return TRUE;
+		return true;
 	}
-	virtual BOOL HitRight() {
+	virtual bool HitRight() {
 		Tile* ground=GetGround();
 		if (ground) ground->WasHit=ground->WasHitRight=BEAM_PERSISTANCE;
-		return TRUE;
+		return true;
 	}
-	virtual BOOL HitBottom() {
+	virtual bool HitBottom() {
 		Tile* ground=GetGround();
 		if (ground) ground->WasHit=ground->WasHitBottom=BEAM_PERSISTANCE;
-		return TRUE;
+		return true;
 	}
-	/*virtual BOOL HitLeft() {
+	/*virtual bool HitLeft() {
 		Tile* ground=GetGround();
 		if (ground) ground->HadFired=ground->HadFiredRight=BEAM_PERSISTANCE;
-		return TRUE;
+		return true;
 	}
-	virtual BOOL HitTop() {
+	virtual bool HitTop() {
 		Tile* ground=GetGround();
 		if (ground) ground->HadFired=ground->HadFiredDown=BEAM_PERSISTANCE;
-		return TRUE;
+		return true;
 	}
-	virtual BOOL HitRight() {
+	virtual bool HitRight() {
 		Tile* ground=GetGround();
 		if (ground) ground->HadFired=ground->HadFiredLeft=BEAM_PERSISTANCE;
-		return TRUE;
+		return true;
 	}
-	virtual BOOL HitBottom() {
+	virtual bool HitBottom() {
 		Tile* ground=GetGround();
 		if (ground) ground->HadFired=ground->HadFiredUp=BEAM_PERSISTANCE;
-		return TRUE;
+		return true;
 	}*/
 
-	virtual BOOL LookLeft(BlockType type, int dist) {return FALSE;}
-	virtual BOOL LookTop(BlockType type, int dist) {return FALSE;}
-	virtual BOOL LookRight(BlockType type, int dist) {return FALSE;}
-	virtual BOOL LookBottom(BlockType type, int dist) {return FALSE;}
+	virtual bool LookLeft(BlockType type, int dist) {return false;}
+	virtual bool LookTop(BlockType type, int dist) {return false;}
+	virtual bool LookRight(BlockType type, int dist) {return false;}
+	virtual bool LookBottom(BlockType type, int dist) {return false;}
 
 
-	virtual BOOL SeeMeUp(BlockType type, int dist);
-	virtual BOOL SeeMeDown(BlockType type, int dist);
-	virtual BOOL SeeMeRight(BlockType type, int dist);
-	virtual BOOL SeeMeLeft(BlockType type, int dist);
+	virtual bool SeeMeUp(BlockType type, int dist);
+	virtual bool SeeMeDown(BlockType type, int dist);
+	virtual bool SeeMeRight(BlockType type, int dist);
+	virtual bool SeeMeLeft(BlockType type, int dist);
 
-	virtual BOOL ShootUp();
-	virtual BOOL ShootDown();
-	virtual BOOL ShootRight();
-	virtual BOOL ShootLeft();
+	virtual bool ShootUp();
+	virtual bool ShootDown();
+	virtual bool ShootRight();
+	virtual bool ShootLeft();
 
-	virtual BOOL RotateLeft() {
+	virtual bool RotateLeft() {
 		rotation--;
 		if (rotation<0) rotation=0;
-		return TRUE;
+		return true;
 	}
-	virtual BOOL RotateRight() {
+	virtual bool RotateRight() {
 		rotation++;
 		SetRotation(rotation);
-		return TRUE;
+		return true;
 	}
 
 	virtual void Update() {
 		Draw();
 		DisplayBeam(BeamState());
-		if (Firing) Firing=FiringRight=FiringLeft=FiringUp=FiringDown=FALSE;
-		moved=FALSE;
+		if (Firing) Firing=FiringRight=FiringLeft=FiringUp=FiringDown=false;
+		moved=false;
 	}
 
-	virtual BOOL PreSeeMe() {
-		return FALSE;
+	virtual bool PreSeeMe() {
+		return false;
 	}
 
-	virtual BOOL AfterAnimate() {
+	virtual bool AfterAnimate() {
 		if (willKillFlag<10) FinalizeOver();
-		else {willKillFlag-=10; return TRUE;}
-		return FALSE;
+		else {willKillFlag-=10; return true;}
+		return false;
 	}
 
 	void FinalizeOver();
@@ -177,33 +177,33 @@ protected: //functions
 		if (surface) draw.BlackSquare(x_pos, y_pos); 
 	}
 	virtual int BeamState();
-	BOOL SeeMe(BlockType type) {
+	bool SeeMe(BlockType type) {
 		SeeMeLeft(type, 0);
 		SeeMeUp(type, 0);
 		SeeMeRight(type, 0);
 		SeeMeDown(type, 0);
-		return TRUE;
+		return true;
 	}
 
-	static BOOL CheckInRange(int x, int y) {
-		if (x>=COLUMNS||x<0) return FALSE;
-		if (y>=ROWS||y<0) return FALSE;
-		return TRUE;
+	static bool CheckInRange(int x, int y) {
+		if (x>=COLUMNS||x<0) return false;
+		if (y>=ROWS||y<0) return false;
+		return true;
 	}
 	Blocks GetBlocks();
 	Blocks GetGrounds();
 	Tile*& GetGround();
 	Tile* Tile::GetBlock();
 
-	BOOL RightBlock(Tile* &p);
-	BOOL LeftBlock(Tile* &p);
-	BOOL TopBlock(Tile* &p);
-	BOOL BottomBlock(Tile* &p);
+	bool RightBlock(Tile* &p);
+	bool LeftBlock(Tile* &p);
+	bool TopBlock(Tile* &p);
+	bool BottomBlock(Tile* &p);
 
-	BOOL RightGround(Tile* &p);
-	BOOL LeftGround(Tile* &p);
-	BOOL TopGround(Tile* &p);
-	BOOL BottomGround(Tile* &p);
+	bool RightGround(Tile* &p);
+	bool LeftGround(Tile* &p);
+	bool TopGround(Tile* &p);
+	bool BottomGround(Tile* &p);
 
 	void DisplayBeam(int type) {
 
@@ -220,16 +220,16 @@ protected: //functions
 	
 	}
 
-	virtual BOOL MoveUp();
-	virtual BOOL MoveDown();
-	virtual BOOL MoveRight();
-	virtual BOOL MoveLeft();
+	virtual bool MoveUp();
+	virtual bool MoveDown();
+	virtual bool MoveRight();
+	virtual bool MoveLeft();
 
 protected: //members
-	BOOL FiringUp, FiringDown, FiringLeft, FiringRight, Firing;
+	bool FiringUp, FiringDown, FiringLeft, FiringRight, Firing;
 	int WasHitLeft, WasHitRight, WasHitTop, WasHitBottom, WasHit;
 	int HadFiredLeft, HadFiredRight, HadFiredUp, HadFiredDown, HadFired;
-	BOOL moved;
+	bool moved;
 
 	static LPDIRECTDRAWSURFACE surface;
 	static LPDIRECTDRAWSURFACE beamSurface;
@@ -263,9 +263,9 @@ public:
 		if (!surface) SetSurface();
 
 	}
-	virtual BOOL SetRotation(int r) {
+	virtual bool SetRotation(int r) {
 		rotation=r;
-		return TRUE;
+		return true;
 	}
 
 	virtual void SetOtherBlocks(unsigned int around) {
@@ -273,24 +273,24 @@ public:
 		otherblocks=around+around*256;	
 	}
 
-	virtual BOOL Kill() {return FALSE;}
+	virtual bool Kill() {return false;}
 
-	virtual BOOL HitLeft() {Tile::HitLeft(); ShootRight(); return TRUE;}
-	virtual BOOL HitTop() {Tile::HitTop(); ShootDown(); return TRUE;}
-	virtual BOOL HitRight() {Tile::HitRight(); ShootLeft(); return TRUE;}
-	virtual BOOL HitBottom() {Tile::HitBottom(); ShootUp(); return TRUE;}
+	virtual bool HitLeft() {Tile::HitLeft(); ShootRight(); return true;}
+	virtual bool HitTop() {Tile::HitTop(); ShootDown(); return true;}
+	virtual bool HitRight() {Tile::HitRight(); ShootLeft(); return true;}
+	virtual bool HitBottom() {Tile::HitBottom(); ShootUp(); return true;}
 
-	virtual BOOL LookLeft(BlockType type, int dist) {SeeMeRight(type, ++dist); return TRUE;}
-	virtual BOOL LookTop(BlockType type, int dist) {SeeMeDown(type, ++dist); return TRUE;}
-	virtual BOOL LookRight(BlockType type, int dist) {SeeMeLeft(type, ++dist); return TRUE;}
-	virtual BOOL LookBottom(BlockType type, int dist) {SeeMeUp(type, ++dist); return TRUE;}
+	virtual bool LookLeft(BlockType type, int dist) {SeeMeRight(type, ++dist); return true;}
+	virtual bool LookTop(BlockType type, int dist) {SeeMeDown(type, ++dist); return true;}
+	virtual bool LookRight(BlockType type, int dist) {SeeMeLeft(type, ++dist); return true;}
+	virtual bool LookBottom(BlockType type, int dist) {SeeMeUp(type, ++dist); return true;}
 
 	virtual BlockType GetBlockType() {
 		return GROUND;
 	}
 
-	static BOOL SetChanged(BOOL change) {
-		BOOL ret=changed;
+	static bool SetChanged(bool change) {
+		bool ret=changed;
 		changed=change;
 		return ret;
 	}
@@ -349,7 +349,7 @@ private: // functions
 		surface=draw.GetSurface("GROUND");
 	}
 private: //members
-	static BOOL changed;
+	static bool changed;
 	unsigned int otherblocks;	
 };
 
@@ -364,29 +364,29 @@ public:
 	virtual void Update() {
 		Draw();
 		BeamState();
-		if (Firing) Firing=FiringRight=FiringLeft=FiringUp=FiringDown=FALSE;
-		moved=FALSE;
+		if (Firing) Firing=FiringRight=FiringLeft=FiringUp=FiringDown=false;
+		moved=false;
 	}
 
-	/*virtual BOOL HitLeft() {
+	/*virtual bool HitLeft() {
 		Tile* ground=GetGround();
 		if (ground) ground->WasHit=ground->WasHitLeft=BEAM_PERSISTANCE;
-		return TRUE;
+		return true;
 	}
-	virtual BOOL HitTop() {
+	virtual bool HitTop() {
 		Tile* ground=GetGround();
 		if (ground) ground->WasHit=ground->WasHitTop=BEAM_PERSISTANCE;
-		return TRUE;
+		return true;
 	}
-	virtual BOOL HitRight() {
+	virtual bool HitRight() {
 		Tile* ground=GetGround();
 		if (ground) ground->WasHit=ground->WasHitRight=BEAM_PERSISTANCE;
-		return TRUE;
+		return true;
 	}
-	virtual BOOL HitBottom() {
+	virtual bool HitBottom() {
 		Tile* ground=GetGround();
 		if (ground) ground->WasHit=ground->WasHitBottom=BEAM_PERSISTANCE;
-		return TRUE;
+		return true;
 	}*/
 
 
@@ -407,12 +407,12 @@ public:
 
 	}
 
-	virtual BOOL SetRotation(int r) {
+	virtual bool SetRotation(int r) {
 		rotation=r%12;
-		return TRUE;
+		return true;
 	}
 
-	virtual BOOL PreSeeMe() {
+	virtual bool PreSeeMe() {
 		return SeeMe(TANK);
 	}
 
@@ -421,55 +421,55 @@ public:
 		return TANK;
 	}
 
-	//virtual BOOL Kill();
+	//virtual bool Kill();
 
-	virtual BOOL ShootUp() {
+	virtual bool ShootUp() {
 	//sound.PlayASound("beam.wav");
-		BOOL ret=ATile::ShootUp();
+		bool ret=ATile::ShootUp();
 		//SeeMe(TANK);
 		return ret;
 
 	}
-	virtual BOOL ShootDown() {
+	virtual bool ShootDown() {
 	//sound.PlayASound("beam.wav");
-		BOOL ret=ATile::ShootDown();
+		bool ret=ATile::ShootDown();
 		//SeeMe(TANK);
 		return ret;
 
 	}
-	virtual BOOL ShootRight() {
+	virtual bool ShootRight() {
 	//sound.PlayASound("beam.wav");
-		BOOL ret=ATile::ShootRight();
+		bool ret=ATile::ShootRight();
 		//SeeMe(TANK);
 		return ret;
 
 	}
-	virtual BOOL ShootLeft() {
+	virtual bool ShootLeft() {
 	//sound.PlayASound("beam.wav");
-		BOOL ret=ATile::ShootLeft();
+		bool ret=ATile::ShootLeft();
 		//SeeMe(TANK);
 		return ret;
 
 	}
-	virtual BOOL HitLeft() {ATile::HitLeft(); sound.PlayASound("pop.wav", POP); return WillKill();}
-	virtual BOOL HitTop() {ATile::HitTop(); sound.PlayASound("pop.wav", POP); return WillKill();}
-	virtual BOOL HitRight() {ATile::HitRight(); sound.PlayASound("pop.wav", POP); return WillKill();}
-	virtual BOOL HitBottom() {ATile::HitBottom(); sound.PlayASound("pop.wav", POP); return WillKill();}
+	virtual bool HitLeft() {ATile::HitLeft(); sound.PlayASound("pop.wav", POP); return WillKill();}
+	virtual bool HitTop() {ATile::HitTop(); sound.PlayASound("pop.wav", POP); return WillKill();}
+	virtual bool HitRight() {ATile::HitRight(); sound.PlayASound("pop.wav", POP); return WillKill();}
+	virtual bool HitBottom() {ATile::HitBottom(); sound.PlayASound("pop.wav", POP); return WillKill();}
 
-	virtual BOOL RotateLeft() {
+	virtual bool RotateLeft() {
 		int row=rotation/4;
 		rotation--;
 		if (rotation<0) rotation=0;
 		if (rotation/4!=row) rotation+=4;
 
-		return TRUE;
+		return true;
 	}
-	virtual BOOL RotateRight() {
+	virtual bool RotateRight() {
 		int row=rotation/4;
 		rotation++;
 		if (rotation/4!=row) rotation-=4;
 
-		return TRUE;
+		return true;
 	}
 	static void RestoreSurface() {if (surface) surface->Restore();}
 
@@ -479,26 +479,26 @@ protected: //functions
 		return 0;
 	}
 	virtual void Tank::Draw();
-	virtual BOOL MoveUp() {
-		BOOL ret=ATile::MoveUp();
+	virtual bool MoveUp() {
+		bool ret=ATile::MoveUp();
 		//if (ret) sound.PlayASound("tick.wav");
 		//SeeMe(TANK);
 		return ret;
 	}
-	virtual BOOL MoveDown() {
-		BOOL ret=ATile::MoveDown();
+	virtual bool MoveDown() {
+		bool ret=ATile::MoveDown();
 		//if (ret) sound.PlayASound("tick.wav");
 		//SeeMe(TANK);
 		return ret;
 	}
-	virtual BOOL MoveRight() {
-		BOOL ret=ATile::MoveRight();
+	virtual bool MoveRight() {
+		bool ret=ATile::MoveRight();
 		//if (ret) sound.PlayASound("tick.wav");
 		//SeeMe(TANK);
 		return ret;
 	}
-	virtual BOOL MoveLeft() {
-		BOOL ret=ATile::MoveLeft();
+	virtual bool MoveLeft() {
+		bool ret=ATile::MoveLeft();
 		//if (ret) sound.PlayASound("tick.wav");
 		//SeeMe(TANK);
 		return ret;
@@ -529,15 +529,15 @@ public:
 	virtual BlockType GetBlockType() {
 		return REDBLOCK;
 	}
-	virtual BOOL SetRotation(int r) {
+	virtual bool SetRotation(int r) {
 		rotation=0;
-		return FALSE;
+		return false;
 	}
 
-	virtual BOOL HitLeft() {Tile::HitLeft(); PushLeft(); return TRUE;}
-	virtual BOOL HitTop() {Tile::HitTop(); PushTop(); return TRUE;}
-	virtual BOOL HitRight() {Tile::HitRight(); PushRight(); return TRUE;}
-	virtual BOOL HitBottom() {Tile::HitBottom(); PushBottom(); return TRUE;}
+	virtual bool HitLeft() {Tile::HitLeft(); PushLeft(); return true;}
+	virtual bool HitTop() {Tile::HitTop(); PushTop(); return true;}
+	virtual bool HitRight() {Tile::HitRight(); PushRight(); return true;}
+	virtual bool HitBottom() {Tile::HitBottom(); PushBottom(); return true;}
 	static void RestoreSurface() {if (surface) surface->Restore();}
 
 protected: //functions
@@ -568,9 +568,9 @@ public:
 	virtual BlockType GetBlockType() {
 		return WHITEBLOCK;
 	}
-	virtual BOOL SetRotation(int r) {
+	virtual bool SetRotation(int r) {
 		rotation=2;
-		return FALSE;
+		return false;
 	}
 	static void RestoreSurface() {if (surface) surface->Restore();}
 
@@ -580,10 +580,10 @@ protected: //functions
 		//Exception::Output("Tank::draw called.");
 		if (surface) draw.BlitSquare(surface, 2 ,0, x_pos, y_pos); 
 	}
-	virtual BOOL MoveUp() {sound.PlayASound(NULL, SCRAPE); return Tile::MoveUp();}
-	virtual BOOL MoveDown() {sound.PlayASound(NULL, SCRAPE); return Tile::MoveDown();}
-	virtual BOOL MoveLeft() {sound.PlayASound(NULL, SCRAPE); return Tile::MoveLeft();}
-	virtual BOOL MoveRight() {sound.PlayASound(NULL, SCRAPE); return Tile::MoveRight();}
+	virtual bool MoveUp() {sound.PlayASound(NULL, SCRAPE); return Tile::MoveUp();}
+	virtual bool MoveDown() {sound.PlayASound(NULL, SCRAPE); return Tile::MoveDown();}
+	virtual bool MoveLeft() {sound.PlayASound(NULL, SCRAPE); return Tile::MoveLeft();}
+	virtual bool MoveRight() {sound.PlayASound(NULL, SCRAPE); return Tile::MoveRight();}
 protected: //members
 private: // functions
 	virtual void SetSurface() {
@@ -603,17 +603,17 @@ public:
 
 	}
 
-	virtual BOOL BlockOver(Tile* &block, Tile* &ground);
-	virtual BOOL SetRotation(int r) {
+	virtual bool BlockOver(Tile* &block, Tile* &ground);
+	virtual bool SetRotation(int r) {
 		rotation=r;
-		return TRUE;
+		return true;
 	}
 	virtual BlockType GetBlockType() {
 		return WATER;
 	}
 
 	static void IncStaticRotation() {
-		static BOOL chop=TRUE;
+		static bool chop=true;
 		chop=!chop;
 		if (chop) {
 			static_rotation++;
@@ -651,10 +651,10 @@ public:
 		SetRotation(r);
 
 	}
-	virtual BOOL SetRotation(int r) {
+	virtual bool SetRotation(int r) {
 		if (r>8) r-=4;
 		rotation=r;
-		return TRUE;
+		return true;
 	}
 	static void RestoreSurface() {if (surface) surface->Restore();}
 
@@ -677,15 +677,15 @@ protected: //functions
 		//Exception::Output("Tank::draw called.");
 		if (surface) draw.BlitSquare(surface, rotation%9 ,0, x_pos, y_pos); 
 	}
-	virtual BOOL PushLeft() {return FALSE;}
-	virtual BOOL PushRight() {return FALSE;}
-	virtual BOOL PushTop() {return FALSE;}
-	virtual BOOL PushBottom() {return FALSE;}
+	virtual bool PushLeft() {return false;}
+	virtual bool PushRight() {return false;}
+	virtual bool PushTop() {return false;}
+	virtual bool PushBottom() {return false;}
 
-	virtual BOOL HitLeft() {sound.PlayASound("donk.wav", DONK); return span=1;}
-	virtual BOOL HitRight() {sound.PlayASound("donk.wav", DONK); return span=1;}
-	virtual BOOL HitTop() {sound.PlayASound("donk.wav", DONK); return span=1;}
-	virtual BOOL HitBottom() {sound.PlayASound("donk.wav", DONK); return span=1;}
+	virtual bool HitLeft() {sound.PlayASound("donk.wav", DONK); return span=1;}
+	virtual bool HitRight() {sound.PlayASound("donk.wav", DONK); return span=1;}
+	virtual bool HitTop() {sound.PlayASound("donk.wav", DONK); return span=1;}
+	virtual bool HitBottom() {sound.PlayASound("donk.wav", DONK); return span=1;}
 
 
 
@@ -698,7 +698,7 @@ private: // functions
 		surface=draw.GetSurface("STATIC");
 	}
 private: //members
-	BOOL turn_right;
+	bool turn_right;
 	int time, span;
 
 };
@@ -711,10 +711,10 @@ public:
 		SetRotation(r);
 
 	}
-	virtual BOOL SetRotation(int r) {
+	virtual bool SetRotation(int r) {
 		rotation=r;
 		rotation%=16;
-		return TRUE;
+		return true;
 	}
 	static void RestoreSurface() {if (surface) surface->Restore();}
 
@@ -732,14 +732,14 @@ protected: //functions
 	virtual int BeamState();
 
 
-	virtual BOOL HitLeft() {
+	virtual bool HitLeft() {
 		ATile::HitLeft();
-		//if (Firing) return FALSE;
+		//if (Firing) return false;
 		switch(rotation%4) {
-		case 1: if (Firing) return FALSE;
+		case 1: if (Firing) return false;
 			ShootDown();
 			break;
-		case 2:  if (Firing) return FALSE;
+		case 2:  if (Firing) return false;
 			ShootUp();
 			break;
 		case 0:
@@ -747,62 +747,62 @@ protected: //functions
 			return PushLeft();
 			break;
 		default:
-			return FALSE;
+			return false;
 			break;
 		}
-		return TRUE;
+		return true;
 
 	}
-	virtual BOOL HitTop() {
+	virtual bool HitTop() {
 		ATile::HitTop();
-		//if (Firing) return FALSE;
+		//if (Firing) return false;
 		switch(rotation%4) {
 		case 0:
 		case 1:
 			return PushTop();
 			break;
-		case 2: if (Firing) return FALSE;
+		case 2: if (Firing) return false;
 			ShootLeft();
 			break;
-		case 3: if (Firing) return FALSE;
+		case 3: if (Firing) return false;
 			ShootRight();
 			break;
 		default:
-			return FALSE;
+			return false;
 			break;
 		}
-		return TRUE;
+		return true;
 
 	}
-	virtual BOOL HitRight() {
+	virtual bool HitRight() {
 		ATile::HitRight();
-		//if (Firing) return FALSE;
+		//if (Firing) return false;
 		switch(rotation%4) {
-		case 0: if (Firing) return FALSE;
+		case 0: if (Firing) return false;
 			ShootDown();
 			break;
 		case 1:
 		case 2:
 			return PushRight();
 			break;
-		case 3: if (Firing) return FALSE;
+		case 3: if (Firing) return false;
 			ShootUp();
 			break;
 		default:
-			return FALSE;
+			return false;
 			break;
 		}
-		return TRUE;
+		return true;
 
 	}
-	virtual BOOL HitBottom() {
+	virtual bool HitBottom() {
 		ATile::HitBottom();
-		//if (Firing) return FALSE;
+		//if (Firing) return false;
 		switch(rotation%4) {
-		case 0: if (Firing) return FALSE;
+		case 0: if (Firing) return false;
 			ShootRight();
 			break;
-		case 1: if (Firing) return FALSE;
+		case 1: if (Firing) return false;
 			ShootLeft();
 			break;
 		case 2:
@@ -810,10 +810,10 @@ protected: //functions
 			return PushBottom();
 			break;
 		default:
-			return FALSE;
+			return false;
 			break;
 		}
-		return TRUE;
+		return true;
 
 	}
 
@@ -855,19 +855,19 @@ protected: //functions
 		if (surface) draw.BlitSquare(surface, rotation%7 , HadFired?4:(rotation/7), x_pos, y_pos); 
 	}
 
-	virtual BOOL HitLeft() {
+	virtual bool HitLeft() {
 		Tile::HitLeft();
-		//if (Firing) return FALSE;
+		//if (Firing) return false;
 		switch(rotation%7) {
-		case 0: if (Firing) return FALSE;
+		case 0: if (Firing) return false;
 			ShootRight();
 			ShootDown();
 			break;
-		case 1: if (Firing) return FALSE;
+		case 1: if (Firing) return false;
 			ShootUp();
 			ShootDown();
 			break;
-		case 2: if (Firing) return FALSE;
+		case 2: if (Firing) return false;
 			ShootUp();
 			ShootRight();
 			break;
@@ -875,26 +875,26 @@ protected: //functions
 		case 6:
 			return PushLeft();
 			break;
-		case 4: if (Firing) return FALSE;
+		case 4: if (Firing) return false;
 			ShootUp();
 			ShootRight();
 			ShootDown();
 			break;
-		case 5: if (Firing) return FALSE;
+		case 5: if (Firing) return false;
 			ShootRight();
 			break;
 		default:
-			return FALSE;
+			return false;
 			break;
 		}
-		return TRUE;
+		return true;
 
 	}
-	virtual BOOL HitTop() {
+	virtual bool HitTop() {
 		Tile::HitTop();
-		//if (Firing) return FALSE;
+		//if (Firing) return false;
 		switch(rotation%7) {
-		case 1: if (Firing) return FALSE;
+		case 1: if (Firing) return false;
 			ShootLeft();
 			ShootDown();
 			break;
@@ -902,76 +902,76 @@ protected: //functions
 		case 5:
 			return PushTop();
 			break;
-		case 2: if (Firing) return FALSE;
+		case 2: if (Firing) return false;
 			ShootLeft();
 			ShootRight();
 			break;
-		case 3: if (Firing) return FALSE;
+		case 3: if (Firing) return false;
 			ShootRight();
 			ShootDown();
 			break;
-		case 4: if (Firing) return FALSE;
+		case 4: if (Firing) return false;
 			ShootLeft();
 			ShootRight();
 			ShootDown();
 			break;
-		case 6: if (Firing) return FALSE;
+		case 6: if (Firing) return false;
 			ShootDown();
 			break;
 		default:
-			return FALSE;
+			return false;
 			break;
 		}
-		return TRUE;
+		return true;
 
 	}
-	virtual BOOL HitRight() {
+	virtual bool HitRight() {
 		Tile::HitRight();
-		//if (Firing) return FALSE;
+		//if (Firing) return false;
 		switch(rotation%7) {
-		case 0: if (Firing) return FALSE;
+		case 0: if (Firing) return false;
 			ShootLeft();
 			ShootDown();
 			break;
 		case 1:
 		case 6:
 			return PushRight();
-		case 2: if (Firing) return FALSE;
+		case 2: if (Firing) return false;
 			ShootLeft();
 			ShootUp();
 			break;
-		case 3: if (Firing) return FALSE;
+		case 3: if (Firing) return false;
 			ShootUp();
 			ShootDown();
 			break;
-		case 4: if (Firing) return FALSE;
+		case 4: if (Firing) return false;
 			ShootLeft();
 			ShootUp();
 			ShootDown();
 			break;
-		case 5: if (Firing) return FALSE;
+		case 5: if (Firing) return false;
 			ShootLeft();
 			break;
 		default:
-			return FALSE;
+			return false;
 			break;
 		}
-		return TRUE;
+		return true;
 
 	}
-	virtual BOOL HitBottom() {
+	virtual bool HitBottom() {
 		Tile::HitBottom();
-		//if (Firing) return FALSE;
+		//if (Firing) return false;
 		switch(rotation%7) {
-		case 0: if (Firing) return FALSE;
+		case 0: if (Firing) return false;
 			ShootLeft();
 			ShootRight();
 			break;
-		case 1: if (Firing) return FALSE;
+		case 1: if (Firing) return false;
 			ShootLeft();
 			ShootUp();
 			break;
-		case 3: if (Firing) return FALSE;
+		case 3: if (Firing) return false;
 			ShootUp();
 			ShootRight();
 			break;
@@ -979,19 +979,19 @@ protected: //functions
 		case 5:
 			return PushBottom();
 			break;
-		case 4: if (Firing) return FALSE;
+		case 4: if (Firing) return false;
 			ShootLeft();
 			ShootUp();
 			ShootRight();
 			break;
-		case 6: if (Firing) return FALSE;
+		case 6: if (Firing) return false;
 			ShootUp();
 			break;
 		default:
-			return FALSE;
+			return false;
 			break;
 		}
-		return TRUE;
+		return true;
 
 	}
 
@@ -1014,25 +1014,25 @@ public:
 	EnemyTank(int x, int y, int r=0) : Tank(x,y,r) {
 
 	}
-	virtual BOOL SetRotation(int r) {return ATile::SetRotation(r);}
+	virtual bool SetRotation(int r) {return ATile::SetRotation(r);}
 
-	virtual BOOL PreSeeMe() {
-		return FALSE;
+	virtual bool PreSeeMe() {
+		return false;
 	}
 
 	virtual BlockType GetBlockType() {
 		return ENEMYTANK;
 	}
 
-	virtual BOOL LookLeft(BlockType type, int dist) {ShootLeft(); return TRUE;}
-	virtual BOOL LookTop(BlockType type, int dist) {ShootUp(); return TRUE;}
-	virtual BOOL LookRight(BlockType type, int dist) {ShootRight(); return TRUE;}
-	virtual BOOL LookBottom(BlockType type, int dist) {ShootDown(); return TRUE;}
+	virtual bool LookLeft(BlockType type, int dist) {ShootLeft(); return true;}
+	virtual bool LookTop(BlockType type, int dist) {ShootUp(); return true;}
+	virtual bool LookRight(BlockType type, int dist) {ShootRight(); return true;}
+	virtual bool LookBottom(BlockType type, int dist) {ShootDown(); return true;}
 
-	virtual BOOL ShootUp() {SetRotation(1); return ATile::ShootUp();}
-	virtual BOOL ShootDown() {SetRotation(3); return ATile::ShootDown();}
-	virtual BOOL ShootRight() {SetRotation(2); return ATile::ShootRight();}
-	virtual BOOL ShootLeft() {SetRotation(0); return ATile::ShootLeft();}
+	virtual bool ShootUp() {SetRotation(1); return ATile::ShootUp();}
+	virtual bool ShootDown() {SetRotation(3); return ATile::ShootDown();}
+	virtual bool ShootRight() {SetRotation(2); return ATile::ShootRight();}
+	virtual bool ShootLeft() {SetRotation(0); return ATile::ShootLeft();}
 	static void RestoreSurface() {if (surface) surface->Restore();}
 
 protected: //functions
@@ -1043,16 +1043,16 @@ protected: //functions
 		else if (rotate==1) RotateLeft();
 		if (surface) draw.BlitSquare(surface, rotation ,1, x_pos, y_pos); 
 	}
-	virtual BOOL MoveUp() {
+	virtual bool MoveUp() {
 		return ATile::MoveUp();
 	}
-	virtual BOOL MoveDown() {
+	virtual bool MoveDown() {
 		return ATile::MoveDown();
 	}
-	virtual BOOL MoveRight() {
+	virtual bool MoveRight() {
 		return ATile::MoveRight();
 	}
-	virtual BOOL MoveLeft() {
+	virtual bool MoveLeft() {
 		return ATile::MoveLeft();
 	}
 protected: //members
@@ -1068,12 +1068,12 @@ public:
 		if (!surface) SetSurface();
 
 	}
-	virtual BOOL HitLeft() {ATile::HitLeft(); Kill(); return TRUE;}
-	virtual BOOL HitTop() {ATile::HitTop(); Kill(); return TRUE;}
-	virtual BOOL HitRight() {ATile::HitRight(); Kill(); return TRUE;}
-	virtual BOOL HitBottom() {ATile::HitBottom(); Kill(); return TRUE;}
+	virtual bool HitLeft() {ATile::HitLeft(); Kill(); return true;}
+	virtual bool HitTop() {ATile::HitTop(); Kill(); return true;}
+	virtual bool HitRight() {ATile::HitRight(); Kill(); return true;}
+	virtual bool HitBottom() {ATile::HitBottom(); Kill(); return true;}
 
-	virtual BOOL Kill();
+	virtual bool Kill();
 	static void RestoreSurface() {if (surface) surface->Restore();}
 protected: //functions
 	virtual void Nuke::Draw() {
@@ -1100,10 +1100,10 @@ public:
 
 	}
 
-	virtual BOOL HitLeft() {ATile::HitLeft(); sound.PlayASound("collapse.wav", COLLAPSE); return Kill();}
-	virtual BOOL HitTop() {ATile::HitTop(); sound.PlayASound("collapse.wav", COLLAPSE); return Kill();}
-	virtual BOOL HitRight() {ATile::HitRight(); sound.PlayASound("collapse.wav", COLLAPSE); return Kill();}
-	virtual BOOL HitBottom() {ATile::HitBottom(); sound.PlayASound("collapse.wav", COLLAPSE); return Kill();}
+	virtual bool HitLeft() {ATile::HitLeft(); sound.PlayASound("collapse.wav", COLLAPSE); return Kill();}
+	virtual bool HitTop() {ATile::HitTop(); sound.PlayASound("collapse.wav", COLLAPSE); return Kill();}
+	virtual bool HitRight() {ATile::HitRight(); sound.PlayASound("collapse.wav", COLLAPSE); return Kill();}
+	virtual bool HitBottom() {ATile::HitBottom(); sound.PlayASound("collapse.wav", COLLAPSE); return Kill();}
 	static void RestoreSurface() {if (surface) surface->Restore();}
 protected: //functions
 	virtual void Rusty::Draw() {
@@ -1125,7 +1125,7 @@ protected: //members
 		static LPDIRECTDRAWSURFACE surface;
 private: // functions
 
-	BOOL turn_right;
+	bool turn_right;
 
 	virtual void SetSurface() {
 		//Exception::Output("Tank::setsurface() called.");
@@ -1144,14 +1144,14 @@ public:
 	virtual BlockType GetBlockType() {
 		return REDBLOCK;
 	}
-	virtual BOOL SetRotation(int r) {
+	virtual bool SetRotation(int r) {
 		rotation=1;
-		return FALSE;
+		return false;
 	}
-	virtual BOOL HitLeft() {ATile::HitLeft(); sound.PlayASound("pop.wav", POP); return Kill();}
-	virtual BOOL HitTop() {ATile::HitTop(); sound.PlayASound("pop.wav", POP); return Kill();}
-	virtual BOOL HitRight() {ATile::HitRight(); sound.PlayASound("pop.wav", POP); return Kill();}
-	virtual BOOL HitBottom() {ATile::HitBottom(); sound.PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitLeft() {ATile::HitLeft(); sound.PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitTop() {ATile::HitTop(); sound.PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitRight() {ATile::HitRight(); sound.PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitBottom() {ATile::HitBottom(); sound.PlayASound("pop.wav", POP); return Kill();}
 	static void RestoreSurface() {if (surface) surface->Restore();}
 
 protected: //functions
@@ -1178,15 +1178,15 @@ public:
 
 	}
 
-	virtual BOOL LookLeft(BlockType type, int dist) {if (!dist) Kill(); return TRUE;}
-	virtual BOOL LookTop(BlockType type, int dist) {if (!dist) Kill(); return TRUE;}
-	virtual BOOL LookRight(BlockType type, int dist) {if (!dist) Kill(); return TRUE;}
-	virtual BOOL LookBottom(BlockType type, int dist) {if (!dist) Kill(); return TRUE;}
+	virtual bool LookLeft(BlockType type, int dist) {if (!dist) Kill(); return true;}
+	virtual bool LookTop(BlockType type, int dist) {if (!dist) Kill(); return true;}
+	virtual bool LookRight(BlockType type, int dist) {if (!dist) Kill(); return true;}
+	virtual bool LookBottom(BlockType type, int dist) {if (!dist) Kill(); return true;}
 
-	//virtual BOOL HitLeft() {return ATile::HitLeft();}
-	//virtual BOOL HitTop() {return ATile::HitTop();}
-	//virtual BOOL HitRight() {return ATile::HitRight();}
-	//virtual BOOL HitBottom() {return ATile::HitBottom();}
+	//virtual bool HitLeft() {return ATile::HitLeft();}
+	//virtual bool HitTop() {return ATile::HitTop();}
+	//virtual bool HitRight() {return ATile::HitRight();}
+	//virtual bool HitBottom() {return ATile::HitBottom();}
 	static void RestoreSurface() {if (surface) surface->Restore();}
 
 protected: //functions
@@ -1212,9 +1212,9 @@ public:
 		SetRotation(r);
 
 	}
-	virtual BOOL SetRotation(int r) {
+	virtual bool SetRotation(int r) {
 		rotation=r;
-		return TRUE;
+		return true;
 	}
 	static void RestoreSurface() {if (surface) surface->Restore();}
 
@@ -1222,10 +1222,10 @@ protected: //functions
 	virtual void Message::Draw() {
 		if (surface) draw.BlitSquare(surface, rotation%14 ,rotation/14, x_pos, y_pos); 
 	}
-	virtual BOOL PushLeft() {return FALSE;}
-	virtual BOOL PushRight() {return FALSE;}
-	virtual BOOL PushTop() {return FALSE;}
-	virtual BOOL PushBottom() {return FALSE;}
+	virtual bool PushLeft() {return false;}
+	virtual bool PushRight() {return false;}
+	virtual bool PushTop() {return false;}
+	virtual bool PushBottom() {return false;}
 
 protected: //members
 		static LPDIRECTDRAWSURFACE surface;
@@ -1248,9 +1248,9 @@ public:
 		SetRotation(0);
 
 	}
-	virtual BOOL SetRotation(int r) {
+	virtual bool SetRotation(int r) {
 		rotation=0;
-		return FALSE;
+		return false;
 	}
 	static void RestoreSurface() {if (surface) surface->Restore();}
 
@@ -1260,11 +1260,11 @@ protected: //functions
 		if (surface) draw.BlitSquare(surface, 0 ,0, x_pos, y_pos); 
 	}
 
-	virtual BOOL HitTop() {Tile::HitTop(); return ShootDown();}
-	virtual BOOL HitBottom() {Tile::HitBottom(); return ShootUp();}
+	virtual bool HitTop() {Tile::HitTop(); return ShootDown();}
+	virtual bool HitBottom() {Tile::HitBottom(); return ShootUp();}
 
-	virtual BOOL LookTop(BlockType type, int dist) {SeeMeDown(type, ++dist); return TRUE;}
-	virtual BOOL LookBottom(BlockType type, int dist) {SeeMeUp(type, ++dist); return TRUE;}
+	virtual bool LookTop(BlockType type, int dist) {SeeMeDown(type, ++dist); return true;}
+	virtual bool LookBottom(BlockType type, int dist) {SeeMeUp(type, ++dist); return true;}
 
 protected: //members
 		static LPDIRECTDRAWSURFACE surface;
@@ -1287,9 +1287,9 @@ public:
 		SetRotation(0);
 
 	}
-	virtual BOOL SetRotation(int r) {
+	virtual bool SetRotation(int r) {
 		rotation=0;
-		return FALSE;
+		return false;
 	}
 	static void RestoreSurface() {if (surface) surface->Restore();}
 
@@ -1298,15 +1298,15 @@ protected: //functions
 
 		if (surface) draw.BlitSquare(surface, 1 ,0, x_pos, y_pos); 
 	}
-	virtual BOOL HitTop() {return Static::HitTop();}
-	virtual BOOL HitBottom() {return Static::HitBottom();}
-	virtual BOOL HitLeft() {Tile::HitLeft(); return ShootRight();}
-	virtual BOOL HitRight() {Tile::HitRight(); return ShootLeft();}
+	virtual bool HitTop() {return Static::HitTop();}
+	virtual bool HitBottom() {return Static::HitBottom();}
+	virtual bool HitLeft() {Tile::HitLeft(); return ShootRight();}
+	virtual bool HitRight() {Tile::HitRight(); return ShootLeft();}
 
-	virtual BOOL LookLeft(BlockType type, int dist) {SeeMeRight(type, ++dist); return TRUE;}
-	virtual BOOL LookTop(BlockType type, int dist) {return FALSE;}
-	virtual BOOL LookRight(BlockType type, int dist) {SeeMeLeft(type, ++dist); return TRUE;}
-	virtual BOOL LookBottom(BlockType type, int dist) {return FALSE;}
+	virtual bool LookLeft(BlockType type, int dist) {SeeMeRight(type, ++dist); return true;}
+	virtual bool LookTop(BlockType type, int dist) {return false;}
+	virtual bool LookRight(BlockType type, int dist) {SeeMeLeft(type, ++dist); return true;}
+	virtual bool LookBottom(BlockType type, int dist) {return false;}
 
 protected: //members
 private: // functions
@@ -1328,9 +1328,9 @@ public:
 		SetRotation(0);
 
 	}
-	virtual BOOL SetRotation(int r) {
+	virtual bool SetRotation(int r) {
 		rotation=0;
-		return FALSE;
+		return false;
 	}
 	static void RestoreSurface() {if (surface) surface->Restore();}
 
@@ -1340,15 +1340,15 @@ protected: //functions
 		if (surface) draw.BlitSquare(surface, 2 ,0, x_pos, y_pos); 
 	}
 
-	virtual BOOL HitTop() {Tile::HitTop(); return ShootDown();}
-	virtual BOOL HitBottom() {Tile::HitBottom(); return ShootUp();}
-	virtual BOOL HitLeft() {Tile::HitLeft(); return ShootRight();}
-	virtual BOOL HitRight() {Tile::HitRight(); return ShootLeft();}
+	virtual bool HitTop() {Tile::HitTop(); return ShootDown();}
+	virtual bool HitBottom() {Tile::HitBottom(); return ShootUp();}
+	virtual bool HitLeft() {Tile::HitLeft(); return ShootRight();}
+	virtual bool HitRight() {Tile::HitRight(); return ShootLeft();}
 
-	virtual BOOL LookLeft(BlockType type, int dist) {SeeMeRight(type, ++dist); return TRUE;}
-	virtual BOOL LookTop(BlockType type, int dist) {SeeMeDown(type, ++dist); return TRUE;}
-	virtual BOOL LookRight(BlockType type, int dist) {SeeMeLeft(type, ++dist); return TRUE;}
-	virtual BOOL LookBottom(BlockType type, int dist) {SeeMeUp(type, ++dist); return TRUE;}
+	virtual bool LookLeft(BlockType type, int dist) {SeeMeRight(type, ++dist); return true;}
+	virtual bool LookTop(BlockType type, int dist) {SeeMeDown(type, ++dist); return true;}
+	virtual bool LookRight(BlockType type, int dist) {SeeMeLeft(type, ++dist); return true;}
+	virtual bool LookBottom(BlockType type, int dist) {SeeMeUp(type, ++dist); return true;}
 
 protected: //members
 private: // functions
@@ -1369,21 +1369,21 @@ public:
 		SetRotation(r);
 
 	}
-	virtual BOOL SetRotation(int r) {
+	virtual bool SetRotation(int r) {
 		rotation=r;
 		rotation%=4;
-		return TRUE;
+		return true;
 	}
 
-	virtual BOOL PushLeft() {return FALSE;}
-	virtual BOOL PushRight() {return FALSE;}
-	virtual BOOL PushTop() {return FALSE;}
-	virtual BOOL PushBottom() {return FALSE;}
+	virtual bool PushLeft() {return false;}
+	virtual bool PushRight() {return false;}
+	virtual bool PushTop() {return false;}
+	virtual bool PushBottom() {return false;}
 
-	virtual BOOL HitLeft() {sound.PlayASound("donk.wav", DONK); return Mirror::HitLeft();}
-	virtual BOOL HitRight() {sound.PlayASound("donk.wav", DONK); return Mirror::HitRight();}
-	virtual BOOL HitTop() {sound.PlayASound("donk.wav", DONK); return Mirror::HitTop();}
-	virtual BOOL HitBottom() {sound.PlayASound("donk.wav", DONK); return Mirror::HitBottom();}
+	virtual bool HitLeft() {sound.PlayASound("donk.wav", DONK); return Mirror::HitLeft();}
+	virtual bool HitRight() {sound.PlayASound("donk.wav", DONK); return Mirror::HitRight();}
+	virtual bool HitTop() {sound.PlayASound("donk.wav", DONK); return Mirror::HitTop();}
+	virtual bool HitBottom() {sound.PlayASound("donk.wav", DONK); return Mirror::HitBottom();}
 
 protected: //functions
 	virtual void Triangle::Draw() {
@@ -1413,19 +1413,19 @@ public:
 
 	}
 
-	virtual BOOL HitLeft() {
+	virtual bool HitLeft() {
 		Triangle::HitLeft();
 		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
-	virtual BOOL HitRight() {
+	virtual bool HitRight() {
 		Triangle::HitRight();
 		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
-	virtual BOOL HitTop() {
+	virtual bool HitTop() {
 		Triangle::HitTop();
 		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
-	virtual BOOL HitBottom() {
+	virtual bool HitBottom() {
 		Triangle::HitBottom();
 		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
@@ -1460,11 +1460,11 @@ public:
 	}
 	static void RestoreSurface() {if (surface) surface->Restore();}
 
-	virtual BOOL HitLeft() {
+	virtual bool HitLeft() {
 		ATile::HitLeft();
 		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
-	virtual BOOL HitRight() {
+	virtual bool HitRight() {
 		ATile::HitRight();
 		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
@@ -1499,11 +1499,11 @@ public:
 	}
 	static void RestoreSurface() {if (surface) surface->Restore();}
 
-	virtual BOOL HitTop() {
+	virtual bool HitTop() {
 		ATile::HitTop();
 		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
-	virtual BOOL HitBottom() {
+	virtual bool HitBottom() {
 		ATile::HitBottom();
 		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
@@ -1537,10 +1537,10 @@ public:
 	}
 	static void RestoreSurface() {if (surface) surface->Restore();}
 	
-	virtual BOOL HitLeft() {ATile::HitLeft(); sound.PlayASound("pop.wav", POP); return Kill();}
-	virtual BOOL HitTop() {ATile::HitTop(); sound.PlayASound("pop.wav", POP); return Kill();}
-	virtual BOOL HitRight() {ATile::HitRight(); sound.PlayASound("pop.wav", POP); return Kill();}
-	virtual BOOL HitBottom() {ATile::HitBottom(); sound.PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitLeft() {ATile::HitLeft(); sound.PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitTop() {ATile::HitTop(); sound.PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitRight() {ATile::HitRight(); sound.PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitBottom() {ATile::HitBottom(); sound.PlayASound("pop.wav", POP); return Kill();}
 
 protected: //functions
 	virtual void RustyWhiteBlock::Draw() {

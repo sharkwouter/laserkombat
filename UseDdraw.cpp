@@ -35,7 +35,7 @@ Finish();
 
 // Start() - Create the window that will be used to atach the
 // DirectDraw object. Create the DD object and the surface.
-BOOL CUseDdraw::Start()
+bool CUseDdraw::Start()
 {
 WNDCLASS wc;
 DDSURFACEDESC ddsd;
@@ -54,7 +54,7 @@ wc.hbrBackground = GetStockObject(BLACK_BRUSH);
 wc.lpszMenuName = NAME;
 wc.lpszClassName = NAME;
 if(!RegisterClass( &wc ))
-return FALSE;
+return false;
 
 DWORD exStyle = 0;
 DWORD style = WS_POPUP;
@@ -65,7 +65,7 @@ GetSystemMetrics(SM_CXSCREEN),
 GetSystemMetrics(SM_CYSCREEN),
 NULL,NULL, gb_hInstance,NULL );
 
-if( !hwnd ) return FALSE;
+if( !hwnd ) return false;
 
 ShowWindow( hwnd, gb_nCmdShow );
 UpdateWindow( hwnd );
@@ -74,16 +74,16 @@ SetFocus( hwnd );
 // Create DD Object 
 ddrval = DirectDrawCreate( NULL, &lpDD, NULL );
 if( ddrval != DD_OK )
-return FALSE;
+return false;
 
 ddrval = lpDD->SetCooperativeLevel( hwnd, /*DDSCL_ALLOWMODEX |*/ DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN);
 if( ddrval != DD_OK )
-return FALSE;
+return false;
 
 ddrval = lpDD->SetDisplayMode( WOLD_MAX_X,WOLD_MAX_Y, COLOR_DEPTH);
 
 if(ddrval != DD_OK)
-return FALSE;
+return false;
 
 // Create the primary surface with a back buffer 
 ddsd.dwSize = sizeof( ddsd );
@@ -94,42 +94,42 @@ DDSCAPS_COMPLEX;
 ddsd.dwBackBufferCount = 1;
 ddrval = lpDD->CreateSurface( &ddsd, &lpDDSPrimary, NULL );
 if( ddrval != DD_OK )
-return FALSE;
+return false;
 
 ddscaps.dwCaps = DDSCAPS_BACKBUFFER;
 ddrval = lpDDSPrimary->GetAttachedSurface(&ddscaps, &lpDDSBack);
 if( ddrval != DD_OK )
-return FALSE;
+return false;
 
 lpDDSDonut = DDLoadBitmap(lpDD, "DONUT", 0, 0);
 if( lpDDSDonut == NULL )
 {
 	
-	return FALSE;
+	return false;
 }
 ddrval = DDSetColorKey(lpDDSDonut, RGB(0,0,0));
 if (ddrval != DD_OK)
-return FALSE;
+return false;
 
 
 lpDDSClouds = DDLoadBitmap(lpDD, "CLOUDS", 0, 0);
 if( lpDDSDonut == NULL )
 {
 	
-	return FALSE;
+	return false;
 }
 
 /*lpDDPal = DDLoadPalette(lpDD, "DONUT");
-if (!lpDDPal) return FALSE;
+if (!lpDDPal) return false;
 ddrval = lpDDSPrimary->SetPalette(lpDDPal);
 if (ddrval != DD_OK)
-	return FALSE;
+	return false;
 ddrval = lpDDSDonut->SetPalette(lpDDPal);
 if (ddrval != DD_OK)
-	return FALSE;
+	return false;
 ddrval = lpDDSBack->SetPalette(lpDDPal);
 if (ddrval != DD_OK)
-	return FALSE;
+	return false;
 
 LPDIRECTDRAWPALETTE FAR * lplpDDPalette;
 
@@ -139,7 +139,7 @@ ddrval = lpDDSPrimary->SetPalette(*lplpDDPalette);*/
 
 
 
-return TRUE;
+return true;
 
 }
 

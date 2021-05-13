@@ -13,14 +13,14 @@ class Sound;
 #define COLUMNS 20
 #define ROWS 15
 #define IMAGE_WIDTH 40
-#define BOOL short
+#define bool short
 
 #define BEAM_PERSISTANCE 4		//beam lasts for this many 0.025 second intervals
 
 #define COLOR_DEPTH 16
 
 extern HINSTANCE gb_hInstance;
-extern BOOL gb_bActive;
+extern bool gb_bActive;
 extern int gb_nCmdShow;
 extern Draw draw;
 extern Board board;

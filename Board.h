@@ -6,7 +6,7 @@ class Board
 {
 	friend class Tile;
 public:
-	Board(int width=20, int height=15) : help(TRUE), cols(width), rows(height), tank_x(0), tank_y(0), level(0) {
+	Board(int width=20, int height=15) : help(true), cols(width), rows(height), tank_x(0), tank_y(0), level(0) {
 		LoadLevel();
 	};
 
@@ -34,7 +34,7 @@ public:
 			}
 		}
 	}
-	BOOL IsOver() {return died||defeated;}
+	bool IsOver() {return died||defeated;}
 
 	void AfterAnimate() {	//called to change things that should be changed only after redraw
 		sound.Play();	//play the queued sound
@@ -51,22 +51,22 @@ public:
 	}
 
 
-	BOOL IsYou(int x, int y) {
-		if (x==tank_x&&y==tank_y) return TRUE;
-		return FALSE;
+	bool IsYou(int x, int y) {
+		if (x==tank_x&&y==tank_y) return true;
+		return false;
 	}
 
-	BOOL CheckInRange(int x, int y) {
-		if (x>=COLUMNS||x<0) return FALSE;
-		if (y>=ROWS||y<0) return FALSE;
-		return TRUE;
+	bool CheckInRange(int x, int y) {
+		if (x>=COLUMNS||x<0) return false;
+		if (y>=ROWS||y<0) return false;
+		return true;
 	}
 
 
-	BOOL TankExists() {
-		BOOL ret;
-		if (!CheckInRange(tank_x, tank_y)) ret= FALSE;
-		else ret= ((array[tank_x][tank_y]->block)?TRUE:FALSE);
+	bool TankExists() {
+		bool ret;
+		if (!CheckInRange(tank_x, tank_y)) ret= false;
+		else ret= ((array[tank_x][tank_y]->block)?true:false);
 
 		if (!ret) YouDied();
 		return ret;
@@ -125,7 +125,7 @@ public:
 		TankExists();
 	}
 
-	BOOL Previous();
+	bool Previous();
 
 	static void RestoreHelpSurface();
 
@@ -134,7 +134,7 @@ private:
 	void MoveForCredits();
 
 	void Delay();
-	BOOL LoadLevel();
+	bool LoadLevel();
 	void FillDefault();
 	void CreateSquare(int x, int y);
 	char digit_to_char(int digit);
@@ -147,16 +147,16 @@ private:
 
 	void SetGroundTypes();
 	unsigned int Board::GetGroundBits(unsigned a[COLUMNS+2][ROWS+2], int x, int y);
-	BOOL swap(int x, int y, int x1, int y1);
+	bool swap(int x, int y, int x1, int y1);
 
-	void FillArray(BOOL credits=FALSE);
+	void FillArray(bool credits=false);
 	void ClearArray();
 	void CheckArray();
 
-	BOOL MoveUp();
-	BOOL MoveDown();
-	BOOL MoveRight();
-	BOOL MoveLeft();
+	bool MoveUp();
+	bool MoveDown();
+	bool MoveRight();
+	bool MoveLeft();
 
 	void DisplayHelp();
 	void SetHelpSurface();
@@ -166,10 +166,10 @@ private: //data
 
 	static LPDIRECTDRAWSURFACE help_surface;
 
-	BOOL help;
-	BOOL died;
-	BOOL defeated;
-	BOOL finished;
+	bool help;
+	bool died;
+	bool defeated;
+	bool finished;
 
 
 	Square* array[COLUMNS][ROWS];

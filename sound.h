@@ -8,7 +8,7 @@ class Sound
 public:
 	Sound() : sound(0), maxx(NOPLAY) {}
 	void Play();
-	BOOL PlayASound(const char* name, SoundPriority priority);
+	bool PlayASound(const char* name, SoundPriority priority);
 private:
 	SoundPriority maxx;
 	const char* sound;
