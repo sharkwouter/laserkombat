@@ -1,9 +1,6 @@
 //pix.h
 
 
-//#include <ddraw.h>
-//#include "draw.h"
-//#include "board.h"
 class Draw;
 class Board;
 class Sound;
@@ -30,4 +27,3 @@ long FAR PASCAL WindowProc( HWND hWnd, UINT message,WPARAM wParam, LPARAM lParam
 
 #define NAME "TANK"
 #define TITLE "Laser Kombat"
-

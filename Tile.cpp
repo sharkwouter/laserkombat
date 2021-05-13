@@ -29,14 +29,6 @@ bool GroundTile::changed=true;
 
 int Water::static_rotation=0;
 
-/*bool Tank::Kill() {
-	int x,y;
-	board.GetTankXY(x,y);
-	bool ret;
-	if ((ret=ATile::Kill()) && x==x_pos && y==y_pos) board.YouDied();
-	return ret;
-}*/
-
 void Tile::AddDead(Tile* tile) {
 	if(!tile) return;
 	Tile *current_tile=this;
@@ -101,15 +93,6 @@ bool Nuke::Kill() {
 	ATile::Kill();
 	int rr=0;
 	Blocks blocks=GetGrounds();
-	/*if (blocks.left&&blocks.left->GetBlockType()==GROUND) blocks.left->SetRotation((rr=blocks.left->GetRotation())>=19&&rr<100?rr+300:rand()%5+25+300);
-	if (blocks.above&&blocks.above->GetBlockType()==GROUND) blocks.above->SetRotation((rr=blocks.above->GetRotation())>=19&&rr<100?rr+300:rand()%5+25+300);
-	if (blocks.right&&blocks.right->GetBlockType()==GROUND) blocks.right->SetRotation((rr=blocks.right->GetRotation())>=19&&rr<100?rr+300:rand()%5+25+300);
-	if (blocks.below&&blocks.below->GetBlockType()==GROUND) blocks.below->SetRotation((rr=blocks.below->GetRotation())>=19&&rr<100?rr+300:rand()%5+25+300);
-	if (blocks.aboveleft&&blocks.aboveleft->GetBlockType()==GROUND) blocks.aboveleft->SetRotation((rr=blocks.aboveleft->GetRotation())>=19&&rr<100?rr+300:rand()%5+25+300);
-	if (blocks.aboveright&&blocks.aboveright->GetBlockType()==GROUND) blocks.aboveright->SetRotation((rr=blocks.aboveright->GetRotation())>=19&&rr<100?rr+300:rand()%5+25+300);
-	if (blocks.belowright&&blocks.belowright->GetBlockType()==GROUND) blocks.belowright->SetRotation((rr=blocks.belowright->GetRotation())>=19&&rr<100?rr+300:rand()%5+25+300);
-	if (blocks.belowleft&&blocks.belowleft->GetBlockType()==GROUND) blocks.belowleft->SetRotation((rr=blocks.belowleft->GetRotation())>=19&&rr<100?rr+300:rand()%5+25+300);
-	*/
 
 	if (blocks.left) blocks.left->SetRotation(333);
 	if (blocks.above) blocks.above->SetRotation(333);
@@ -423,11 +406,7 @@ void Tank::Draw() {
 }
 
 int Tile::BeamState() {
-	//int horiz=0;
-	//int verti=0;
 	if (HadFired) {
-		//horiz=(HadFiredRight||HadFiredLeft);
-		//verti=(HadFiredUp||HadFiredDown);
 		if (HadFiredRight&&!board.IsOver()) HadFiredRight--;
 		if (HadFiredDown&&!board.IsOver()) HadFiredDown--;
 		if (HadFiredLeft&&!board.IsOver()) HadFiredLeft--;
@@ -436,20 +415,14 @@ int Tile::BeamState() {
 		if (!Firing&&HadFired&&!board.IsOver()) HadFired--;
 	}
 	if (WasHit) {
-		//int direction=WasHitLeft?0:(WasHitTop?1:(WasHitRight?2:(WasHitBottom?3:4)));
 		if (WasHitLeft&&!board.IsOver()) WasHitLeft--;
 		if (WasHitTop&&!board.IsOver()) WasHitTop--;
 		if (WasHitRight&&!board.IsOver()) WasHitRight--;
 		if (WasHitBottom&&!board.IsOver()) WasHitBottom--;
 
 		if (WasHit&&!board.IsOver()) WasHit--;
-		//return direction+4;
 	}
 
-
-	//if (horiz) horiz=1;
-	//if (verti) verti=2;
-	//return horiz+verti;		//returns 0,1,2, or 3
 	return 0;
 }
 
@@ -457,5 +430,3 @@ int Mirror::BeamState() {
 	if (!Firing&&HadFired&&!board.IsOver()) HadFired--;
 	return 0;
 }
-
-

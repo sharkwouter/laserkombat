@@ -15,4 +15,3 @@ public:
 	Tile* block;
 	Tile* ground;
 };
-

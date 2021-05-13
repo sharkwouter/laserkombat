@@ -119,26 +119,6 @@ if( lpDDSDonut == NULL )
 	return false;
 }
 
-/*lpDDPal = DDLoadPalette(lpDD, "DONUT");
-if (!lpDDPal) return false;
-ddrval = lpDDSPrimary->SetPalette(lpDDPal);
-if (ddrval != DD_OK)
-	return false;
-ddrval = lpDDSDonut->SetPalette(lpDDPal);
-if (ddrval != DD_OK)
-	return false;
-ddrval = lpDDSBack->SetPalette(lpDDPal);
-if (ddrval != DD_OK)
-	return false;
-
-LPDIRECTDRAWPALETTE FAR * lplpDDPalette;
-
-lpDDSDonut->GetPalette(lplpDDPalette);
-ddrval = lpDDSPrimary->SetPalette(*lplpDDPalette);*/
-
-
-
-
 return true;
 
 }
@@ -193,19 +173,10 @@ void CUseDdraw::Update()
 static int number=0;
 static int old_x=0;
 static int old_y=0;
-//const static RECT  r={0, 0, 64, 64};
-//RECT r2={x,y,64,64};
 number++;
 number%=60;
 
 RECT  r={(number%10*64), (int(number/10)*64),(number%10*64+64),(int(number/10)*64+64)};
-//RECT r2={(x*64), (y*64),(x*64+64),(y*64+64)};
-
-//RECT r2={0,0,WOLD_MAX_X,WOLD_MAX_Y};
-//lpDDSBack->BltFast(0,0, lpDDSClouds, &r2, DDBLTFAST_WAIT);
-
-
-//lpDDSBack->BltFast(x,y, lpDDSClouds, &r2, DDBLTFAST_WAIT);
     RECT rc = {0,0, WOLD_MAX_X,WOLD_MAX_Y};
 
     DDBLTFX fx;

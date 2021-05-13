@@ -13,14 +13,7 @@ LPDIRECTDRAWSURFACE Board::help_surface=NULL;
 
 void Board::FillArray(bool credits)
 {
-
 	ClearArray();
-	/*if (!LoadLevel()) {
-		tank_x=tank_y=0;
-		FillDefault();
-		CheckArray();
-		return;
-	}*/
 	if (!credits) {
 		number_of_enemies=0;
 		died=defeated=finished=0;
@@ -38,10 +31,7 @@ void Board::FillArray(bool credits)
 	CheckArray();	//Make sure no empty spots
 	if (!credits) {
 		if (number_of_enemies<1) YouDefeated();
-		//See();			//items could be seen imediately
-		//TankExists();	//tank could die imediatly
 	}
-
 }
 
 void Board::CreateSquare(int x, int y)
@@ -90,7 +80,6 @@ void Board::CreateSquare(int x, int y)
 
 bool Board::Previous()
 {
-	//died=defeated=finished=tank_x=tank_y=origin_x=origin_y=0;
 	level-=2;
 	if (level<0) {level=1; return false;}
 	return LoadLevel();
@@ -104,8 +93,6 @@ bool Board::LoadLevel() {
 	number_to_string(filename+5, level, 3);
 
 	strcpy(filename+8, ".lvl");
-
-	//Exception::Output(filename);
 
 	FILE *file=fopen(filename, "rb");
 	if (file) {
@@ -126,7 +113,6 @@ bool Board::LoadLevel() {
 	}
 	else FillDefault();
 	return false;
-
 }
 
 void Board::number_to_string(char* string, int number, int digits) {
@@ -136,7 +122,6 @@ void Board::number_to_string(char* string, int number, int digits) {
 		number/=10;
 	}
 	*(string+i) = '\0';
-
 }
 
 char Board::digit_to_char(int digit) {
@@ -157,7 +142,6 @@ void Board::YouDied() {
 		}
 	}
 	died=true;
-
 }
 
 void Board::YouDefeated() {
@@ -173,7 +157,6 @@ void Board::YouDefeated() {
 		}
 	}
 	defeated=true;
-
 }
 
 void Board::Credits() {
@@ -185,7 +168,6 @@ void Board::Credits() {
 		}
 	}
 	finished=true;
-
 }
 
 void Board::ClearArray()
@@ -223,7 +205,6 @@ bool Board::swap(int x, int y, int x1, int y1)
 	if (array[x1][y1]->block) array[x1][y1]->block->SetXY(x1,y1);
 	if (array[x][y]->block) array[x][y]->block->SetXY(x,y);
 	if (x==tank_x && y==tank_y) tank_x=x1, tank_y=y1;
-	//array[x1][y1]->ground->ClearOver();
 	array[x1][y1]->ground->BlockOver(array[x1][y1]->block, array[x1][y1]->ground);
 	return true;
 }
@@ -287,11 +268,7 @@ void Board::SetGroundTypes()
 			if (array[x-1][y-1]->ground->GetBlockType()==GROUND) {
 				r=array[x-1][y-1]->ground->GetRotation();
 				
-				
-
-				//groundArray[x][y]=((r%100)==10?0:r);  //makes sunken not calculate as ground
 				groundArray[x][y]=r;
-
 			}
 			else groundArray[x][y]=0x0u;
 		}
@@ -338,8 +315,6 @@ void Board::FillDefault()
 	blockRotationArray[1][1]=2;
 	tank_x=tank_y=origin_x=origin_y=1;
 	FillArray(true);
-	//GroundTile::SetChanged(1);
-	//SetGroundTypes();
 	Credits();
 }
 
@@ -355,10 +330,6 @@ int Board::AnyKey(int key) {
 }
 
 void Board::MoveForCredits() {
-	/*static int new_x=tank_x;
-	static int new_y=tank_y;
-	new_x=tank_x;
-	new_y=tank_y;*/
 	static int chop=0;
 	chop++;
 	chop%=4;
@@ -368,13 +339,6 @@ void Board::MoveForCredits() {
 		else if (tank_y==1&& tank_x< COLUMNS-3) Right();
 		else if (tank_y==ROWS-2 && tank_x> 2) Left();
 	}
-/*
-	if (new_y>ROWS-2) new_y=ROWS-2;
-	if (new_y<1) new_y=1;
-	if (new_x>COLUMNS-3) new_x=COLUMNS-3;
-	if (new_x<2) new_x=2;
-
-	swap(tank_x, tank_y, new_x, new_y);*/
 }
 
 void Board::Delay()
@@ -387,7 +351,6 @@ void Board::Delay()
 		Sleep(sleep);
 	}
 	seconds_ago= current_time;
-
 }
 
 void Board::DisplayHelp()
@@ -407,5 +370,3 @@ void Board::RestoreHelpSurface()
 {
 	if (help_surface) help_surface->Restore();
 }
-
-

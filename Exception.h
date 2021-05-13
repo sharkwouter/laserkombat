@@ -1,5 +1,3 @@
-// Exception.h
-
 #ifndef EXCEPTION_H
 #define EXCEPTION_H
 
@@ -13,14 +11,10 @@ public:
 		fprintf( file, string);
 		fprintf( file, "\r\n");
 		fclose(file);
-
 	}
 	const char* what() {return text;}
 private:
 	const char* text;
 };
 
-
-
-
-#endif
+#endif // EXCEPTION_H

@@ -22,4 +22,3 @@ bool Sound::PlayASound(const char* name, SoundPriority priority)
 	}
 	return false;
 }
-

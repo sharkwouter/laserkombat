@@ -30,7 +30,6 @@ public:
 		for (int i=0; i<ROWS; i++) {
 			for (int j=0; j<COLUMNS; j++) {
 				if (array[j][i]&&array[j][i]->block) array[j][i]->block->PreSeeMe();
-				//if (array[j][i]&&array[j][i]->over) array[j][i]->over->PreSeeMe();
 			}
 		}
 	}
@@ -186,4 +185,3 @@ private: //data
 	int number_of_enemies;
 	float seconds_ago;
 };
-

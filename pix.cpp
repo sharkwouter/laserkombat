@@ -111,14 +111,6 @@ int PASCAL WinMain( HINSTANCE hInstance, HINSTANCE ,LPSTR , int nCmdShow)
 	gb_hInstance = hInstance;
 	gb_nCmdShow = nCmdShow;
 
-
-	//CUseDdraw *pUseDD = new CUseDdraw();
-	//if(!pUseDD) return 255;
-
-	//if(!pUseDD->Ok()) return 255;
-
-	//srand( (unsigned)time( NULL ) );
-
 	while( 1 ) {
 		if( PeekMessage( &msg, NULL, 0, 0, PM_NOREMOVE ) ) {
 			if( !GetMessage( &msg, NULL, 0, 0 ) ) {
@@ -129,19 +121,6 @@ int PASCAL WinMain( HINSTANCE hInstance, HINSTANCE ,LPSTR , int nCmdShow)
 		}
 
 		else if( gb_bActive ) {
-			// Get the pointer and do the drawing ...
-			//unsigned char *pBuff = pUseDD->LockBackBuf();
-			//if(!pBuff) 
-			//return 0;
-
-			//for(int i=0;i<WOLD_MAX_X*WOLD_MAX_Y;i++) {
-			//	*pBuff = (unsigned char)rand();
-			//	pBuff++; 
-			//}
-			//pUseDD->UnLockBackBuf();
-
-			// Free the pointer and update the screen ...
-			//Sleep(50);
 			board.Animate();
 		}
 		else WaitMessage();
@@ -150,7 +129,3 @@ int PASCAL WinMain( HINSTANCE hInstance, HINSTANCE ,LPSTR , int nCmdShow)
 
 	return 0;
 }
-
-
-
-

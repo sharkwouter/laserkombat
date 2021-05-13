@@ -2,7 +2,6 @@
 
 enum SoundPriority { NOPLAY,TICK, DONK, SCRAPE, SPLASH, POP, COLLAPSE, NUKE_SOUND };
 
-
 class Sound
 {
 public:

@@ -150,25 +150,18 @@ void Draw::BlitSquare(LPDIRECTDRAWSURFACE surface, int x, int y, int dx, int dy)
 	dy*=IMAGE_WIDTH;
 	RECT r={x,y,x+IMAGE_WIDTH, y+IMAGE_WIDTH};
 	lpDDSBack->BltFast(dx,dy,surface,&r, DDBLTFAST_SRCCOLORKEY|DDBLTFAST_WAIT);
-
-	//RECT rd={dx, dy, dx+IMAGE_WIDTH, dy+IMAGE_WIDTH};
-	//lpDDSBack->Blt(&rd, surface, &r, DDBLT_WAIT|DDBLT_ALPHASRC, NULL);
 }
 
 void Draw::Blit(LPDIRECTDRAWSURFACE surface, int x, int y, int dx, int dy)
 {
 	RECT r={x,y,x+IMAGE_WIDTH, y+IMAGE_WIDTH};
 	lpDDSBack->BltFast(dx,dy,surface,&r, DDBLTFAST_SRCCOLORKEY|DDBLTFAST_WAIT);
-	//Exception::Output("Blit called");
-
 }
 
 void Draw::BlitOther(LPDIRECTDRAWSURFACE surface, int x, int y, int dx, int dy, int w, int h)
 {
 	RECT r={x,y,x+w, y+h};
 	lpDDSBack->BltFast(dx,dy,surface,&r, DDBLTFAST_SRCCOLORKEY|DDBLTFAST_WAIT);
-	//Exception::Output("Blit called");
-
 }
 
 void Draw::BlackSquare(int dx, int dy)
@@ -202,7 +195,5 @@ void Draw::Flip()
 		}
 
 		break;
-
 	}
 }
-
