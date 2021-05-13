@@ -7,7 +7,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 
 set(SOURCES
     Board.cpp
-    ddutil.cpp
     Draw.cpp
     Exception.h
     pix.cpp
