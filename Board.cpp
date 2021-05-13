@@ -1,14 +1,13 @@
 // Board.cpp
 
-#include <ddraw.h>
 #include <time.h>
 #include "pix.h"
 #include "sound.h"
 #include "Exception.h"
-#include "draw.h"
+#include "Draw.h"
 #include "Tile.h"
-#include "square.h"
-#include "board.h"
+#include "Square.h"
+#include "Board.h"
 
 LPDIRECTDRAWSURFACE Board::help_surface=NULL;
 
