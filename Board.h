@@ -1,6 +1,7 @@
 // Board.h
 
-
+#include "Tile.h"
+#include "Square.h"
 
 class Board
 {
@@ -36,7 +37,7 @@ public:
 	bool IsOver() {return died||defeated;}
 
 	void AfterAnimate() {	//called to change things that should be changed only after redraw
-		sound.Play();	//play the queued sound
+		Sound.Play();	//play the queued sound
 		for (int i=0; i<ROWS; i++) {
 			for (int j=0; j<COLUMNS; j++) {
 				if (array[j][i]&&array[j][i]->over) array[j][i]->over->AfterAnimate();
@@ -163,7 +164,7 @@ private:
 
 private: //data
 
-	static LPDIRECTDRAWSURFACE help_surface;
+	static SDL_Surface *help_surface;
 
 	bool help;
 	bool died;

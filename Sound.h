@@ -1,4 +1,4 @@
-//sound.h
+// Sound.h
 
 enum SoundPriority { NOPLAY,TICK, DONK, SCRAPE, SPLASH, POP, COLLAPSE, NUKE_SOUND };
 

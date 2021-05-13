@@ -1,4 +1,5 @@
-// square.h
+#ifndef SQUARE_H
+#define SQUARE_H
 
 class Tile;
 
@@ -15,3 +16,5 @@ public:
 	Tile* block;
 	Tile* ground;
 };
+
+#endif // SQUARE_H

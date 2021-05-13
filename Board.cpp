@@ -2,15 +2,16 @@
 
 #include <string.h>
 #include <time.h>
-#include "pix.h"
-#include "sound.h"
+#include <SDL2/SDL.h>
+#include "constants.h"
+#include "Sound.h"
 #include "Exception.h"
 #include "Draw.h"
 #include "Tile.h"
 #include "Square.h"
 #include "Board.h"
 
-LPDIRECTDRAWSURFACE Board::help_surface=NULL;
+SDL_Surface *Board::help_surface=NULL;
 
 void Board::FillArray(bool credits)
 {
@@ -319,13 +320,13 @@ void Board::FillDefault()
 	Credits();
 }
 
-int Board::AnyKey(int key) {
-	if (key==VK_F1&&!help) {help=true; return 0;}
+int Board::AnyKey(SDL_Keycode key) {
+	if (key==SDLK_F1&&!help) {help=true; return 0;}
 	if (help) {help=false; return 0;}
-	if (key==VK_ESCAPE||key==VK_F12) return 666;
-	if (defeated&&key==VK_RETURN) {LoadLevel(); return 0;}
+	if (key==SDLK_ESCAPE||key==SDLK_F12) return 666;
+	if (defeated&&key==SDLK_RETURN) {LoadLevel(); return 0;}
 	else if (defeated) return 0;
-	else if (finished&&key!=VK_PRIOR) return 0;
+	else if (finished&&key!=SDLK_PAGEDOWN) return 0;
 
 	return 1;
 }
@@ -347,9 +348,9 @@ void Board::Delay()
 	float current_time=(float(clock()))/(float(CLOCKS_PER_SEC));
 	float difference=current_time-seconds_ago;
 	if (difference < .025) {
-		DWORD sleep = long((.025 - difference)*1000);
+		int sleep = long((.025 - difference)*1000);
 		if (sleep>25) sleep=25;
-		Sleep(sleep);
+		SDL_Delay(sleep);
 	}
 	seconds_ago= current_time;
 }

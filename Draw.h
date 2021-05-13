@@ -10,25 +10,26 @@ public:
 	~Draw() {
 		CleanUp();
 	}
-	LPDIRECTDRAWSURFACE GetSurface(const char* name);
-	void Blit(LPDIRECTDRAWSURFACE surface, int x, int y, int dx, int dy);
-	void BlitSquare(LPDIRECTDRAWSURFACE surface, int x, int y, int dx, int dy);
-	void BlitOther(LPDIRECTDRAWSURFACE surface, int x, int y, int dx, int dy, int w, int h);
+	SDL_Texture * GetSurface(const char* name);
+	void Blit(SDL_Texture * surface, int x, int y, int dx, int dy);
+	void BlitSquare(SDL_Texture * surface, int x, int y, int dx, int dy);
+	void BlitOther(SDL_Texture * surface, int x, int y, int dx, int dy, int w, int h);
 	void BlackSquare(int dx, int dy);
 	void Flip();
 private: //functions
 	void SetWindow();
 	void SetDDraw();
 	void CleanUp();
-	HRESULT Restore();
+	// HRESULT Restore();
 
 private: //members
-	LPDIRECTDRAW lpDD;
-	LPDIRECTDRAWSURFACE lpDDSPrimary;
-	LPDIRECTDRAWSURFACE lpDDSBack;
+	// LPDIRECTDRAW lpDD;
+	SDL_Surface * lpDDSPrimary;
+	SDL_Surface * lpDDSBack;
 
-	HWND hwnd;
+	// HWND hwnd;
 
-
+	SDL_Window * window;
+	SDL_Renderer * renderer;
 
 };

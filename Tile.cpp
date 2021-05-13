@@ -1,28 +1,29 @@
 //Tile.cpp
-#include "pix.h"
-#include "sound.h"
+#include <SDL2/SDL.h>
+#include "constants.h"
+#include "Sound.h"
 
 #include "Exception.h"
-#include "draw.h"
+#include "Draw.h"
 #include "Tile.h"
 
-#include "square.h"
-#include "board.h"
+#include "Square.h"
+#include "Board.h"
 
-LPDIRECTDRAWSURFACE Tile::surface=NULL;
-LPDIRECTDRAWSURFACE Tank::surface=draw.GetSurface("TANK");
-LPDIRECTDRAWSURFACE GroundTile::surface=draw.GetSurface("GROUND");
-LPDIRECTDRAWSURFACE RedBlock::surface=draw.GetSurface("REDBLOCK");
-LPDIRECTDRAWSURFACE Water::surface=draw.GetSurface("WATER");
-LPDIRECTDRAWSURFACE Static::surface=draw.GetSurface("STATIC");
-LPDIRECTDRAWSURFACE Mirror::surface=draw.GetSurface("MIRROR");
-LPDIRECTDRAWSURFACE Tee::surface=draw.GetSurface("TEE");
-LPDIRECTDRAWSURFACE Nuke::surface=draw.GetSurface("NUKE");
-LPDIRECTDRAWSURFACE Rusty::surface=draw.GetSurface("RUSTY");
-LPDIRECTDRAWSURFACE Message::surface=draw.GetSurface("MESSAGE");
-LPDIRECTDRAWSURFACE BarsVert::surface=draw.GetSurface("BARS");
+SDL_Texture * Tile::surface=NULL;
+SDL_Texture * Tank::surface=draw.GetSurface("TANK");
+SDL_Texture * GroundTile::surface=draw.GetSurface("GROUND");
+SDL_Texture * RedBlock::surface=draw.GetSurface("REDBLOCK");
+SDL_Texture * Water::surface=draw.GetSurface("WATER");
+SDL_Texture * Static::surface=draw.GetSurface("STATIC");
+SDL_Texture * Mirror::surface=draw.GetSurface("MIRROR");
+SDL_Texture * Tee::surface=draw.GetSurface("TEE");
+SDL_Texture * Nuke::surface=draw.GetSurface("NUKE");
+SDL_Texture * Rusty::surface=draw.GetSurface("RUSTY");
+SDL_Texture * Message::surface=draw.GetSurface("MESSAGE");
+SDL_Texture * BarsVert::surface=draw.GetSurface("BARS");
 
-LPDIRECTDRAWSURFACE Tile::beamSurface=NULL;
+SDL_Texture * Tile::beamSurface=nullptr;
 
 bool GroundTile::changed=true;
 
@@ -401,6 +402,7 @@ void Tank::Draw() {
 		if (rotate==0) RotateRight();	//make tanks rotate randomly
 		else if (rotate==1) RotateLeft();
 	}
+	
 	if (surface) draw.BlitSquare(surface, rotation%4 ,rotation/4, x_pos, y_pos); 
 }
 

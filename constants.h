@@ -1,5 +1,5 @@
-//pix.h
-
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
 
 class Draw;
 class Board;
@@ -16,14 +16,16 @@ class Sound;
 
 #define COLOR_DEPTH 16
 
-extern HINSTANCE gb_hInstance;
+// extern HINSTANCE gb_hInstance;
 extern bool gb_bActive;
 extern int gb_nCmdShow;
 extern Draw draw;
 extern Board board;
 extern Sound sound;
 
-long FAR PASCAL WindowProc( HWND hWnd, UINT message,WPARAM wParam, LPARAM lParam );
+// long FAR PASCAL WindowProc( HWND hWnd, UINT message,WPARAM wParam, LPARAM lParam );
 
 #define NAME "TANK"
 #define TITLE "Laser Kombat"
+
+#endif // CONSTANTS_H

@@ -1,7 +1,9 @@
 // Draw.cpp
 
-#include "pix.h"
-#include "sound.h"
+#include <SDL2/SDL.h>
+
+#include "constants.h"
+#include "Sound.h"
 
 #include "Exception.h"
 #include "Draw.h"
@@ -12,154 +14,66 @@
 
 void Draw::SetWindow()
 {
-	WNDCLASS wc;
+    window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WOLD_MAX_X, WOLD_MAX_Y, SDL_WINDOW_SHOWN);
+    if (window == nullptr) {
+        printf("Couldn't create window: %s", SDL_GetError());
+        exit(2);
+    }
 
-	// Create the Window class and the Window ...
-	wc.style = CS_HREDRAW | CS_VREDRAW;
-	wc.lpfnWndProc = WindowProc;
-	wc.cbClsExtra = 0;
-	wc.cbWndExtra = 0;
-	wc.hInstance = gb_hInstance;
-	wc.hIcon = LoadIcon( gb_hInstance, "MAINICON" );
-	wc.hCursor = LoadCursor( NULL, IDC_ARROW );
-	wc.hbrBackground = GetStockObject(BLACK_BRUSH);
-	wc.lpszMenuName = NAME;
-	wc.lpszClassName = NAME;
-	if(!RegisterClass( &wc ))
-		throw Exception("Failed to register window class.");
-
-	DWORD exStyle = 0;
-	DWORD style = WS_POPUP;
-
-	hwnd = CreateWindowEx(exStyle,NAME,TITLE,
-	style,0,0,
-	GetSystemMetrics(SM_CXSCREEN),
-	GetSystemMetrics(SM_CYSCREEN),
-	NULL,NULL, gb_hInstance,NULL );
-
-	if( !hwnd ) throw Exception("Window creation failed.");
-
-	ShowWindow( hwnd, gb_nCmdShow );
-	UpdateWindow( hwnd );
-	SetFocus( hwnd );
-
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (renderer == nullptr) {
+        printf("Couldn't create renderer: %s", SDL_GetError());
+        exit(3);
+    }
 }
 
 void Draw::SetDDraw()
 {
-	DDSURFACEDESC ddsd;
-	DDSCAPS ddscaps;
-	HRESULT ddrval;
-
-	// Create DD Object 
-	ddrval = DirectDrawCreate( NULL, &lpDD, NULL );
-	if( ddrval != DD_OK )
-	throw Exception("DirectDrawCreate failed.");
-
-	ddrval = lpDD->SetCooperativeLevel( hwnd, /*DDSCL_ALLOWMODEX |*/ DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN);
-	if( ddrval != DD_OK )
-	throw Exception("SetCooperativeLevel failed.");
-
-	ddrval = lpDD->SetDisplayMode( WOLD_MAX_X,WOLD_MAX_Y, COLOR_DEPTH);
-
-	if(ddrval != DD_OK)
-	throw Exception("SetDisplayMode failed.");
-
-	// Create the primary surface with a back buffer 
-	ddsd.dwSize = sizeof( ddsd );
-	ddsd.dwFlags = DDSD_CAPS | DDSD_BACKBUFFERCOUNT;
-	ddsd.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE |
-	DDSCAPS_FLIP |
-	DDSCAPS_COMPLEX;
-	ddsd.dwBackBufferCount = 1;
-	ddrval = lpDD->CreateSurface( &ddsd, &lpDDSPrimary, NULL );
-	if( ddrval != DD_OK )
-	throw Exception("Could not create primary surface.");
-
-	ddscaps.dwCaps = DDSCAPS_BACKBUFFER;
-	ddrval = lpDDSPrimary->GetAttachedSurface(&ddscaps, &lpDDSBack);
-	if( ddrval != DD_OK )
-	throw Exception("Could not attach back surface.");
-	/// fill in black
-	RECT rc = {0,0, WOLD_MAX_X,WOLD_MAX_Y};
-
-    DDBLTFX fx;
-    memset(&fx, 0, sizeof(fx));
-    fx.dwSize = sizeof(DDBLTFX);
-    fx.dwFillColor = RGB(0,0,0);
-    lpDDSBack->Blt(&rc, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fx);
-
+    if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS) < 0){
+        printf("Couldn't init SDL: %s", SDL_GetError());
+        exit(1);
+    }
 }
 
 void Draw::CleanUp()
 {
-	if( lpDD != NULL )
-	{
-		if( lpDDSPrimary != NULL )
-		{
-			lpDDSPrimary->Release();
-			lpDDSPrimary = NULL;
-		}
 
-		lpDD->Release();
-		lpDD = NULL;
-	}
 }
 
-HRESULT Draw::Restore()
+SDL_Texture * Draw::GetSurface(const char* name)
 {
-	HRESULT ddrval;
-	ddrval = lpDDSPrimary->Restore();
-	GroundTile::RestoreSurface();
-	RedBlock::RestoreSurface();
-	Water::RestoreSurface();
-	Static::RestoreSurface();
-	Mirror::RestoreSurface();
-	Tee::RestoreSurface();
-	Nuke::RestoreSurface();
-	Rusty::RestoreSurface();
-	Message::RestoreSurface();
-	Tank::RestoreSurface();
-	BarsVert::RestoreSurface();
-
-	Tile::RestoreBeamSurface();
-	Board::RestoreHelpSurface();
-	return ddrval;
-}
-
-LPDIRECTDRAWSURFACE Draw::GetSurface(const char* name)
-{
-	HRESULT ddrval;
-
-	LPDIRECTDRAWSURFACE surface = DDLoadBitmap(lpDD, name, 0, 0);
-	if( surface == NULL )
+	SDL_Surface * surface = SDL_LoadBMP(name);
+	if( surface == nullptr )
 		throw Exception("Error loading bitmap.");
-	ddrval = DDSetColorKey(surface, RGB(0,0,0));
-	if (ddrval != DD_OK)
-		throw Exception("Error setting color key for surface.");
-	return surface;
-
+	SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer, surface);
+    if (texture == NULL) {
+        SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Unable to load texture for image %s! SDL Error: %s\n", name, SDL_GetError());
+        exit(4);
+    }
+    SDL_FreeSurface(surface);
+	return texture;
 }
-void Draw::BlitSquare(LPDIRECTDRAWSURFACE surface, int x, int y, int dx, int dy)
+void Draw::BlitSquare(SDL_Texture * surface, int x, int y, int dx, int dy)
 {
 	x*=IMAGE_WIDTH;
 	y*=IMAGE_WIDTH;
 	dx*=IMAGE_WIDTH;
 	dy*=IMAGE_WIDTH;
-	RECT r={x,y,x+IMAGE_WIDTH, y+IMAGE_WIDTH};
-	lpDDSBack->BltFast(dx,dy,surface,&r, DDBLTFAST_SRCCOLORKEY|DDBLTFAST_WAIT);
+	SDL_Rect sr={x,y,x+IMAGE_WIDTH, y+IMAGE_WIDTH};
+	SDL_Rect r={dx,dy,dx+IMAGE_WIDTH, dy+IMAGE_WIDTH};
+    SDL_RenderCopy(renderer, surface, &sr, &r);
 }
 
-void Draw::Blit(LPDIRECTDRAWSURFACE surface, int x, int y, int dx, int dy)
+void Draw::Blit(SDL_Texture * surface, int x, int y, int dx, int dy)
 {
-	RECT r={x,y,x+IMAGE_WIDTH, y+IMAGE_WIDTH};
-	lpDDSBack->BltFast(dx,dy,surface,&r, DDBLTFAST_SRCCOLORKEY|DDBLTFAST_WAIT);
+	SDL_Rect r={x,y,x+IMAGE_WIDTH, y+IMAGE_WIDTH};
+    SDL_RenderCopy(renderer, surface, NULL, &r);
 }
 
-void Draw::BlitOther(LPDIRECTDRAWSURFACE surface, int x, int y, int dx, int dy, int w, int h)
+void Draw::BlitOther(SDL_Texture * surface, int x, int y, int dx, int dy, int w, int h)
 {
-	RECT r={x,y,x+w, y+h};
-	lpDDSBack->BltFast(dx,dy,surface,&r, DDBLTFAST_SRCCOLORKEY|DDBLTFAST_WAIT);
+	SDL_Rect r={x,y,x+w, y+h};
+    SDL_RenderCopy(renderer, surface, NULL, &r);
 }
 
 void Draw::BlackSquare(int dx, int dy)
@@ -167,31 +81,14 @@ void Draw::BlackSquare(int dx, int dy)
 	dx*=IMAGE_WIDTH;
 	dy*=IMAGE_WIDTH;
 
-	RECT rc = {dx, dy, dx+IMAGE_WIDTH, dy+IMAGE_WIDTH};
+	SDL_Rect rc = {dx, dy, dx+IMAGE_WIDTH, dy+IMAGE_WIDTH};
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
-    DDBLTFX fx;
-    memset(&fx, 0, sizeof(fx));
-    fx.dwSize = sizeof(DDBLTFX);
-    fx.dwFillColor = RGB(0,0,0);
-    lpDDSBack->Blt(&rc, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fx);
-
-
+	SDL_RenderFillRect(renderer, &rc);
 }
 
 
 void Draw::Flip()
 {
-	while( 1 )
-	{
-		HRESULT ddrval = lpDDSPrimary->Flip( NULL, DDFLIP_WAIT );
-		if( ddrval == DD_OK ) break;
-
-		if( ddrval == DDERR_SURFACELOST ) {
-			ddrval = Restore();
-			if( ddrval != DD_OK )
-			break;
-		}
-
-		break;
-	}
+	SDL_RenderClear(renderer);
 }
