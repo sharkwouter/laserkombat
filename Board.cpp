@@ -1,5 +1,6 @@
 // Board.cpp
 
+#include <string.h>
 #include <time.h>
 #include "pix.h"
 #include "sound.h"
@@ -257,9 +258,9 @@ void Board::SetGroundTypes()
 	if (!GroundTile::SetChanged(0)) return;
 	static unsigned int groundArray[COLUMNS+2][ROWS+2];
 	for (int i=0; i<COLUMNS+2; i++) groundArray[i][0]=1;
-	for (i    =0; i<COLUMNS+2; i++) groundArray[i][ROWS+1]=1;
-	for (i    =0; i<ROWS+2   ; i++) groundArray[COLUMNS+1][i]=1;
-	for (i    =0; i<ROWS+2   ; i++) groundArray[0][i]=1;
+	for (int i=0; i<COLUMNS+2; i++) groundArray[i][ROWS+1]=1;
+	for (int i=0; i<ROWS+2   ; i++) groundArray[COLUMNS+1][i]=1;
+	for (int i=0; i<ROWS+2   ; i++) groundArray[0][i]=1;
 
 	int r;
 
@@ -273,7 +274,7 @@ void Board::SetGroundTypes()
 			else groundArray[x][y]=0x0u;
 		}
 	}
-	for (y=1; y<ROWS+1; y++) {
+	for (int y=1; y<ROWS+1; y++) {
 		for (int x=1; x<COLUMNS+1; x++) {
 			r= groundArray[x][y]%100;
 			if (r>=30&&r<=33) array[x-1][y-1]->ground->SetOtherBlocks(GetGroundBits(groundArray, x, y));
@@ -296,7 +297,7 @@ unsigned int Board::GetGroundBits(unsigned int a[COLUMNS+2][ROWS+2], int x, int 
 	unsigned int allbits = 0x0u;
 	for (unsigned int i=0; i<8; i++)
 		allbits |= (bits[i]<<i);
-	return unsigned int(allbits);
+	return allbits;
 }
 
 void Board::FillDefault()
