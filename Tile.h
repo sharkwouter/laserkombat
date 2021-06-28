@@ -1,17 +1,11 @@
 #ifndef TILE_H
 #define TILE_H
 
-#include "Sound.h"
-
-enum BlockType{NONE, TANK, WATER, GROUND, REDBLOCK,
-	ENEMYTANK, NUKE, ENEMYNUKE, MIRROR, TEE, STATIC,
-	RUSTYREDBLOCK, RUSTY, BARSVERT, BARSHORIZ, BARSCROSS,
-	WHITEBLOCK, TRIANGLE, RUSTYTRIANGLE, RUSTYBARSVERT,
-	RUSTYBARSHORIZ, RUSTYWHITEBLOCK};
-
+#include "constants.h"
+#include "BlockType.h"
+#include "Draw.h"
 
 class Tile;
-class Draw;
 
 struct Blocks {
 	Tile* right;
@@ -24,13 +18,11 @@ struct Blocks {
 	Tile* aboveleft;
 };
 
-//#include "pix.h"
-
 class Tile
 {
 	friend class ATile;
 public:
-	Tile(int x, int y, int r=0) : x_pos(x), y_pos(y), deadBlock(0), willKillFlag(0) {
+	Tile(int x, int y, int r=0, Draw draw) : x_pos(x), y_pos(y), deadBlock(0), willKillFlag(0), draw(draw) {
 		if (!beamSurface) SetBeamSurface();
 
 		SetRotation(r);
@@ -58,7 +50,7 @@ public:
 	virtual bool WillKill(int flag=2);
 
 	virtual BlockType GetBlockType() {
-		return NONE;
+		return BlockType::NONE;
 	}
 
 	virtual bool BlockOver(Tile* &block, Tile* &ground)
@@ -171,6 +163,7 @@ protected: //functions
 		if (y>=ROWS||y<0) return false;
 		return true;
 	}
+	Draw draw;
 	Blocks GetBlocks();
 	Blocks GetGrounds();
 	Tile*& GetGround();
@@ -267,7 +260,7 @@ public:
 	virtual bool LookBottom(BlockType type, int dist) {SeeMeUp(type, ++dist); return true;}
 
 	virtual BlockType GetBlockType() {
-		return GROUND;
+		return BlockType::GROUND;
 	}
 
 	static bool SetChanged(bool change) {
@@ -365,12 +358,12 @@ public:
 	}
 
 	virtual bool PreSeeMe() {
-		return SeeMe(TANK);
+		return SeeMe(BlockType::TANK);
 	}
 
 	virtual BlockType GetBlockType()
 	{
-		return TANK;
+		return BlockType::TANK;
 	}
 
 	virtual bool ShootUp() {
@@ -393,10 +386,10 @@ public:
 		return ret;
 
 	}
-	virtual bool HitLeft() {ATile::HitLeft(); sound.PlayASound("pop.wav", POP); return WillKill();}
-	virtual bool HitTop() {ATile::HitTop(); sound.PlayASound("pop.wav", POP); return WillKill();}
-	virtual bool HitRight() {ATile::HitRight(); sound.PlayASound("pop.wav", POP); return WillKill();}
-	virtual bool HitBottom() {ATile::HitBottom(); sound.PlayASound("pop.wav", POP); return WillKill();}
+	virtual bool HitLeft() {ATile::HitLeft(); Sound::PlayASound("pop.wav", POP); return WillKill();}
+	virtual bool HitTop() {ATile::HitTop(); Sound::PlayASound("pop.wav", POP); return WillKill();}
+	virtual bool HitRight() {ATile::HitRight(); Sound::PlayASound("pop.wav", POP); return WillKill();}
+	virtual bool HitBottom() {ATile::HitBottom(); Sound::PlayASound("pop.wav", POP); return WillKill();}
 
 	virtual bool RotateLeft() {
 		int row=rotation/4;
@@ -459,7 +452,7 @@ public:
 
 	}
 	virtual BlockType GetBlockType() {
-		return REDBLOCK;
+		return BlockType::REDBLOCK;
 	}
 	virtual bool SetRotation(int r) {
 		rotation=0;
@@ -495,7 +488,7 @@ public:
 
 	}
 	virtual BlockType GetBlockType() {
-		return WHITEBLOCK;
+		return BlockType::WHITEBLOCK;
 	}
 	virtual bool SetRotation(int r) {
 		rotation=2;
@@ -507,10 +500,10 @@ protected: //functions
 	virtual void WhiteBlock::Draw() {
 		if (surface) draw.BlitSquare(surface, 2 ,0, x_pos, y_pos); 
 	}
-	virtual bool MoveUp() {sound.PlayASound(NULL, SCRAPE); return Tile::MoveUp();}
-	virtual bool MoveDown() {sound.PlayASound(NULL, SCRAPE); return Tile::MoveDown();}
-	virtual bool MoveLeft() {sound.PlayASound(NULL, SCRAPE); return Tile::MoveLeft();}
-	virtual bool MoveRight() {sound.PlayASound(NULL, SCRAPE); return Tile::MoveRight();}
+	virtual bool MoveUp() {Sound::PlayASound(NULL, SCRAPE); return Tile::MoveUp();}
+	virtual bool MoveDown() {Sound::PlayASound(NULL, SCRAPE); return Tile::MoveDown();}
+	virtual bool MoveLeft() {Sound::PlayASound(NULL, SCRAPE); return Tile::MoveLeft();}
+	virtual bool MoveRight() {Sound::PlayASound(NULL, SCRAPE); return Tile::MoveRight();}
 protected: //members
 private: // functions
 	virtual void SetSurface() {
@@ -535,7 +528,7 @@ public:
 		return true;
 	}
 	virtual BlockType GetBlockType() {
-		return WATER;
+		return BlockType::WATER;
 	}
 
 	static void IncStaticRotation() {
@@ -604,10 +597,10 @@ protected: //functions
 	virtual bool PushTop() {return false;}
 	virtual bool PushBottom() {return false;}
 
-	virtual bool HitLeft() {sound.PlayASound("donk.wav", DONK); return span=1;}
-	virtual bool HitRight() {sound.PlayASound("donk.wav", DONK); return span=1;}
-	virtual bool HitTop() {sound.PlayASound("donk.wav", DONK); return span=1;}
-	virtual bool HitBottom() {sound.PlayASound("donk.wav", DONK); return span=1;}
+	virtual bool HitLeft() {Sound::PlayASound("donk.wav", DONK); return span=1;}
+	virtual bool HitRight() {Sound::PlayASound("donk.wav", DONK); return span=1;}
+	virtual bool HitTop() {Sound::PlayASound("donk.wav", DONK); return span=1;}
+	virtual bool HitBottom() {Sound::PlayASound("donk.wav", DONK); return span=1;}
 
 
 
@@ -928,7 +921,7 @@ public:
 	}
 
 	virtual BlockType GetBlockType() {
-		return ENEMYTANK;
+		return BlockType::ENEMYTANK;
 	}
 
 	virtual bool LookLeft(BlockType type, int dist) {ShootLeft(); return true;}
@@ -1002,10 +995,10 @@ public:
 
 	}
 
-	virtual bool HitLeft() {ATile::HitLeft(); sound.PlayASound("collapse.wav", COLLAPSE); return Kill();}
-	virtual bool HitTop() {ATile::HitTop(); sound.PlayASound("collapse.wav", COLLAPSE); return Kill();}
-	virtual bool HitRight() {ATile::HitRight(); sound.PlayASound("collapse.wav", COLLAPSE); return Kill();}
-	virtual bool HitBottom() {ATile::HitBottom(); sound.PlayASound("collapse.wav", COLLAPSE); return Kill();}
+	virtual bool HitLeft() {ATile::HitLeft(); Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();}
+	virtual bool HitTop() {ATile::HitTop(); Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();}
+	virtual bool HitRight() {ATile::HitRight(); Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();}
+	virtual bool HitBottom() {ATile::HitBottom(); Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();}
 protected: //functions
 	virtual void Rusty::Draw() {
 		if (rotation>=5) {
@@ -1042,16 +1035,16 @@ public:
 
 	}
 	virtual BlockType GetBlockType() {
-		return REDBLOCK;
+		return BlockType::REDBLOCK;
 	}
 	virtual bool SetRotation(int r) {
 		rotation=1;
 		return false;
 	}
-	virtual bool HitLeft() {ATile::HitLeft(); sound.PlayASound("pop.wav", POP); return Kill();}
-	virtual bool HitTop() {ATile::HitTop(); sound.PlayASound("pop.wav", POP); return Kill();}
-	virtual bool HitRight() {ATile::HitRight(); sound.PlayASound("pop.wav", POP); return Kill();}
-	virtual bool HitBottom() {ATile::HitBottom(); sound.PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitLeft() {ATile::HitLeft(); Sound::PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitTop() {ATile::HitTop(); Sound::PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitRight() {ATile::HitRight(); Sound::PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitBottom() {ATile::HitBottom(); Sound::PlayASound("pop.wav", POP); return Kill();}
 
 protected: //functions
 	virtual void RustyRedBlock::Draw() {
@@ -1263,10 +1256,10 @@ public:
 	virtual bool PushTop() {return false;}
 	virtual bool PushBottom() {return false;}
 
-	virtual bool HitLeft() {sound.PlayASound("donk.wav", DONK); return Mirror::HitLeft();}
-	virtual bool HitRight() {sound.PlayASound("donk.wav", DONK); return Mirror::HitRight();}
-	virtual bool HitTop() {sound.PlayASound("donk.wav", DONK); return Mirror::HitTop();}
-	virtual bool HitBottom() {sound.PlayASound("donk.wav", DONK); return Mirror::HitBottom();}
+	virtual bool HitLeft() {Sound::PlayASound("donk.wav", DONK); return Mirror::HitLeft();}
+	virtual bool HitRight() {Sound::PlayASound("donk.wav", DONK); return Mirror::HitRight();}
+	virtual bool HitTop() {Sound::PlayASound("donk.wav", DONK); return Mirror::HitTop();}
+	virtual bool HitBottom() {Sound::PlayASound("donk.wav", DONK); return Mirror::HitBottom();}
 
 protected: //functions
 	virtual void Triangle::Draw() {
@@ -1296,19 +1289,19 @@ public:
 
 	virtual bool HitLeft() {
 		Triangle::HitLeft();
-		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 	virtual bool HitRight() {
 		Triangle::HitRight();
-		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 	virtual bool HitTop() {
 		Triangle::HitTop();
-		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 	virtual bool HitBottom() {
 		Triangle::HitBottom();
-		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 
 protected: //functions
@@ -1340,11 +1333,11 @@ public:
 
 	virtual bool HitLeft() {
 		ATile::HitLeft();
-		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 	virtual bool HitRight() {
 		ATile::HitRight();
-		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 
 protected: //functions
@@ -1377,11 +1370,11 @@ public:
 
 	virtual bool HitTop() {
 		ATile::HitTop();
-		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 	virtual bool HitBottom() {
 		ATile::HitBottom();
-		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 
 protected: //functions
@@ -1411,10 +1404,10 @@ public:
 
 	}
 	
-	virtual bool HitLeft() {ATile::HitLeft(); sound.PlayASound("pop.wav", POP); return Kill();}
-	virtual bool HitTop() {ATile::HitTop(); sound.PlayASound("pop.wav", POP); return Kill();}
-	virtual bool HitRight() {ATile::HitRight(); sound.PlayASound("pop.wav", POP); return Kill();}
-	virtual bool HitBottom() {ATile::HitBottom(); sound.PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitLeft() {ATile::HitLeft(); Sound::PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitTop() {ATile::HitTop(); Sound::PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitRight() {ATile::HitRight(); Sound::PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitBottom() {ATile::HitBottom(); Sound::PlayASound("pop.wav", POP); return Kill();}
 
 protected: //functions
 	virtual void RustyWhiteBlock::Draw() {

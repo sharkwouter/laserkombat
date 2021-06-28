@@ -1,16 +1,13 @@
 //Tile.cpp
 #include <SDL2/SDL.h>
-#include "constants.h"
-#include "Sound.h"
-
-#include "Exception.h"
-#include "Draw.h"
 #include "Tile.h"
 
-#include "Square.h"
-#include "Board.h"
+#include "Exception.h"
+#include "constants.h"
+#include "Sound.h"
+#include "BlockType.h"
 
-SDL_Texture * Tile::surface=NULL;
+SDL_Texture * Tile::surface=nullptr;
 SDL_Texture * Tank::surface=draw.GetSurface("TANK");
 SDL_Texture * GroundTile::surface=draw.GetSurface("GROUND");
 SDL_Texture * RedBlock::surface=draw.GetSurface("REDBLOCK");
@@ -32,7 +29,7 @@ int Water::static_rotation=0;
 void Tile::AddDead(Tile* tile) {
 	if(!tile) return;
 	Tile *current_tile=this;
-	if (tile->GetBlockType()==ENEMYTANK) board.DecreaseEnemyCount();
+	if (tile->GetBlockType()==BlockType::ENEMYTANK) board.DecreaseEnemyCount();
 	while (current_tile->deadBlock) {
 		current_tile=current_tile->deadBlock;
 	}
@@ -123,7 +120,7 @@ bool Nuke::Kill() {
 	}
 
 	GroundTile::SetChanged(true);	//flag for changes to update images draw
-	sound.PlayASound("nuke.wav", NUKE_SOUND);
+	sound.PlayASound("nuke.wav", SoundPriority::NUKE_SOUND);
 	return true;
 }
 
@@ -248,7 +245,7 @@ bool Tile::MoveUp() {
 	Tile* block; TopBlock(block);
 	if (block) block->PushBottom();
 	bool ret = board.swap(x_pos, y_pos, x_pos, y_pos-1);
-	if (ret&&GetBlockType()!=TANK) sound.PlayASound("scrape.wav", SCRAPE);
+	if (ret&&GetBlockType()!=TANK) sound.PlayASound("scrape.wav", SoundPriority::SCRAPE);
 	return moved=ret;
 }
 bool Tile::MoveDown() {
@@ -256,7 +253,7 @@ bool Tile::MoveDown() {
 	Tile* block; BottomBlock(block);
 	if (block) block->PushTop();
 	bool ret =board.swap(x_pos, y_pos, x_pos, y_pos+1);
-	if (ret&&GetBlockType()!=TANK) sound.PlayASound("scrape.wav", SCRAPE);
+	if (ret&&GetBlockType()!=TANK) sound.PlayASound("scrape.wav", SoundPriority::SCRAPE);
 	return moved=ret;
 }
 bool Tile::MoveRight() {
@@ -264,7 +261,7 @@ bool Tile::MoveRight() {
 	Tile* block; RightBlock(block);
 	if (block) block->PushLeft();
 	bool ret =board.swap(x_pos, y_pos, x_pos+1, y_pos);
-	if (ret&&GetBlockType()!=TANK) sound.PlayASound("scrape.wav", SCRAPE);
+	if (ret&&GetBlockType()!=TANK) sound.PlayASound("scrape.wav", SoundPriority::SCRAPE);
 	return moved=ret;
 }
 bool Tile::MoveLeft() {
@@ -272,7 +269,7 @@ bool Tile::MoveLeft() {
 	Tile* block; LeftBlock(block);
 	if (block) block->PushRight();
 	bool ret =board.swap(x_pos, y_pos, x_pos-1, y_pos);
-	if (ret&&GetBlockType()!=TANK) sound.PlayASound("scrape.wav", SCRAPE);
+	if (ret&&GetBlockType()!=TANK) sound.PlayASound("scrape.wav", SoundPriority::SCRAPE);
 	return moved=ret;
 }
 
@@ -292,7 +289,7 @@ bool Water::BlockOver(Tile* &block, Tile* &ground)
 	}
 	block->WillKill(1); // 1 for drown
 	GroundTile::SetChanged(1);
-	sound.PlayASound("splash.wav", SPLASH);
+	sound.PlayASound("splash.wav", SoundPriority::SPLASH);
 	return true;
 }
 

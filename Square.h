@@ -1,17 +1,16 @@
 #ifndef SQUARE_H
 #define SQUARE_H
 
-class Tile;
+#include "Tile.h"
 
-class Square
-{
+class Square {
+
 public:
-	Square(Tile* b, Tile* g) : block(b), ground(g), over(0) {}
-	~Square() {
-		if (block) { delete block; block=NULL; }
-		if (ground) { delete ground; ground=NULL; }
-		if (over) { delete over; over=NULL; }
-	}
+	Square(Tile* b, Tile* g);
+	~Square();
+
+	static Square CreateSquare(int x, int y);
+
 	Tile* over;
 	Tile* block;
 	Tile* ground;

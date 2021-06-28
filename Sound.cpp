@@ -1,7 +1,6 @@
 // sound.cpp
 #include <time.h>
-#include "constants.h"
-#include "sound.h"
+#include "Sound.h"
 
 void Sound::Play()
 {

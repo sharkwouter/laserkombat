@@ -1,4 +1,5 @@
-// Draw.h
+#ifndef DRAW_H
+#define DRAW_H
 
 class Draw
 {
@@ -33,3 +34,5 @@ private: //members
 	SDL_Renderer * renderer;
 
 };
+
+#endif // DRAW_H

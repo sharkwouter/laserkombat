@@ -3,15 +3,13 @@
 #include <string.h>
 #include <time.h>
 #include <SDL2/SDL.h>
-#include "constants.h"
-#include "Sound.h"
-#include "Exception.h"
-#include "Draw.h"
-#include "Tile.h"
-#include "Square.h"
 #include "Board.h"
+#include "Exception.h"
+#include "BlockType.h"
+#include "Sound.h"
+#include "Square.h"
 
-SDL_Surface *Board::help_surface=NULL;
+SDL_Texture *Board::help_surface=NULL;
 
 void Board::FillArray(bool credits)
 {
@@ -46,8 +44,8 @@ void Board::CreateSquare(int x, int y)
 
 	switch(type) {
 	default:
-	case GROUND:		ground=	new GroundTile(x, y, r); break;
-	case WATER:			ground=	new Water(x, y); break;
+	case BlockType::GROUND:		ground=	new GroundTile(x, y, r); break;
+	case BlockType::WATER:			ground=	new Water(x, y); break;
 	}
 
 	type= blockTypeArray[x][y];
@@ -55,25 +53,25 @@ void Board::CreateSquare(int x, int y)
 
 	switch(type) {
 	default:			block= NULL; break;
-	case REDBLOCK:		block=	new RedBlock(x, y, r); break;
-	case RUSTYREDBLOCK:	block=	new RustyRedBlock(x, y, r); break;
-	case WHITEBLOCK:	block=	new WhiteBlock(x, y, r); break;
-	case TEE:			block=  new Tee(x, y, r); break;
-	case MIRROR:		block=	new Mirror(x, y, r); break;
-	case NUKE:			block=	new Nuke(x, y, r); break;
-	case ENEMYNUKE:		block=	new EnemyNuke(x, y, r); break;
-	case TANK:			block=	new Tank(x, y, r); break;
-	case ENEMYTANK:		block=	new EnemyTank(x, y, r); number_of_enemies++; break;
-	case STATIC:		block=	new Static(x, y, r); break;
-	case RUSTY:			block=	new Rusty(x, y, r); break;
-	case BARSVERT:		block=	new BarsVert(x, y, r); break;
-	case BARSHORIZ:		block=	new BarsHoriz(x, y, r); break;
-	case BARSCROSS:		block=	new BarsCross(x, y, r); break;
-	case TRIANGLE:		block=	new Triangle(x, y, r); break;
-	case RUSTYTRIANGLE:	block=	new RustyTriangle(x, y, r); break;
-	case RUSTYBARSVERT:	block=	new RustyBarsVert(x, y, r); break;
-	case RUSTYBARSHORIZ:block=	new RustyBarsHoriz(x, y, r); break;
-	case RUSTYWHITEBLOCK:block= new RustyWhiteBlock(x, y, r); break;
+	case BlockType::REDBLOCK:		block=	new RedBlock(x, y, r); break;
+	case BlockType::RUSTYREDBLOCK:	block=	new RustyRedBlock(x, y, r); break;
+	case BlockType::WHITEBLOCK:	block=	new WhiteBlock(x, y, r); break;
+	case BlockType::TEE:			block=  new Tee(x, y, r); break;
+	case BlockType::MIRROR:		block=	new Mirror(x, y, r); break;
+	case BlockType::NUKE:			block=	new Nuke(x, y, r); break;
+	case BlockType::ENEMYNUKE:		block=	new EnemyNuke(x, y, r); break;
+	case BlockType::TANK:			block=	new Tank(x, y, r); break;
+	case BlockType::ENEMYTANK:		block=	new EnemyTank(x, y, r); number_of_enemies++; break;
+	case BlockType::STATIC:		block=	new Static(x, y, r); break;
+	case BlockType::RUSTY:			block=	new Rusty(x, y, r); break;
+	case BlockType::BARSVERT:		block=	new BarsVert(x, y, r); break;
+	case BlockType::BARSHORIZ:		block=	new BarsHoriz(x, y, r); break;
+	case BlockType::BARSCROSS:		block=	new BarsCross(x, y, r); break;
+	case BlockType::TRIANGLE:		block=	new Triangle(x, y, r); break;
+	case BlockType::RUSTYTRIANGLE:	block=	new RustyTriangle(x, y, r); break;
+	case BlockType::RUSTYBARSVERT:	block=	new RustyBarsVert(x, y, r); break;
+	case BlockType::RUSTYBARSHORIZ:block=	new RustyBarsHoriz(x, y, r); break;
+	case BlockType::RUSTYWHITEBLOCK:block= new RustyWhiteBlock(x, y, r); break;
 	}
 
 	if (!ground) ground= new GroundTile(x, y, 33);
@@ -267,7 +265,7 @@ void Board::SetGroundTypes()
 
 	for (int y=1; y<ROWS+1; y++) {
 		for (int x=1; x<COLUMNS+1; x++) {
-			if (array[x-1][y-1]->ground->GetBlockType()==GROUND) {
+			if (array[x-1][y-1]->ground->GetBlockType()==BlockType::GROUND) {
 				r=array[x-1][y-1]->ground->GetRotation();
 				
 				groundArray[x][y]=r;
@@ -307,13 +305,13 @@ void Board::FillDefault()
 	finished=1;
 	for (int i=0; i<ROWS; i++) {
 		for (int j=0; j<COLUMNS; j++) {
-				groundTypeArray[j][i]=GROUND;
+				groundTypeArray[j][i]=BlockType::GROUND;
 				groundRotationArray[j][i]=33;
-				blockTypeArray[j][i]=NONE;
+				blockTypeArray[j][i]=BlockType::NONE;
 				blockRotationArray[j][i]=0;
 		}
 	}
-	blockTypeArray[1][1]=TANK;
+	blockTypeArray[1][1]=BlockType::TANK;
 	blockRotationArray[1][1]=2;
 	tank_x=tank_y=origin_x=origin_y=1;
 	FillArray(true);
@@ -366,9 +364,4 @@ void Board::DisplayHelp()
 void Board::SetHelpSurface()
 {
 	help_surface=draw.GetSurface("MAIN");
-}
-
-void Board::RestoreHelpSurface()
-{
-	if (help_surface) help_surface->Restore();
 }

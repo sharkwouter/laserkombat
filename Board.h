@@ -1,13 +1,16 @@
-// Board.h
+#ifndef BOARD_H
+#define BOARD_H
 
-#include "Tile.h"
+#include "constants.h"
+#include "Sound.h"
+#include "Draw.h"
 #include "Square.h"
 
 class Board
 {
 	friend class Tile;
 public:
-	Board(int width=20, int height=15) : help(true), cols(width), rows(height), tank_x(0), tank_y(0), level(0) {
+	Board(Draw draw) : help(true), cols(COLUMNS), rows(ROWS), tank_x(0), tank_y(0), level(0), draw(draw) {
 		LoadLevel();
 	};
 
@@ -37,7 +40,7 @@ public:
 	bool IsOver() {return died||defeated;}
 
 	void AfterAnimate() {	//called to change things that should be changed only after redraw
-		Sound.Play();	//play the queued sound
+		sound.Play();	//play the queued sound
 		for (int i=0; i<ROWS; i++) {
 			for (int j=0; j<COLUMNS; j++) {
 				if (array[j][i]&&array[j][i]->over) array[j][i]->over->AfterAnimate();
@@ -164,7 +167,9 @@ private:
 
 private: //data
 
-	static SDL_Surface *help_surface;
+	static SDL_Texture *help_surface;
+
+	Draw draw;
 
 	bool help;
 	bool died;
@@ -186,3 +191,5 @@ private: //data
 	int number_of_enemies;
 	float seconds_ago;
 };
+
+#endif // BOARD_H

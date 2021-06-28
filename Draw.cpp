@@ -3,14 +3,8 @@
 #include <SDL2/SDL.h>
 
 #include "constants.h"
-#include "Sound.h"
-
 #include "Exception.h"
 #include "Draw.h"
-#include "Tile.h"
-
-#include "Square.h"
-#include "Board.h"
 
 void Draw::SetWindow()
 {

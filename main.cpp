@@ -1,35 +1,13 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
 #include "constants.h"
+#include "Draw.h"
 #include "Board.h"
-
-SDL_Window *window;
-SDL_Renderer *renderer;
+#include "Sound.h"
 
 bool running;
 
-Board board;
-
-void init() {
-    if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS) < 0){
-        printf("Couldn't init SDL: %s", SDL_GetError());
-        exit(1);
-    }
-
-    window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WOLD_MAX_X, WOLD_MAX_Y, SDL_WINDOW_SHOWN);
-    if (window == nullptr) {
-        printf("Couldn't create window: %s", SDL_GetError());
-        exit(2);
-    }
-
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (renderer == nullptr) {
-        printf("Couldn't create renderer: %s", SDL_GetError());
-        exit(3);
-    }
-}
-
-void handle_input() {
+void handle_input(Board board) {
     SDL_Event event;
     if (SDL_PollEvent(&event)) {
         switch (event.type) {
@@ -65,11 +43,12 @@ void handle_input() {
 }
 
 int main() {
-    init();
+    Draw * draw = new Draw();
+    Board * board = new Board(*draw);
 
     running = true;
     while(running) {
-        handle_input();
-        board.Animate();
+        handle_input(*board);
+        board->Animate();
     }
 }
