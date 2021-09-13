@@ -29,42 +29,47 @@ int Water::static_rotation=0;
 void Tile::AddDead(Tile* tile) {
 	if(!tile) return;
 	Tile *current_tile=this;
-	if (tile->GetBlockType()==BlockType::ENEMYTANK) board.DecreaseEnemyCount();
+	if (tile->GetBlockType()==BlockType::ENEMYTANK) {
+		//board.DecreaseEnemyCount();
+	}
 	while (current_tile->deadBlock) {
 		current_tile=current_tile->deadBlock;
 	}
 	current_tile->deadBlock=tile;
 }
 
+void Tile::SetBeamSurface() {
+	beamSurface=draw.GetSurface("BEAM");
+}
 
  
 bool Tile::Kill() {
-	if (!board.array[x_pos][y_pos]->block) return true;
-	Tile* temp=board.array[x_pos][y_pos]->block;
-	board.array[x_pos][y_pos]->block=NULL;
-	//Schedule for deletion
-	board.array[x_pos][y_pos]->ground->AddDead(this);
+	// if (!board.array[x_pos][y_pos]->block) return true;
+	// Tile* temp=board.array[x_pos][y_pos]->block;
+	// board.array[x_pos][y_pos]->block=NULL;
+	// //Schedule for deletion
+	// board.array[x_pos][y_pos]->ground->AddDead(this);
 	return true;
 }
 
 bool Tile::KillOver() {
-	if (!board.array[x_pos][y_pos]->over) return true;
-	Tile* temp=board.array[x_pos][y_pos]->over;
-	board.array[x_pos][y_pos]->over=NULL;
-	//Schedule for deletion
-	board.array[x_pos][y_pos]->ground->AddDead(this);	
+	// if (!board.array[x_pos][y_pos]->over) return true;
+	// Tile* temp=board.array[x_pos][y_pos]->over;
+	// board.array[x_pos][y_pos]->over=NULL;
+	// //Schedule for deletion
+	// board.array[x_pos][y_pos]->ground->AddDead(this);	
 	return true;
 }
 
 bool Tile::WillKill(int flag) {
-	board.array[x_pos][y_pos]->block=NULL;
-	if (flag==1) willKillFlag=flag+10*BEAM_PERSISTANCE;
-	else willKillFlag=flag;	//don't persist long for plain kill
-	Tile* temp=board.array[x_pos][y_pos]->over;
-	if (temp) {
-		temp->FinalizeOver();
-	}
-	board.array[x_pos][y_pos]->over=this;
+	// board.array[x_pos][y_pos]->block=NULL;
+	// if (flag==1) willKillFlag=flag+10*BEAM_PERSISTANCE;
+	// else willKillFlag=flag;	//don't persist long for plain kill
+	// Tile* temp=board.array[x_pos][y_pos]->over;
+	// if (temp) {
+	// 	temp->FinalizeOver();
+	// }
+	// board.array[x_pos][y_pos]->over=this;
 	return true;
 }
 
@@ -74,15 +79,15 @@ void Tile::FinalizeOver() {// Get the over tile out of the way
 	}
 	else if (willKillFlag%10==1) {
 		DrownOver();
-		if (!board.IsOver())PreSeeMe();
+		// if (!board.IsOver())PreSeeMe();
 	}
 }
 
 void Tile::ClearOver() {//make sure the over layer is clear
-	Tile* temp=board.array[x_pos][y_pos]->over;
-	if (temp) {
-		temp->FinalizeOver();
-	}
+	// Tile* temp=board.array[x_pos][y_pos]->over;
+	// if (temp) {
+	// 	temp->FinalizeOver();
+	// }
 	
 }
 
@@ -113,127 +118,127 @@ bool Nuke::Kill() {
 	Tile* &ground=GetGround();
 	if (ground) {
 		Tile* temp=ground;
-		ground=new Water(x_pos,y_pos);
+		ground=new Water(x_pos,y_pos, draw);
 		ground->AddDead(temp);
 		ground->SetRotation(ground->GetRotation()+300);
 
 	}
 
 	GroundTile::SetChanged(true);	//flag for changes to update images draw
-	sound.PlayASound("nuke.wav", SoundPriority::NUKE_SOUND);
+	Sound::PlayASound("nuke.wav", SoundPriority::NUKE_SOUND);
 	return true;
 }
 
 
 Tile*& Tile::GetGround()
 {
-	return board.array[x_pos][y_pos]->ground;
+	// return board.array[x_pos][y_pos]->ground;
 }
 
 Tile* Tile::GetBlock() 
 {
-	return board.array[x_pos][y_pos]->block;
+	// return board.array[x_pos][y_pos]->block;
 }
 
 Blocks Tile::GetBlocks()
 {
 	Blocks blocks;
-	if (x_pos>=COLUMNS-1) blocks.right=NULL;
-	else blocks.right=board.array[x_pos+1][y_pos]->block;
-	if (x_pos<=0) blocks.left=NULL;
-	else blocks.left=board.array[x_pos-1][y_pos]->block;
-	if (y_pos>=ROWS-1) blocks.below=NULL;
-	else blocks.below=board.array[x_pos][y_pos+1]->block;
-	if (y_pos<=0) blocks.above=NULL;
-	else blocks.above=board.array[x_pos][y_pos-1]->block;
+	// if (x_pos>=COLUMNS-1) blocks.right=NULL;
+	// else blocks.right=board.array[x_pos+1][y_pos]->block;
+	// if (x_pos<=0) blocks.left=NULL;
+	// else blocks.left=board.array[x_pos-1][y_pos]->block;
+	// if (y_pos>=ROWS-1) blocks.below=NULL;
+	// else blocks.below=board.array[x_pos][y_pos+1]->block;
+	// if (y_pos<=0) blocks.above=NULL;
+	// else blocks.above=board.array[x_pos][y_pos-1]->block;
 
-	if (x_pos>=COLUMNS-1||y_pos>=ROWS-1) blocks.belowright=NULL;
-	else blocks.belowright=board.array[x_pos+1][y_pos+1]->block;
-	if (x_pos>=COLUMNS-1||y_pos<=0) blocks.aboveright=NULL;
-	else blocks.aboveright=board.array[x_pos+1][y_pos-1]->block;
-	if (x_pos<=0||y_pos>=ROWS-1) blocks.belowleft=NULL;
-	else blocks.belowleft=board.array[x_pos-1][y_pos+1]->block;
-	if (x_pos<=0||y_pos<=0) blocks.aboveleft=NULL;
-	else blocks.aboveleft=board.array[x_pos-1][y_pos-1]->block;
+	// if (x_pos>=COLUMNS-1||y_pos>=ROWS-1) blocks.belowright=NULL;
+	// else blocks.belowright=board.array[x_pos+1][y_pos+1]->block;
+	// if (x_pos>=COLUMNS-1||y_pos<=0) blocks.aboveright=NULL;
+	// else blocks.aboveright=board.array[x_pos+1][y_pos-1]->block;
+	// if (x_pos<=0||y_pos>=ROWS-1) blocks.belowleft=NULL;
+	// else blocks.belowleft=board.array[x_pos-1][y_pos+1]->block;
+	// if (x_pos<=0||y_pos<=0) blocks.aboveleft=NULL;
+	// else blocks.aboveleft=board.array[x_pos-1][y_pos-1]->block;
 	return blocks;
 }
 
 Blocks Tile::GetGrounds()
 {
 	Blocks blocks;
-	if (x_pos>=COLUMNS-1) blocks.right=NULL;
-	else blocks.right=board.array[x_pos+1][y_pos]->ground;
-	if (x_pos<=0) blocks.left=NULL;
-	else blocks.left=board.array[x_pos-1][y_pos]->ground;
-	if (y_pos>=ROWS-1) blocks.below=NULL;
-	else blocks.below=board.array[x_pos][y_pos+1]->ground;
-	if (y_pos<=0) blocks.above=NULL;
-	else blocks.above=board.array[x_pos][y_pos-1]->ground;
+	// if (x_pos>=COLUMNS-1) blocks.right=NULL;
+	// else blocks.right=board.array[x_pos+1][y_pos]->ground;
+	// if (x_pos<=0) blocks.left=NULL;
+	// else blocks.left=board.array[x_pos-1][y_pos]->ground;
+	// if (y_pos>=ROWS-1) blocks.below=NULL;
+	// else blocks.below=board.array[x_pos][y_pos+1]->ground;
+	// if (y_pos<=0) blocks.above=NULL;
+	// else blocks.above=board.array[x_pos][y_pos-1]->ground;
 
-	if (x_pos>=COLUMNS-1||y_pos>=ROWS-1) blocks.belowright=NULL;
-	else blocks.belowright=board.array[x_pos+1][y_pos+1]->ground;
-	if (x_pos>=COLUMNS-1||y_pos<=0) blocks.aboveright=NULL;
-	else blocks.aboveright=board.array[x_pos+1][y_pos-1]->ground;
-	if (x_pos<=0||y_pos>=ROWS-1) blocks.belowleft=NULL;
-	else blocks.belowleft=board.array[x_pos-1][y_pos+1]->ground;
-	if (x_pos<=0||y_pos<=0) blocks.aboveleft=NULL;
-	else blocks.aboveleft=board.array[x_pos-1][y_pos-1]->ground;
+	// if (x_pos>=COLUMNS-1||y_pos>=ROWS-1) blocks.belowright=NULL;
+	// else blocks.belowright=board.array[x_pos+1][y_pos+1]->ground;
+	// if (x_pos>=COLUMNS-1||y_pos<=0) blocks.aboveright=NULL;
+	// else blocks.aboveright=board.array[x_pos+1][y_pos-1]->ground;
+	// if (x_pos<=0||y_pos>=ROWS-1) blocks.belowleft=NULL;
+	// else blocks.belowleft=board.array[x_pos-1][y_pos+1]->ground;
+	// if (x_pos<=0||y_pos<=0) blocks.aboveleft=NULL;
+	// else blocks.aboveleft=board.array[x_pos-1][y_pos-1]->ground;
 	return blocks;
 }
 
 bool Tile::RightBlock(Tile* &p)
 {
 	if (x_pos>=COLUMNS-1) {p=NULL; return false;}
-	p=board.array[x_pos+1][y_pos]->block;
+	// p=board.array[x_pos+1][y_pos]->block;
 	return true;
 }
 
 bool Tile::LeftBlock(Tile* &p)
 {
 	if (x_pos<=0) {p=NULL; return false;}
-	p=board.array[x_pos-1][y_pos]->block;
+	// p=board.array[x_pos-1][y_pos]->block;
 	return true;
 }
 
 bool Tile::TopBlock(Tile* &p)
 {
 	if (y_pos<=0) {p=NULL; return false;}
-	p=board.array[x_pos][y_pos-1]->block;
+	// p=board.array[x_pos][y_pos-1]->block;
 	return true;
 }
 
 bool Tile::BottomBlock(Tile* &p)
 {
 	if (y_pos>=ROWS-1) {p=NULL; return false;}
-	p=board.array[x_pos][y_pos+1]->block;
+	// p=board.array[x_pos][y_pos+1]->block;
 	return true;
 }
 
 bool Tile::RightGround(Tile* &p)
 {
 	if (x_pos>=COLUMNS-1) {p=NULL; return false;}
-	p=board.array[x_pos+1][y_pos]->ground;
+	// p=board.array[x_pos+1][y_pos]->ground;
 	return true;
 }
 
 bool Tile::LeftGround(Tile* &p)
 {
 	if (x_pos<=0) {p=NULL; return false;}
-	p=board.array[x_pos-1][y_pos]->ground;
+	// p=board.array[x_pos-1][y_pos]->ground;
 	return true;
 }
 
 bool Tile::TopGround(Tile* &p)
 {
 	if (y_pos<=0) {p=NULL; return false;}
-	p=board.array[x_pos][y_pos-1]->ground;
+	// p=board.array[x_pos][y_pos-1]->ground;
 	return true;
 }
 
 bool Tile::BottomGround(Tile* &p)
 {
 	if (y_pos>=ROWS-1) {p=NULL; return false;}
-	p=board.array[x_pos][y_pos+1]->ground;
+	// p=board.array[x_pos][y_pos+1]->ground;
 	return true;
 }
 
@@ -241,36 +246,41 @@ bool Tile::BottomGround(Tile* &p)
 
 
 bool Tile::MoveUp() {
-	if (moved) return false;
-	Tile* block; TopBlock(block);
-	if (block) block->PushBottom();
-	bool ret = board.swap(x_pos, y_pos, x_pos, y_pos-1);
-	if (ret&&GetBlockType()!=TANK) sound.PlayASound("scrape.wav", SoundPriority::SCRAPE);
-	return moved=ret;
+	// if (moved) return false;
+	// Tile* block; TopBlock(block);
+	// if (block) block->PushBottom();
+	// bool ret = board.swap(x_pos, y_pos, x_pos, y_pos-1);
+	// if (ret&&GetBlockType()!=BlockType::TANK) Sound::PlayASound("scrape.wav", SoundPriority::SCRAPE);
+	// return moved=ret;
+	return false;
 }
 bool Tile::MoveDown() {
-	if (moved) return false;
-	Tile* block; BottomBlock(block);
-	if (block) block->PushTop();
-	bool ret =board.swap(x_pos, y_pos, x_pos, y_pos+1);
-	if (ret&&GetBlockType()!=TANK) sound.PlayASound("scrape.wav", SoundPriority::SCRAPE);
-	return moved=ret;
+	// if (moved) return false;
+	// Tile* block; BottomBlock(block);
+	// if (block) block->PushTop();
+	// bool ret =board.swap(x_pos, y_pos, x_pos, y_pos+1);
+	// if (ret&&GetBlockType()!=BlockType::TANK) Sound::PlayASound("scrape.wav", SoundPriority::SCRAPE);
+	// return moved=ret;
+	return false;
+
 }
 bool Tile::MoveRight() {
-	if (moved) return false;
-	Tile* block; RightBlock(block);
-	if (block) block->PushLeft();
-	bool ret =board.swap(x_pos, y_pos, x_pos+1, y_pos);
-	if (ret&&GetBlockType()!=TANK) sound.PlayASound("scrape.wav", SoundPriority::SCRAPE);
-	return moved=ret;
+	// if (moved) return false;
+	// Tile* block; RightBlock(block);
+	// if (block) block->PushLeft();
+	// bool ret =board.swap(x_pos, y_pos, x_pos+1, y_pos);
+	// if (ret&&GetBlockType()!=BlockType::TANK) Sound::PlayASound("scrape.wav", SoundPriority::SCRAPE);
+	// return moved=ret;
+	return false;
 }
 bool Tile::MoveLeft() {
-	if (moved) return false;
-	Tile* block; LeftBlock(block);
-	if (block) block->PushRight();
-	bool ret =board.swap(x_pos, y_pos, x_pos-1, y_pos);
-	if (ret&&GetBlockType()!=TANK) sound.PlayASound("scrape.wav", SoundPriority::SCRAPE);
-	return moved=ret;
+	// if (moved) return false;
+	// Tile* block; LeftBlock(block);
+	// if (block) block->PushRight();
+	// bool ret =board.swap(x_pos, y_pos, x_pos-1, y_pos);
+	// if (ret&&GetBlockType()!=BlockType::TANK) Sound::PlayASound("scrape.wav", SoundPriority::SCRAPE);
+	// return moved=ret;
+	return false;
 }
 
 bool Water::BlockOver(Tile* &block, Tile* &ground)
@@ -281,15 +291,15 @@ bool Water::BlockOver(Tile* &block, Tile* &ground)
 	// else:
 	Tile* temp = block;
 
-	if (temp->GetBlockType()==WHITEBLOCK) return true;
+	if (temp->GetBlockType()==BlockType::WHITEBLOCK) return true;
 
-	if (temp->GetBlockType()==REDBLOCK) {
-		ground=new GroundTile(x_pos, y_pos, 10);
+	if (temp->GetBlockType()==BlockType::REDBLOCK) {
+		ground=new GroundTile(x_pos, y_pos, draw, 10);
 		ground->AddDead(this);
 	}
 	block->WillKill(1); // 1 for drown
 	GroundTile::SetChanged(1);
-	sound.PlayASound("splash.wav", SoundPriority::SPLASH);
+	Sound::PlayASound("splash.wav", SoundPriority::SPLASH);
 	return true;
 }
 
@@ -393,38 +403,38 @@ bool Tile::SeeMeLeft(BlockType type, int dist)
 	return true;
 }
 
-void Tank::Draw() {
-	if (!board.IsYou(x_pos, y_pos)) { 
-		int rotate=rand()%1000;
-		if (rotate==0) RotateRight();	//make tanks rotate randomly
-		else if (rotate==1) RotateLeft();
-	}
+void Tank::Render() {
+	// if (!board.IsYou(x_pos, y_pos)) { 
+	// 	int rotate=rand()%1000;
+	// 	if (rotate==0) RotateRight();	//make tanks rotate randomly
+	// 	else if (rotate==1) RotateLeft();
+	// }
 	
 	if (surface) draw.BlitSquare(surface, rotation%4 ,rotation/4, x_pos, y_pos); 
 }
 
 int Tile::BeamState() {
-	if (HadFired) {
-		if (HadFiredRight&&!board.IsOver()) HadFiredRight--;
-		if (HadFiredDown&&!board.IsOver()) HadFiredDown--;
-		if (HadFiredLeft&&!board.IsOver()) HadFiredLeft--;
-		if (HadFiredUp&&!board.IsOver()) HadFiredUp--;
+	// if (HadFired) {
+	// 	if (HadFiredRight&&!board.IsOver()) HadFiredRight--;
+	// 	if (HadFiredDown&&!board.IsOver()) HadFiredDown--;
+	// 	if (HadFiredLeft&&!board.IsOver()) HadFiredLeft--;
+	// 	if (HadFiredUp&&!board.IsOver()) HadFiredUp--;
 
-		if (!Firing&&HadFired&&!board.IsOver()) HadFired--;
-	}
-	if (WasHit) {
-		if (WasHitLeft&&!board.IsOver()) WasHitLeft--;
-		if (WasHitTop&&!board.IsOver()) WasHitTop--;
-		if (WasHitRight&&!board.IsOver()) WasHitRight--;
-		if (WasHitBottom&&!board.IsOver()) WasHitBottom--;
+	// 	if (!Firing&&HadFired&&!board.IsOver()) HadFired--;
+	// }
+	// if (WasHit) {
+	// 	if (WasHitLeft&&!board.IsOver()) WasHitLeft--;
+	// 	if (WasHitTop&&!board.IsOver()) WasHitTop--;
+	// 	if (WasHitRight&&!board.IsOver()) WasHitRight--;
+	// 	if (WasHitBottom&&!board.IsOver()) WasHitBottom--;
 
-		if (WasHit&&!board.IsOver()) WasHit--;
-	}
+	// 	if (WasHit&&!board.IsOver()) WasHit--;
+	// }
 
 	return 0;
 }
 
 int Mirror::BeamState() {
-	if (!Firing&&HadFired&&!board.IsOver()) HadFired--;
+	// if (!Firing&&HadFired&&!board.IsOver()) HadFired--;
 	return 0;
 }

@@ -1,7 +1,5 @@
 // Draw.cpp
 
-#include <SDL2/SDL.h>
-
 #include "constants.h"
 #include "Exception.h"
 #include "Draw.h"

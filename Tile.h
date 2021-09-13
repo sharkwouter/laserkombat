@@ -1,9 +1,12 @@
 #ifndef TILE_H
 #define TILE_H
 
+#include <SDL2/SDL.h>
+
 #include "constants.h"
 #include "BlockType.h"
 #include "Draw.h"
+#include "Sound.h"
 
 class Tile;
 
@@ -22,7 +25,7 @@ class Tile
 {
 	friend class ATile;
 public:
-	Tile(int x, int y, int r=0, Draw draw) : x_pos(x), y_pos(y), deadBlock(0), willKillFlag(0), draw(draw) {
+	Tile(int x, int y, Draw draw, int r=0) : x_pos(x), y_pos(y), deadBlock(0), willKillFlag(0), draw(draw) {
 		if (!beamSurface) SetBeamSurface();
 
 		SetRotation(r);
@@ -123,7 +126,7 @@ public:
 	}
 
 	virtual void Update() {
-		Draw();
+		Render();
 		DisplayBeam(BeamState());
 		if (Firing) Firing=FiringRight=FiringLeft=FiringUp=FiringDown=false;
 		moved=false;
@@ -146,7 +149,7 @@ public:
 
 
 protected: //functions
-	virtual void Draw() {
+	virtual void Render() {
 		if (surface) draw.BlackSquare(x_pos, y_pos); 
 	}
 	virtual int BeamState();
@@ -216,10 +219,7 @@ protected: //members
 private: // functions
 	//Set for killing, just not immediatly.
 
-	static void SetBeamSurface()
-	{
-		beamSurface=draw.GetSurface("BEAM");
-	}
+	static void SetBeamSurface();
 private: //members
 	int willKillFlag;
 	Tile* deadBlock;
@@ -232,7 +232,7 @@ private: //members
 class GroundTile : public Tile
 {
 public:
-	GroundTile(int x, int y, int r=33) : Tile(x,y,r), otherblocks(0) {
+	GroundTile(int x, int y, Draw draw, int r=33) : Tile(x,y,draw,r), otherblocks(0) {
 		SetRotation(r);
 		if (!surface) SetSurface();
 
@@ -271,7 +271,7 @@ public:
 
 
 protected: //functions
-	virtual void GroundTile::Draw() {
+	virtual void GroundTile::Render() {
 		if (rotation!=33) {
 			int r;
 			if (rotation>=100) r=33-rotation/100, rotation-=100; 
@@ -316,19 +316,19 @@ private: // functions
 	}
 private: //members
 	static bool changed;
-	unsigned int otherblocks;	
+	unsigned int otherblocks;
 };
 
 class ATile : public Tile
 {
 public:
 
-	ATile(int x, int y, int r=0) : Tile(x,y,r) {
+	ATile(int x, int y, Draw draw, int r=0) : Tile(x,y,draw,r) {
 
 	}
 
 	virtual void Update() {
-		Draw();
+		Render();
 		BeamState();
 		if (Firing) Firing=FiringRight=FiringLeft=FiringUp=FiringDown=false;
 		moved=false;
@@ -346,7 +346,7 @@ private: //members
 class Tank : public ATile
 {
 public:
-	Tank(int x, int y, int r=0) : ATile(x,y,r) {
+	Tank(int x, int y, Draw draw, int r=0) : ATile(x,y,draw,r) {
 		if (!surface) SetSurface();
 		SetRotation(r);
 
@@ -412,7 +412,7 @@ protected: //functions
 	virtual int BeamState() {
 		return 0;
 	}
-	virtual void Tank::Draw();
+	virtual void Tank::Render();
 	virtual bool MoveUp() {
 		bool ret=ATile::MoveUp();
 		return ret;
@@ -446,7 +446,7 @@ private: //members
 class RedBlock : public ATile
 {
 public:
-	RedBlock(int x, int y, int r=0) : ATile(x,y,0) {
+	RedBlock(int x, int y, Draw draw, int r=0) : ATile(x,y,draw,0) {
 		if (!surface) SetSurface();
 		SetRotation(r);
 
@@ -465,7 +465,7 @@ public:
 	virtual bool HitBottom() {Tile::HitBottom(); PushBottom(); return true;}
 
 protected: //functions
-	virtual void RedBlock::Draw() {
+	virtual void RedBlock::Render() {
 		if (surface) draw.BlitSquare(surface, 0 ,0, x_pos, y_pos); 
 	}
 
@@ -482,7 +482,7 @@ private: //members
 class WhiteBlock : public RedBlock
 {
 public:
-	WhiteBlock(int x, int y, int r=0) : RedBlock(x,y,2) {
+	WhiteBlock(int x, int y, Draw draw, int r=0) : RedBlock(x,y,draw,2) {
 		if (!surface) SetSurface();
 		SetRotation(r);
 
@@ -497,7 +497,7 @@ public:
 
 
 protected: //functions
-	virtual void WhiteBlock::Draw() {
+	virtual void WhiteBlock::Render() {
 		if (surface) draw.BlitSquare(surface, 2 ,0, x_pos, y_pos); 
 	}
 	virtual bool MoveUp() {Sound::PlayASound(NULL, SCRAPE); return Tile::MoveUp();}
@@ -516,7 +516,7 @@ private: //members
 class Water : public GroundTile
 {
 public:
-	Water(int x, int y, int r=0) : GroundTile(x,y,r) {
+	Water(int x, int y, Draw draw, int r=0) : GroundTile(x,y,draw,r) {
 		SetRotation(r);
 		if (!surface) SetSurface();
 
@@ -541,9 +541,9 @@ public:
 	}
 
 protected: //functions
-	virtual void Water::Draw() {
+	virtual void Water::Render() {
 		if (rotation>=100) {
-			GroundTile::Draw();
+			GroundTile::Render();
 			return;
 		}
 		if (surface) draw.BlitSquare(surface, static_rotation%10 ,static_rotation/10, x_pos, y_pos); 
@@ -562,8 +562,8 @@ private: //members
 class Static : public ATile
 {
 public:
-	Static(int x, int y, int r=0) : 
-	  ATile(x,y,r), turn_right(r>8?0:1) , time(0), span(0) {
+	Static(int x, int y, Draw draw, int r=0) : 
+	  ATile(x,y,draw,r), turn_right(r>8?0:1) , time(0), span(0) {
 		if (!surface) SetSurface();
 		SetRotation(r);
 
@@ -575,7 +575,7 @@ public:
 	}
 
 protected: //functions
-	virtual void Static::Draw() {
+	virtual void Static::Render() {
 		if (span>=2) {
 			time++;
 			time%=(span-1);
@@ -620,7 +620,7 @@ private: //members
 class Mirror : public ATile
 {
 public:
-	Mirror(int x, int y, int r=0) : ATile(x,y,r), rotation2(0){
+	Mirror(int x, int y, Draw draw, int r=0) : ATile(x,y,draw,r), rotation2(0){
 		if (!surface) SetSurface();
 		SetRotation(r);
 
@@ -632,7 +632,7 @@ public:
 	}
 
 protected: //functions
-	virtual void Mirror::Draw() {
+	virtual void Mirror::Render() {
 		rotation2++;
 		if (rotation2>=7) {
 			rotation2=0;
@@ -742,7 +742,7 @@ private: //members
 class Tee : public Mirror
 {
 public:
-	Tee(int x, int y, int r=0) : Mirror(x,y,r) {
+	Tee(int x, int y, Draw draw, int r=0) : Mirror(x,y,draw,r) {
 		if (!surface) SetSurface();
 		SetRotation(r);
 
@@ -750,7 +750,7 @@ public:
 
 protected: //functions
 
-	virtual void Tee::Draw() {
+	virtual void Tee::Render() {
 		rotation2++;
 		if (rotation2>=7) {
 			rotation2=0;
@@ -911,7 +911,7 @@ private: //members
 class EnemyTank : public Tank
 {
 public:
-	EnemyTank(int x, int y, int r=0) : Tank(x,y,r) {
+	EnemyTank(int x, int y, Draw draw, int r=0) : Tank(x,y,draw,r) {
 
 	}
 	virtual bool SetRotation(int r) {return ATile::SetRotation(r);}
@@ -935,7 +935,7 @@ public:
 	virtual bool ShootLeft() {SetRotation(0); return ATile::ShootLeft();}
 
 protected: //functions
-	virtual void EnemyTank::Draw() {
+	virtual void EnemyTank::Render() {
 		int rotate=rand()%1000;
 		if (rotate==0) RotateRight();	//make tanks rotate randomly
 		else if (rotate==1) RotateLeft();
@@ -962,7 +962,7 @@ private: //members
 class Nuke : public ATile
 {
 public:
-	Nuke(int x, int y, int r=0) : ATile(x,y,r) {
+	Nuke(int x, int y, Draw draw, int r=0) : ATile(x,y,draw,r) {
 		if (!surface) SetSurface();
 
 	}
@@ -973,7 +973,7 @@ public:
 
 	virtual bool Kill();
 protected: //functions
-	virtual void Nuke::Draw() {
+	virtual void Nuke::Render() {
 		if (surface) draw.BlitSquare(surface, 0 ,0, x_pos, y_pos); 
 	}
 
@@ -990,7 +990,7 @@ private: //members
 class Rusty : public Static
 {
 public:
-	Rusty(int x, int y, int r=0) : Static(x,y,r), turn_right(r>8?0:1) {
+	Rusty(int x, int y, Draw draw, int r=0) : Static(x,y,draw,r), turn_right(r>8?0:1) {
 		if (!surface) SetSurface();
 
 	}
@@ -1000,7 +1000,7 @@ public:
 	virtual bool HitRight() {ATile::HitRight(); Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();}
 	virtual bool HitBottom() {ATile::HitBottom(); Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();}
 protected: //functions
-	virtual void Rusty::Draw() {
+	virtual void Rusty::Render() {
 		if (rotation>=5) {
 			if (turn_right) {rotation++;
 				if (rotation>=9) rotation=5;
@@ -1029,7 +1029,7 @@ private: // functions
 class RustyRedBlock :public RedBlock
 {
 public:
-	RustyRedBlock(int x, int y, int r=0) : RedBlock(x,y,1) {
+	RustyRedBlock(int x, int y, Draw draw, int r=0) : RedBlock(x,y,draw,1) {
 		if (!surface) SetSurface();
 		SetRotation(r);
 
@@ -1047,7 +1047,7 @@ public:
 	virtual bool HitBottom() {ATile::HitBottom(); Sound::PlayASound("pop.wav", POP); return Kill();}
 
 protected: //functions
-	virtual void RustyRedBlock::Draw() {
+	virtual void RustyRedBlock::Render() {
 		if (surface) draw.BlitSquare(surface, 1 ,0, x_pos, y_pos); 
 	}
 
@@ -1063,7 +1063,7 @@ private: //members
 class EnemyNuke : public Nuke
 {
 public:
-	EnemyNuke(int x, int y, int r=0) : Nuke(x,y,r) {
+	EnemyNuke(int x, int y, Draw draw, int r=0) : Nuke(x,y,draw,r) {
 		if (!surface) SetSurface();
 
 	}
@@ -1075,7 +1075,7 @@ public:
 
 
 protected: //functions
-	virtual void EnemyNuke::Draw() {
+	virtual void EnemyNuke::Render() {
 		if (surface) draw.BlitSquare(surface, 1 ,0, x_pos, y_pos); 
 	}
 
@@ -1091,7 +1091,7 @@ private: //members
 class Message : public Static
 {
 public:
-	Message(int x, int y, int r=0) : Static(x,y,r) {
+	Message(int x, int y, Draw draw, int r=0) : Static(x,y,draw,r) {
 		if (!surface) SetSurface();
 		SetRotation(r);
 
@@ -1102,7 +1102,7 @@ public:
 	}
 
 protected: //functions
-	virtual void Message::Draw() {
+	virtual void Message::Render() {
 		if (surface) draw.BlitSquare(surface, rotation%14 ,rotation/14, x_pos, y_pos); 
 	}
 	virtual bool PushLeft() {return false;}
@@ -1124,8 +1124,8 @@ private: //members
 class BarsVert : public Static
 {
 public:
-	BarsVert(int x, int y, int r=0) : 
-	  Static(x,y,r) {
+	BarsVert(int x, int y, Draw draw, int r=0) : 
+	  Static(x,y,draw,r) {
 		if (!surface) SetSurface();
 		SetRotation(0);
 
@@ -1136,7 +1136,7 @@ public:
 	}
 
 protected: //functions
-	virtual void BarsVert::Draw() {
+	virtual void BarsVert::Render() {
 
 		if (surface) draw.BlitSquare(surface, 0 ,0, x_pos, y_pos); 
 	}
@@ -1161,8 +1161,8 @@ private: //members
 class BarsHoriz : public BarsVert
 {
 public:
-	BarsHoriz(int x, int y, int r=0) : 
-	  BarsVert(x,y,r) {
+	BarsHoriz(int x, int y, Draw draw, int r=0) : 
+	  BarsVert(x,y,draw,r) {
 		if (!surface) SetSurface();
 		SetRotation(0);
 
@@ -1173,7 +1173,7 @@ public:
 	}
 
 protected: //functions
-	virtual void BarsHoriz::Draw() {
+	virtual void BarsHoriz::Render() {
 
 		if (surface) draw.BlitSquare(surface, 1 ,0, x_pos, y_pos); 
 	}
@@ -1200,8 +1200,8 @@ private: //members
 class BarsCross : public BarsVert
 {
 public:
-	BarsCross(int x, int y, int r=0) : 
-	  BarsVert(x,y,r) {
+	BarsCross(int x, int y, Draw draw, int r=0) : 
+	  BarsVert(x,y,draw,r) {
 		if (!surface) SetSurface();
 		SetRotation(0);
 
@@ -1212,7 +1212,7 @@ public:
 	}
 
 protected: //functions
-	virtual void BarsCross::Draw() {
+	virtual void BarsCross::Render() {
 
 		if (surface) draw.BlitSquare(surface, 2 ,0, x_pos, y_pos); 
 	}
@@ -1240,7 +1240,7 @@ private: //members
 class Triangle : public Mirror
 {
 public:
-	Triangle(int x, int y, int r=0) : Mirror(x,y,r) {
+	Triangle(int x, int y, Draw draw, int r=0) : Mirror(x,y,draw,r) {
 		if (!surface) SetSurface();
 		SetRotation(r);
 
@@ -1262,7 +1262,7 @@ public:
 	virtual bool HitBottom() {Sound::PlayASound("donk.wav", DONK); return Mirror::HitBottom();}
 
 protected: //functions
-	virtual void Triangle::Draw() {
+	virtual void Triangle::Render() {
 		if (surface) draw.BlitSquare(surface, rotation%4 , 5, x_pos, y_pos); 
 	};
 
@@ -1281,7 +1281,7 @@ private: //members
 class RustyTriangle : public Triangle
 {
 public:
-	RustyTriangle(int x, int y, int r=0) : Triangle(x,y,r) {
+	RustyTriangle(int x, int y, Draw draw, int r=0) : Triangle(x,y,draw,r) {
 		if (!surface) SetSurface();
 		SetRotation(r);
 
@@ -1305,7 +1305,7 @@ public:
 	}
 
 protected: //functions
-	virtual void RustyTriangle::Draw() {
+	virtual void RustyTriangle::Render() {
 		if (surface) draw.BlitSquare(surface, rotation%4 , 6, x_pos, y_pos); 
 	};
 
@@ -1324,8 +1324,8 @@ private: //members
 class RustyBarsVert : public BarsVert
 {
 public:
-	RustyBarsVert(int x, int y, int r=0) : 
-	  BarsVert(x,y,r) {
+	RustyBarsVert(int x, int y, Draw draw, int r=0) : 
+	  BarsVert(x,y,draw,r) {
 		if (!surface) SetSurface();
 		SetRotation(0);
 
@@ -1341,7 +1341,7 @@ public:
 	}
 
 protected: //functions
-	virtual void RustyBarsVert::Draw() {
+	virtual void RustyBarsVert::Render() {
 
 		if (surface) draw.BlitSquare(surface, 0 ,1, x_pos, y_pos); 
 	}
@@ -1361,8 +1361,8 @@ private: //members
 class RustyBarsHoriz : public BarsHoriz
 {
 public:
-	RustyBarsHoriz(int x, int y, int r=0) : 
-	  BarsHoriz(x,y,r) {
+	RustyBarsHoriz(int x, int y, Draw draw, int r=0) : 
+	  BarsHoriz(x,y,draw,r) {
 		if (!surface) SetSurface();
 		SetRotation(0);
 
@@ -1378,7 +1378,7 @@ public:
 	}
 
 protected: //functions
-	virtual void RustyBarsHoriz::Draw() {
+	virtual void RustyBarsHoriz::Render() {
 
 		if (surface) draw.BlitSquare(surface, 1 ,1, x_pos, y_pos); 
 	}
@@ -1398,7 +1398,7 @@ private: //members
 class RustyWhiteBlock : public WhiteBlock
 {
 public:
-	RustyWhiteBlock(int x, int y, int r=0) : WhiteBlock(x,y,3) {
+	RustyWhiteBlock(int x, int y, Draw draw, int r=0) : WhiteBlock(x,y,draw,3) {
 		if (!surface) SetSurface();
 		SetRotation(r);
 
@@ -1410,7 +1410,7 @@ public:
 	virtual bool HitBottom() {ATile::HitBottom(); Sound::PlayASound("pop.wav", POP); return Kill();}
 
 protected: //functions
-	virtual void RustyWhiteBlock::Draw() {
+	virtual void RustyWhiteBlock::Render() {
 		if (surface) draw.BlitSquare(surface, 3 ,0, x_pos, y_pos); 
 	}
 
