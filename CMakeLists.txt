@@ -9,6 +9,10 @@ set(SOURCES
     src/main.cpp
     src/Window.cpp
     src/Game.cpp
+    src/Textures.cpp
+    src/Board.cpp
+    src/Tile.cpp
+    src/Square.cpp
 )
 
 # file(GLOB SOURCES

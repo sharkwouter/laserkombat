@@ -11,6 +11,18 @@
 
 SDL_Texture *Board::help_surface=NULL;
 
+Board::Board(Textures * textures) : help(true), cols(COLUMNS), rows(ROWS), tank_x(0), tank_y(0), level(0), textures(textures) {
+	LoadLevel();	
+}
+
+Board::~Board() {
+	ClearArray();
+}
+
+void Board::handleInput(std::vector<Input> input) {
+
+}
+
 void Board::FillArray(bool credits)
 {
 	ClearArray();
@@ -44,8 +56,8 @@ void Board::CreateSquare(int x, int y)
 
 	switch(type) {
 	default:
-	case BlockType::GROUND:		ground=	new GroundTile(x, y, draw, r); break;
-	case BlockType::WATER:			ground=	new Water(x, y, draw); break;
+	case BlockType::GROUND:		ground=	new GroundTile(x, y, textures, r); break;
+	case BlockType::WATER:			ground=	new Water(x, y, textures); break;
 	}
 
 	type= blockTypeArray[x][y];
@@ -53,28 +65,28 @@ void Board::CreateSquare(int x, int y)
 
 	switch(type) {
 	default:			block= NULL; break;
-	case BlockType::REDBLOCK:		block=	new RedBlock(x, y, draw, r); break;
-	case BlockType::RUSTYREDBLOCK:	block=	new RustyRedBlock(x, y, draw, r); break;
-	case BlockType::WHITEBLOCK:	block=	new WhiteBlock(x, y, draw, r); break;
-	case BlockType::TEE:			block=  new Tee(x, y, draw, r); break;
-	case BlockType::MIRROR:		block=	new Mirror(x, y, draw, r); break;
-	case BlockType::NUKE:			block=	new Nuke(x, y, draw, r); break;
-	case BlockType::ENEMYNUKE:		block=	new EnemyNuke(x, y, draw, r); break;
-	case BlockType::TANK:			block=	new Tank(x, y, draw, r); break;
-	case BlockType::ENEMYTANK:		block=	new EnemyTank(x, y, draw, r); number_of_enemies++; break;
-	case BlockType::STATIC:		block=	new Static(x, y, draw, r); break;
-	case BlockType::RUSTY:			block=	new Rusty(x, y, draw, r); break;
-	case BlockType::BARSVERT:		block=	new BarsVert(x, y, draw, r); break;
-	case BlockType::BARSHORIZ:		block=	new BarsHoriz(x, y, draw, r); break;
-	case BlockType::BARSCROSS:		block=	new BarsCross(x, y, draw, r); break;
-	case BlockType::TRIANGLE:		block=	new Triangle(x, y, draw, r); break;
-	case BlockType::RUSTYTRIANGLE:	block=	new RustyTriangle(x, y, draw, r); break;
-	case BlockType::RUSTYBARSVERT:	block=	new RustyBarsVert(x, y, draw, r); break;
-	case BlockType::RUSTYBARSHORIZ:block=	new RustyBarsHoriz(x, y, draw, r); break;
-	case BlockType::RUSTYWHITEBLOCK:block= new RustyWhiteBlock(x, y, draw, r); break;
+	case BlockType::REDBLOCK:		block=	new RedBlock(x, y, textures, r); break;
+	case BlockType::RUSTYREDBLOCK:	block=	new RustyRedBlock(x, y, textures, r); break;
+	case BlockType::WHITEBLOCK:	block=	new WhiteBlock(x, y, textures, r); break;
+	case BlockType::TEE:			block=  new Tee(x, y, textures, r); break;
+	case BlockType::MIRROR:		block=	new Mirror(x, y, textures, r); break;
+	case BlockType::NUKE:			block=	new Nuke(x, y, textures, r); break;
+	case BlockType::ENEMYNUKE:		block=	new EnemyNuke(x, y, textures, r); break;
+	case BlockType::TANK:			block=	new Tank(x, y, textures, r); break;
+	case BlockType::ENEMYTANK:		block=	new EnemyTank(x, y, textures, r); number_of_enemies++; break;
+	case BlockType::STATIC:		block=	new Static(x, y, textures, r); break;
+	case BlockType::RUSTY:			block=	new Rusty(x, y, textures, r); break;
+	case BlockType::BARSVERT:		block=	new BarsVert(x, y, textures, r); break;
+	case BlockType::BARSHORIZ:		block=	new BarsHoriz(x, y, textures, r); break;
+	case BlockType::BARSCROSS:		block=	new BarsCross(x, y, textures, r); break;
+	case BlockType::TRIANGLE:		block=	new Triangle(x, y, textures, r); break;
+	case BlockType::RUSTYTRIANGLE:	block=	new RustyTriangle(x, y, textures, r); break;
+	case BlockType::RUSTYBARSVERT:	block=	new RustyBarsVert(x, y, textures, r); break;
+	case BlockType::RUSTYBARSHORIZ:block=	new RustyBarsHoriz(x, y, textures, r); break;
+	case BlockType::RUSTYWHITEBLOCK:block= new RustyWhiteBlock(x, y, textures, r); break;
 	}
 
-	if (!ground) ground= new GroundTile(x, y, draw, 33);
+	if (!ground) ground= new GroundTile(x, y, textures, 33);
 	array[x][y]= new Square(block, ground);
 }
 
@@ -137,7 +149,7 @@ void Board::YouDied() {
 	for (int y=ROWS/2-2, yy=0; y<ROWS/2+1; y++, yy++) {
 		for (int x=COLUMNS/2-3, xx=0; x<COLUMNS/2+3; x++, xx++) {
 			Tile* temp=array[x][y]->over;
-			array[x][y]->over=new Message(x,y,draw,yy*14+xx);
+			array[x][y]->over=new Message(x,y,textures,yy*14+xx);
 			if (temp) array[x][y]->ground->AddDead(temp);
 		}
 	}
@@ -152,7 +164,7 @@ void Board::YouDefeated() {
 	for (int y=ROWS/2-2, yy=0; y<ROWS/2+1; y++, yy++) {
 		for (int x=COLUMNS/2-4, xx=6; x<COLUMNS/2+4; x++, xx++) {
 			Tile* temp=array[x][y]->over;
-			array[x][y]->over=new Message(x,y,draw,yy*14+xx);
+			array[x][y]->over=new Message(x,y,textures,yy*14+xx);
 			if (temp) array[x][y]->ground->AddDead(temp);
 		}
 	}
@@ -163,7 +175,7 @@ void Board::Credits() {
 	for (int y=ROWS/2-5, yy=3; y<ROWS/2+6; y++, yy++) {
 		for (int x=COLUMNS/2-7, xx=0; x<COLUMNS/2+7; x++, xx++) {
 			Tile* temp=array[x][y]->over;
-			array[x][y]->over=new Message(x,y,draw,yy*14+xx);
+			array[x][y]->over=new Message(x,y,textures,yy*14+xx);
 			if (temp) array[x][y]->ground->AddDead(temp);
 		}
 	}
@@ -233,8 +245,20 @@ bool Board::MoveDown()
 	return retvalue;
 }
 
-void Board::Animate()
-{
+void Board::draw(SDL_Renderer * renderer) {
+	if (!array) return;
+	for (int i=0; i<ROWS; i++) {
+		for (int j=0; j<COLUMNS; j++) {
+			if (!array[j][i]) continue;
+			if (array[j][i]->ground) array[j][i]->ground->draw(renderer);
+			if (array[j][i]->block) array[j][i]->block->draw(renderer);
+			if (array[j][i]->over) array[j][i]->over->draw(renderer);
+		}
+	}
+	DisplayHelp(renderer);
+}
+
+void Board::update() {
 	Delay();
 	SetGroundTypes(); //Make ground tiles all line up nice
 
@@ -247,8 +271,6 @@ void Board::Animate()
 			if (array[j][i]->over) array[j][i]->over->Update();
 		}
 	}
-	DisplayHelp();
-	draw.Flip();
 	AfterAnimate();
 }
 
@@ -353,15 +375,21 @@ void Board::Delay()
 	seconds_ago= current_time;
 }
 
-void Board::DisplayHelp()
+void Board::BlitOther(SDL_Renderer * renderer, SDL_Texture * surface, int x, int y, int dx, int dy, int w, int h)
+{
+	SDL_Rect r={x,y,x+w, y+h};
+    SDL_RenderCopy(renderer, surface, NULL, &r);
+}
+
+void Board::DisplayHelp(SDL_Renderer * renderer)
 {
 	if (!help) return;
 	if (!help_surface) SetHelpSurface();
 	if (!help_surface) return;
-	draw.BlitOther(help_surface, 0, 0, 120, 40, 560, 520);
+	BlitOther(renderer, help_surface, 0, 0, 120, 40, 560, 520);
 }
 
 void Board::SetHelpSurface()
 {
-	help_surface=draw.GetSurface("MAIN");
+	help_surface=textures->getMainSprite();
 }

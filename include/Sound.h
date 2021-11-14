@@ -7,8 +7,8 @@ class Sound
 {
 public:
 	Sound() : sound(0), maxx(SoundPriority::NOPLAY) {}
-	static void Play();
-	static bool PlayASound(const char* name, SoundPriority priority);
+	static void Play() {};
+	static bool PlayASound(const char* name, SoundPriority priority) {return true;};
 private:
 	SoundPriority maxx;
 	const char* sound;

@@ -1,22 +1,19 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+#include "Object.h"
 #include "constants.h"
+#include "Textures.h"
 #include "Sound.h"
-#include "Draw.h"
 #include "Square.h"
 
-class Board
-{
+class Board : public Object {
 public:
-	Board(Draw draw) : help(true), cols(COLUMNS), rows(ROWS), tank_x(0), tank_y(0), level(0), draw(draw) {
-		LoadLevel();
-	};
+	Board(Textures * textures);
+	~Board();
 
 	int DecreaseEnemyCount() {--number_of_enemies; return number_of_enemies;}
 	void GetTankXY(int &x, int& y) {x=tank_x; y=tank_y;}
-
-	~Board() {ClearArray();}
 
 	int AnyKey(int key);
 	void NextLevel() {LoadLevel();}
@@ -25,7 +22,6 @@ public:
 	void Restart() {
 		FillArray();
 	}
-
 
 	void Animate();		//Update tiles
 
@@ -131,6 +127,10 @@ public:
 
 	static void RestoreHelpSurface();
 
+	void handleInput(std::vector<Input> input);
+    void update();
+    void draw(SDL_Renderer * renderer);
+
 
 private:
 	void MoveForCredits();
@@ -160,21 +160,21 @@ private:
 	bool MoveRight();
 	bool MoveLeft();
 
-	void DisplayHelp();
+	void DisplayHelp(SDL_Renderer * renderer);
 	void SetHelpSurface();
 
+	void BlitOther(SDL_Renderer * renderer, SDL_Texture * surface, int x, int y, int dx, int dy, int w, int h);
 
 private: //data
 
 	static SDL_Texture *help_surface;
-
-	Draw draw;
 
 	bool help;
 	bool died;
 	bool defeated;
 	bool finished;
 
+	Textures * textures;
 
 	Square* array[COLUMNS][ROWS];
 	int rows, cols;

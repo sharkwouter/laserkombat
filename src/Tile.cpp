@@ -7,20 +7,6 @@
 #include "Sound.h"
 #include "BlockType.h"
 
-SDL_Texture * Tile::surface=nullptr;
-SDL_Texture * Tank::surface=draw.GetSurface("TANK");
-SDL_Texture * GroundTile::surface=draw.GetSurface("GROUND");
-SDL_Texture * RedBlock::surface=draw.GetSurface("REDBLOCK");
-SDL_Texture * Water::surface=draw.GetSurface("WATER");
-SDL_Texture * Static::surface=draw.GetSurface("STATIC");
-SDL_Texture * Mirror::surface=draw.GetSurface("MIRROR");
-SDL_Texture * Tee::surface=draw.GetSurface("TEE");
-SDL_Texture * Nuke::surface=draw.GetSurface("NUKE");
-SDL_Texture * Rusty::surface=draw.GetSurface("RUSTY");
-SDL_Texture * Message::surface=draw.GetSurface("MESSAGE");
-SDL_Texture * BarsVert::surface=draw.GetSurface("BARS");
-
-SDL_Texture * Tile::beamSurface=nullptr;
 
 bool GroundTile::changed=true;
 
@@ -36,10 +22,6 @@ void Tile::AddDead(Tile* tile) {
 		current_tile=current_tile->deadBlock;
 	}
 	current_tile->deadBlock=tile;
-}
-
-void Tile::SetBeamSurface() {
-	beamSurface=draw.GetSurface("BEAM");
 }
 
  
@@ -118,7 +100,7 @@ bool Nuke::Kill() {
 	Tile* &ground=GetGround();
 	if (ground) {
 		Tile* temp=ground;
-		ground=new Water(x_pos,y_pos, draw);
+		ground=new Water(x_pos,y_pos, textures);
 		ground->AddDead(temp);
 		ground->SetRotation(ground->GetRotation()+300);
 
@@ -294,7 +276,7 @@ bool Water::BlockOver(Tile* &block, Tile* &ground)
 	if (temp->GetBlockType()==BlockType::WHITEBLOCK) return true;
 
 	if (temp->GetBlockType()==BlockType::REDBLOCK) {
-		ground=new GroundTile(x_pos, y_pos, draw, 10);
+		ground=new GroundTile(x_pos, y_pos, textures, 10);
 		ground->AddDead(this);
 	}
 	block->WillKill(1); // 1 for drown
@@ -403,14 +385,14 @@ bool Tile::SeeMeLeft(BlockType type, int dist)
 	return true;
 }
 
-void Tank::Render() {
+void Tank::draw(SDL_Renderer * renderer) {
 	// if (!board.IsYou(x_pos, y_pos)) { 
 	// 	int rotate=rand()%1000;
 	// 	if (rotate==0) RotateRight();	//make tanks rotate randomly
 	// 	else if (rotate==1) RotateLeft();
 	// }
 	
-	if (surface) draw.BlitSquare(surface, rotation%4 ,rotation/4, x_pos, y_pos); 
+	BlitSquare(renderer, textures->getTankSprites(), rotation%4 ,rotation/4, x_pos, y_pos); 
 }
 
 int Tile::BeamState() {

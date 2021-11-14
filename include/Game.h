@@ -3,6 +3,8 @@
 
 #include "Object.h"
 #include "Window.h"
+#include "Textures.h"
+// #include "Board.h"
 
 class Game {
     
@@ -16,6 +18,10 @@ public:
 private:
 
     Window * window;
+
+    Textures textures;
+
+    // Board board;
 
     bool running = false;
 };

@@ -5,6 +5,7 @@
 // This is the base class for all game objects
 
 #include <vector>
+#include <SDL.h>
 
 #include "Input.h"
 
@@ -16,7 +17,7 @@ public:
 
     virtual void update() { }
 
-    virtual void draw() = 0;
+    virtual void draw(SDL_Renderer * renderer) = 0;
 };
 
 
