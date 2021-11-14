@@ -139,9 +139,6 @@ private:
 	bool LoadLevel();
 	void FillDefault();
 	void CreateSquare(int x, int y);
-	char digit_to_char(int digit);
-	void number_to_string(char* string, int number, int digits=3);
-
 
 	void YouDied();
 	void YouDefeated();

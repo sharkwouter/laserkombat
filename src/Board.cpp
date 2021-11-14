@@ -100,13 +100,12 @@ bool Board::Previous()
 
 bool Board::LoadLevel() {
 	level++;
-	char filename[255]="level";
 
-	number_to_string(filename+5, level, 3);
+	std::string filename = "assets/levels/level";
+	filename += std::string(3 - std::min(3, int(std::to_string(level).length())), '0') + std::to_string(level);
+	filename += ".lvl";
 
-	strcpy(filename+8, ".lvl");
-
-	FILE *file=fopen(filename, "rb");
+	FILE *file=fopen(filename.c_str(), "rb");
 	if (file) {
 		int size= fread( &origin_x, sizeof(origin_y), 1, file);
 		if (size) size= fread( &origin_y, sizeof(origin_x), 1, file);
@@ -126,23 +125,6 @@ bool Board::LoadLevel() {
 	else FillDefault();
 	return false;
 }
-
-void Board::number_to_string(char* string, int number, int digits) {
-	int i, d=digits;
-	for (i=0, d--; i<digits; i++, d--) {
-		*(string+(d)) = digit_to_char(number%10);
-		number/=10;
-	}
-	*(string+i) = '\0';
-}
-
-char Board::digit_to_char(int digit) {
-	digit%=10;
-	int character = digit + '0';
-	return (char)character;
-}
-
-
 
 void Board::YouDied() {
 	if (died) return;
