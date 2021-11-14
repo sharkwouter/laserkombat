@@ -14,7 +14,7 @@ public:
 
     virtual void handleInput(std::vector<Input> input) { }
 
-    virtual void update() = 0;
+    virtual void update() { }
 
     virtual void draw() = 0;
 };
