@@ -1,8 +1,8 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-inline constexpr int WOLD_MAX_X = 800;
-inline constexpr int WOLD_MAX_Y = 600;
+inline constexpr int WINDOW_WIDTH = 800;
+inline constexpr int WINDOW_HEIGHT = 600;
 inline constexpr int COLUMNS = 20;
 inline constexpr int ROWS = 15;
 inline constexpr int IMAGE_WIDTH = 40;
