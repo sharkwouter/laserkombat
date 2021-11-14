@@ -1,7 +1,9 @@
 #include "Textures.h"
 
 Textures::Textures(SDL_Renderer * renderer) : renderer(renderer) {
-
+    if (!load()) {
+        exit(4);
+    }
 }
 
 Textures::~Textures() {

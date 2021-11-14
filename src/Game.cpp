@@ -1,11 +1,7 @@
 #include "Game.h"
 
-Game::Game(Window * window) : textures(window->renderer) {
+Game::Game(Window * window) : textures(window->renderer), board(&textures) {
     this->window = window;
-
-    if (!textures.load()) {
-        exit(4);
-    }
 }
 
 Game::~Game() {
@@ -17,13 +13,13 @@ void Game::run() {
     while(this->running) {
         std::vector<Input> input = this->window->getInput();
 
-        // board.handleInput(input);
-        // board.update();
+        board.handleInput(input);
+        board.update();
         
         SDL_SetRenderDrawColor(this->window->renderer, 255, 255, 255, 255);
         SDL_RenderClear(this->window->renderer);
 
-        // board.draw(window->renderer);
+        board.draw(window->renderer);
 
         SDL_RenderPresent(this->window->renderer);
         

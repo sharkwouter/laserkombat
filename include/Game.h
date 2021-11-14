@@ -4,7 +4,7 @@
 #include "Object.h"
 #include "Window.h"
 #include "Textures.h"
-// #include "Board.h"
+#include "Board.h"
 
 class Game {
     
@@ -21,7 +21,7 @@ private:
 
     Textures textures;
 
-    // Board board;
+    Board board;
 
     bool running = false;
 };
