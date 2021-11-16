@@ -1,17 +1,15 @@
 #ifndef TILE_H
 #define TILE_H
 
+#include <SDL.h>
+
+#include "Object.h"
+#include "constants.h"
+#include "BlockType.h"
+#include "Textures.h"
 #include "Sound.h"
 
-enum BlockType{NONE, TANK, WATER, GROUND, REDBLOCK,
-	ENEMYTANK, NUKE, ENEMYNUKE, MIRROR, TEE, STATIC,
-	RUSTYREDBLOCK, RUSTY, BARSVERT, BARSHORIZ, BARSCROSS,
-	WHITEBLOCK, TRIANGLE, RUSTYTRIANGLE, RUSTYBARSVERT,
-	RUSTYBARSHORIZ, RUSTYWHITEBLOCK};
-
-
 class Tile;
-class Draw;
 
 struct Blocks {
 	Tile* right;
@@ -24,15 +22,11 @@ struct Blocks {
 	Tile* aboveleft;
 };
 
-//#include "pix.h"
-
-class Tile
+class Tile : public Object
 {
 	friend class ATile;
 public:
-	Tile(int x, int y, int r=0) : x_pos(x), y_pos(y), deadBlock(0), willKillFlag(0) {
-		if (!beamSurface) SetBeamSurface();
-
+	Tile(int x, int y, Textures * textures, int r=0) : x_pos(x), y_pos(y), deadBlock(0), willKillFlag(0), textures(textures) {
 		SetRotation(r);
 		FiringUp=FiringDown=FiringLeft=FiringRight=Firing=0;
 		WasHitLeft=WasHitRight=WasHitTop=WasHitBottom=WasHit=0;
@@ -58,7 +52,7 @@ public:
 	virtual bool WillKill(int flag=2);
 
 	virtual BlockType GetBlockType() {
-		return NONE;
+		return BlockType::NONE;
 	}
 
 	virtual bool BlockOver(Tile* &block, Tile* &ground)
@@ -131,8 +125,6 @@ public:
 	}
 
 	virtual void Update() {
-		Draw();
-		DisplayBeam(BeamState());
 		if (Firing) Firing=FiringRight=FiringLeft=FiringUp=FiringDown=false;
 		moved=false;
 	}
@@ -151,12 +143,12 @@ public:
 
 	void AddDead(Tile* tile);
 
-
+	virtual void draw(SDL_Renderer * renderer) {
+		DisplayBeam(renderer, BeamState());
+		BlackSquare(renderer, x_pos, y_pos); 
+	}
 
 protected: //functions
-	virtual void Draw() {
-		if (surface) draw.BlackSquare(x_pos, y_pos); 
-	}
 	virtual int BeamState();
 	bool SeeMe(BlockType type) {
 		SeeMeLeft(type, 0);
@@ -186,17 +178,17 @@ protected: //functions
 	bool TopGround(Tile* &p);
 	bool BottomGround(Tile* &p);
 
-	void DisplayBeam(int type) {
+	void DisplayBeam(SDL_Renderer * renderer, int type) {
 
 		//if (type&&beamSurface)
 		if (HadFiredLeft||WasHitLeft)
-			draw.BlitSquare(beamSurface, 0 ,1, x_pos, y_pos);
+			BlitSquare(renderer, textures->getBeamSprites(), 0 ,1, x_pos, y_pos);
 		if (HadFiredUp||WasHitTop)
-			draw.BlitSquare(beamSurface, 1 ,1, x_pos, y_pos);
+			BlitSquare(renderer, textures->getBeamSprites(), 1 ,1, x_pos, y_pos);
 		if (HadFiredRight||WasHitRight)
-			draw.BlitSquare(beamSurface, 2 ,1, x_pos, y_pos);
+			BlitSquare(renderer, textures->getBeamSprites(), 2 ,1, x_pos, y_pos);
 		if (HadFiredDown||WasHitBottom)
-			draw.BlitSquare(beamSurface, 3 ,1, x_pos, y_pos);	
+			BlitSquare(renderer, textures->getBeamSprites(), 3 ,1, x_pos, y_pos);	
 	
 	
 	}
@@ -206,27 +198,57 @@ protected: //functions
 	virtual bool MoveRight();
 	virtual bool MoveLeft();
 
+	void BlitSquare(SDL_Renderer * renderer, SDL_Texture * surface, int x, int y, int dx, int dy)
+	{
+		x*=IMAGE_WIDTH;
+		y*=IMAGE_WIDTH;
+		dx*=IMAGE_WIDTH;
+		dy*=IMAGE_WIDTH;
+		SDL_Rect sr={x,y,x+IMAGE_WIDTH, y+IMAGE_WIDTH};
+		SDL_Rect r={dx,dy,dx+IMAGE_WIDTH, dy+IMAGE_WIDTH};
+		SDL_RenderCopy(renderer, surface, &sr, &r);
+	}
+
+	void Blit(SDL_Renderer * renderer, SDL_Texture * surface, int x, int y, int dx, int dy)
+	{
+		SDL_Rect r={x,y,x+IMAGE_WIDTH, y+IMAGE_WIDTH};
+		SDL_RenderCopy(renderer, surface, NULL, &r);
+	}
+
+	void BlitOther(SDL_Renderer * renderer, SDL_Texture * surface, int x, int y, int dx, int dy, int w, int h)
+	{
+		SDL_Rect r={x,y,x+w, y+h};
+		SDL_RenderCopy(renderer, surface, NULL, &r);
+	}
+
+	void BlackSquare(SDL_Renderer * renderer, int dx, int dy)
+	{
+		dx*=IMAGE_WIDTH;
+		dy*=IMAGE_WIDTH;
+
+		SDL_Rect rc = {dx, dy, dx+IMAGE_WIDTH, dy+IMAGE_WIDTH};
+		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+
+		SDL_RenderFillRect(renderer, &rc);
+	}
+
 protected: //members
 	bool FiringUp, FiringDown, FiringLeft, FiringRight, Firing;
 	int WasHitLeft, WasHitRight, WasHitTop, WasHitBottom, WasHit;
 	int HadFiredLeft, HadFiredRight, HadFiredUp, HadFiredDown, HadFired;
 	bool moved;
 
-	static SDL_Texture * surface;
-	static SDL_Texture * beamSurface;
 	int cols;
 	int rows;
 
 	int x_pos, y_pos;
 	int rotation;
 
+	Textures * textures;
+
 private: // functions
 	//Set for killing, just not immediatly.
 
-	static void SetBeamSurface()
-	{
-		beamSurface=draw.GetSurface("BEAM");
-	}
 private: //members
 	int willKillFlag;
 	Tile* deadBlock;
@@ -239,9 +261,8 @@ private: //members
 class GroundTile : public Tile
 {
 public:
-	GroundTile(int x, int y, int r=33) : Tile(x,y,r), otherblocks(0) {
+	GroundTile(int x, int y, Textures * textures, int r=33) : Tile(x,y,textures,r), otherblocks(0) {
 		SetRotation(r);
-		if (!surface) SetSurface();
 
 	}
 	virtual bool SetRotation(int r) {
@@ -267,7 +288,7 @@ public:
 	virtual bool LookBottom(BlockType type, int dist) {SeeMeUp(type, ++dist); return true;}
 
 	virtual BlockType GetBlockType() {
-		return GROUND;
+		return BlockType::GROUND;
 	}
 
 	static bool SetChanged(bool change) {
@@ -278,12 +299,12 @@ public:
 
 
 protected: //functions
-	virtual void GroundTile::Draw() {
+	virtual void GroundTile::draw(SDL_Renderer * renderer) {
 		if (rotation!=33) {
 			int r;
 			if (rotation>=100) r=33-rotation/100, rotation-=100; 
 			else r=rotation;
-			if (surface) draw.BlitSquare(surface, r%11 ,r/11, x_pos, y_pos);
+			BlitSquare(renderer, textures->getGroundSprites(), r%11 ,r/11, x_pos, y_pos);
 		}
 		else {
 			//calculate pieces of images to stick together
@@ -300,42 +321,34 @@ protected: //functions
 			corners[3] = ((otherblocks& mask)/0x40u);
 			mask*=0x4u;
 
-			if (surface) {
-				for (int i=0; i<4; i++) {
-					if (surface) { draw.BlitOther(surface,
-						corners[i]*IMAGE_WIDTH + ((i==0||i==3)?0:(IMAGE_WIDTH/2)),
-						3*IMAGE_WIDTH + ((i<2)?0:(IMAGE_WIDTH/2)),
-						x_pos*IMAGE_WIDTH + ((i==0||i==3)?0:(IMAGE_WIDTH/2)),
-						y_pos*IMAGE_WIDTH + ((i<2)?0:(IMAGE_WIDTH/2)),
-						IMAGE_WIDTH/2, IMAGE_WIDTH/2);
-					}
-				}
+			for (int i=0; i<4; i++) {
+				BlitOther(renderer, textures->getGroundSprites(),
+					corners[i]*IMAGE_WIDTH + ((i==0||i==3)?0:(IMAGE_WIDTH/2)),
+					3*IMAGE_WIDTH + ((i<2)?0:(IMAGE_WIDTH/2)),
+					x_pos*IMAGE_WIDTH + ((i==0||i==3)?0:(IMAGE_WIDTH/2)),
+					y_pos*IMAGE_WIDTH + ((i<2)?0:(IMAGE_WIDTH/2)),
+					IMAGE_WIDTH/2, IMAGE_WIDTH/2);
 			}
 		}
 	}
 
 protected: //members
-	static SDL_Texture * surface;
 
 private: // functions
-	virtual void SetSurface() {
-		surface=draw.GetSurface("GROUND");
-	}
 private: //members
 	static bool changed;
-	unsigned int otherblocks;	
+	unsigned int otherblocks;
 };
 
 class ATile : public Tile
 {
 public:
 
-	ATile(int x, int y, int r=0) : Tile(x,y,r) {
+	ATile(int x, int y, Textures * textures, int r=0) : Tile(x,y,textures,r) {
 
 	}
 
 	virtual void Update() {
-		Draw();
 		BeamState();
 		if (Firing) Firing=FiringRight=FiringLeft=FiringUp=FiringDown=false;
 		moved=false;
@@ -353,8 +366,7 @@ private: //members
 class Tank : public ATile
 {
 public:
-	Tank(int x, int y, int r=0) : ATile(x,y,r) {
-		if (!surface) SetSurface();
+	Tank(int x, int y, Textures * textures, int r=0) : ATile(x,y,textures,r) {
 		SetRotation(r);
 
 	}
@@ -365,12 +377,12 @@ public:
 	}
 
 	virtual bool PreSeeMe() {
-		return SeeMe(TANK);
+		return SeeMe(BlockType::TANK);
 	}
 
 	virtual BlockType GetBlockType()
 	{
-		return TANK;
+		return BlockType::TANK;
 	}
 
 	virtual bool ShootUp() {
@@ -393,10 +405,10 @@ public:
 		return ret;
 
 	}
-	virtual bool HitLeft() {ATile::HitLeft(); sound.PlayASound("pop.wav", POP); return WillKill();}
-	virtual bool HitTop() {ATile::HitTop(); sound.PlayASound("pop.wav", POP); return WillKill();}
-	virtual bool HitRight() {ATile::HitRight(); sound.PlayASound("pop.wav", POP); return WillKill();}
-	virtual bool HitBottom() {ATile::HitBottom(); sound.PlayASound("pop.wav", POP); return WillKill();}
+	virtual bool HitLeft() {ATile::HitLeft(); Sound::PlayASound("pop.wav", POP); return WillKill();}
+	virtual bool HitTop() {ATile::HitTop(); Sound::PlayASound("pop.wav", POP); return WillKill();}
+	virtual bool HitRight() {ATile::HitRight(); Sound::PlayASound("pop.wav", POP); return WillKill();}
+	virtual bool HitBottom() {ATile::HitBottom(); Sound::PlayASound("pop.wav", POP); return WillKill();}
 
 	virtual bool RotateLeft() {
 		int row=rotation/4;
@@ -419,7 +431,7 @@ protected: //functions
 	virtual int BeamState() {
 		return 0;
 	}
-	virtual void Tank::Draw();
+	virtual void Tank::draw(SDL_Renderer * renderer);
 	virtual bool MoveUp() {
 		bool ret=ATile::MoveUp();
 		return ret;
@@ -438,14 +450,9 @@ protected: //functions
 
 	}
 protected: //members
-		static SDL_Texture * surface;
-
 
 
 private: // functions
-	virtual void SetSurface() {
-		surface=draw.GetSurface("TANK");
-	}
 private: //members
 
 };
@@ -453,13 +460,12 @@ private: //members
 class RedBlock : public ATile
 {
 public:
-	RedBlock(int x, int y, int r=0) : ATile(x,y,0) {
-		if (!surface) SetSurface();
+	RedBlock(int x, int y, Textures * textures, int r=0) : ATile(x,y,textures,0) {
 		SetRotation(r);
 
 	}
 	virtual BlockType GetBlockType() {
-		return REDBLOCK;
+		return BlockType::REDBLOCK;
 	}
 	virtual bool SetRotation(int r) {
 		rotation=0;
@@ -472,16 +478,12 @@ public:
 	virtual bool HitBottom() {Tile::HitBottom(); PushBottom(); return true;}
 
 protected: //functions
-	virtual void RedBlock::Draw() {
-		if (surface) draw.BlitSquare(surface, 0 ,0, x_pos, y_pos); 
+	virtual void RedBlock::draw(SDL_Renderer * renderer) {
+		BlitSquare(renderer, textures->getRedblockSprites(), 0 ,0, x_pos, y_pos); 
 	}
 
 protected: //members
-		static SDL_Texture * surface;
 private: // functions
-	virtual void SetSurface() {
-		surface=draw.GetSurface("REDBLOCK");
-	}
 private: //members
 
 };
@@ -489,13 +491,12 @@ private: //members
 class WhiteBlock : public RedBlock
 {
 public:
-	WhiteBlock(int x, int y, int r=0) : RedBlock(x,y,2) {
-		if (!surface) SetSurface();
+	WhiteBlock(int x, int y, Textures * textures, int r=0) : RedBlock(x,y,textures,2) {
 		SetRotation(r);
 
 	}
 	virtual BlockType GetBlockType() {
-		return WHITEBLOCK;
+		return BlockType::WHITEBLOCK;
 	}
 	virtual bool SetRotation(int r) {
 		rotation=2;
@@ -504,18 +505,15 @@ public:
 
 
 protected: //functions
-	virtual void WhiteBlock::Draw() {
-		if (surface) draw.BlitSquare(surface, 2 ,0, x_pos, y_pos); 
+	virtual void WhiteBlock::draw(SDL_Renderer * renderer) {
+		BlitSquare(renderer, textures->getRedblockSprites(), 2 ,0, x_pos, y_pos); 
 	}
-	virtual bool MoveUp() {sound.PlayASound(NULL, SCRAPE); return Tile::MoveUp();}
-	virtual bool MoveDown() {sound.PlayASound(NULL, SCRAPE); return Tile::MoveDown();}
-	virtual bool MoveLeft() {sound.PlayASound(NULL, SCRAPE); return Tile::MoveLeft();}
-	virtual bool MoveRight() {sound.PlayASound(NULL, SCRAPE); return Tile::MoveRight();}
+	virtual bool MoveUp() {Sound::PlayASound(NULL, SCRAPE); return Tile::MoveUp();}
+	virtual bool MoveDown() {Sound::PlayASound(NULL, SCRAPE); return Tile::MoveDown();}
+	virtual bool MoveLeft() {Sound::PlayASound(NULL, SCRAPE); return Tile::MoveLeft();}
+	virtual bool MoveRight() {Sound::PlayASound(NULL, SCRAPE); return Tile::MoveRight();}
 protected: //members
 private: // functions
-	virtual void SetSurface() {
-		surface=draw.GetSurface("REDBLOCK");
-	}
 private: //members
 
 };
@@ -523,9 +521,8 @@ private: //members
 class Water : public GroundTile
 {
 public:
-	Water(int x, int y, int r=0) : GroundTile(x,y,r) {
+	Water(int x, int y, Textures * textures, int r=0) : GroundTile(x,y,textures,r) {
 		SetRotation(r);
-		if (!surface) SetSurface();
 
 	}
 
@@ -535,7 +532,7 @@ public:
 		return true;
 	}
 	virtual BlockType GetBlockType() {
-		return WATER;
+		return BlockType::WATER;
 	}
 
 	static void IncStaticRotation() {
@@ -548,20 +545,16 @@ public:
 	}
 
 protected: //functions
-	virtual void Water::Draw() {
+	virtual void Water::draw(SDL_Renderer * renderer) {
 		if (rotation>=100) {
-			GroundTile::Draw();
+			GroundTile::draw(renderer);
 			return;
 		}
-		if (surface) draw.BlitSquare(surface, static_rotation%10 ,static_rotation/10, x_pos, y_pos); 
+		BlitSquare(renderer, textures->getWaterSprite(), static_rotation%10 ,static_rotation/10, x_pos, y_pos); 
 	}
 protected: //members
-	static SDL_Texture * surface;
 
 private: // functions
-	virtual void SetSurface() {
-		surface=draw.GetSurface("WATER");
-	}
 private: //members
 	static int static_rotation;
 };
@@ -569,9 +562,8 @@ private: //members
 class Static : public ATile
 {
 public:
-	Static(int x, int y, int r=0) : 
-	  ATile(x,y,r), turn_right(r>8?0:1) , time(0), span(0) {
-		if (!surface) SetSurface();
+	Static(int x, int y, Textures * textures, int r=0) : 
+	  ATile(x,y,textures,r), turn_right(r>8?0:1) , time(0), span(0) {
 		SetRotation(r);
 
 	}
@@ -582,7 +574,7 @@ public:
 	}
 
 protected: //functions
-	virtual void Static::Draw() {
+	virtual void Static::draw(SDL_Renderer * renderer) {
 		if (span>=2) {
 			time++;
 			time%=(span-1);
@@ -597,27 +589,22 @@ protected: //functions
 			}
 			if (span&&!(rand()%(17-((span-1)*(span-1))*1))) span++;
 		}
-		if (surface) draw.BlitSquare(surface, rotation%9 ,0, x_pos, y_pos); 
+		BlitSquare(renderer, textures->getStaticSprites(), rotation%9 ,0, x_pos, y_pos); 
 	}
 	virtual bool PushLeft() {return false;}
 	virtual bool PushRight() {return false;}
 	virtual bool PushTop() {return false;}
 	virtual bool PushBottom() {return false;}
 
-	virtual bool HitLeft() {sound.PlayASound("donk.wav", DONK); return span=1;}
-	virtual bool HitRight() {sound.PlayASound("donk.wav", DONK); return span=1;}
-	virtual bool HitTop() {sound.PlayASound("donk.wav", DONK); return span=1;}
-	virtual bool HitBottom() {sound.PlayASound("donk.wav", DONK); return span=1;}
+	virtual bool HitLeft() {Sound::PlayASound("donk.wav", DONK); return span=1;}
+	virtual bool HitRight() {Sound::PlayASound("donk.wav", DONK); return span=1;}
+	virtual bool HitTop() {Sound::PlayASound("donk.wav", DONK); return span=1;}
+	virtual bool HitBottom() {Sound::PlayASound("donk.wav", DONK); return span=1;}
 
 
 
 protected: //members
-		static SDL_Texture * surface;
 private: // functions
-
-	virtual void SetSurface() {
-		surface=draw.GetSurface("STATIC");
-	}
 private: //members
 	bool turn_right;
 	int time, span;
@@ -627,8 +614,7 @@ private: //members
 class Mirror : public ATile
 {
 public:
-	Mirror(int x, int y, int r=0) : ATile(x,y,r), rotation2(0){
-		if (!surface) SetSurface();
+	Mirror(int x, int y, Textures * textures, int r=0) : ATile(x,y,textures,r), rotation2(0){
 		SetRotation(r);
 
 	}
@@ -639,14 +625,14 @@ public:
 	}
 
 protected: //functions
-	virtual void Mirror::Draw() {
+	virtual void Mirror::draw(SDL_Renderer * renderer) {
 		rotation2++;
 		if (rotation2>=7) {
 			rotation2=0;
 			rotation+=4;
 			rotation%=16;
 		}
-		if (surface) draw.BlitSquare(surface, rotation%4 , HadFired?4:(rotation/4), x_pos, y_pos); 
+		BlitSquare(renderer, textures->getMirrorSprites(), rotation%4 , HadFired?4:(rotation/4), x_pos, y_pos); 
 	}
 	virtual int BeamState();
 
@@ -735,36 +721,30 @@ protected: //functions
 
 
 protected: //members
-		static SDL_Texture * surface;
 		int rotation2;
 
 private: // functions
-
-	virtual void SetSurface() {
-		surface=draw.GetSurface("MIRROR");
-	}
 private: //members
 };
 
 class Tee : public Mirror
 {
 public:
-	Tee(int x, int y, int r=0) : Mirror(x,y,r) {
-		if (!surface) SetSurface();
+	Tee(int x, int y, Textures * textures, int r=0) : Mirror(x,y,textures,r) {
 		SetRotation(r);
 
 	}
 
 protected: //functions
 
-	virtual void Tee::Draw() {
+	virtual void Tee::draw(SDL_Renderer * renderer) {
 		rotation2++;
 		if (rotation2>=7) {
 			rotation2=0;
 			rotation+=7;
 			rotation%=28;
 		}
-		if (surface) draw.BlitSquare(surface, rotation%7 , HadFired?4:(rotation/7), x_pos, y_pos); 
+		BlitSquare(renderer, textures->getTeeSprites(), rotation%7 , HadFired?4:(rotation/7), x_pos, y_pos); 
 	}
 
 	virtual bool HitLeft() {
@@ -906,19 +886,14 @@ protected: //functions
 
 
 protected: //members
-		static SDL_Texture * surface;
 private: // functions
-
-	virtual void SetSurface() {
-		surface=draw.GetSurface("TEE");
-	}
 private: //members
 };
 
 class EnemyTank : public Tank
 {
 public:
-	EnemyTank(int x, int y, int r=0) : Tank(x,y,r) {
+	EnemyTank(int x, int y, Textures * textures, int r=0) : Tank(x,y,textures,r) {
 
 	}
 	virtual bool SetRotation(int r) {return ATile::SetRotation(r);}
@@ -928,7 +903,7 @@ public:
 	}
 
 	virtual BlockType GetBlockType() {
-		return ENEMYTANK;
+		return BlockType::ENEMYTANK;
 	}
 
 	virtual bool LookLeft(BlockType type, int dist) {ShootLeft(); return true;}
@@ -942,11 +917,11 @@ public:
 	virtual bool ShootLeft() {SetRotation(0); return ATile::ShootLeft();}
 
 protected: //functions
-	virtual void EnemyTank::Draw() {
+	virtual void EnemyTank::draw(SDL_Renderer * renderer) {
 		int rotate=rand()%1000;
 		if (rotate==0) RotateRight();	//make tanks rotate randomly
 		else if (rotate==1) RotateLeft();
-		if (surface) draw.BlitSquare(surface, rotation ,1, x_pos, y_pos); 
+		BlitSquare(renderer, textures->getTankSprites(), rotation ,1, x_pos, y_pos); 
 	}
 	virtual bool MoveUp() {
 		return ATile::MoveUp();
@@ -969,8 +944,7 @@ private: //members
 class Nuke : public ATile
 {
 public:
-	Nuke(int x, int y, int r=0) : ATile(x,y,r) {
-		if (!surface) SetSurface();
+	Nuke(int x, int y, Textures * textures, int r=0) : ATile(x,y,textures,r) {
 
 	}
 	virtual bool HitLeft() {ATile::HitLeft(); Kill(); return true;}
@@ -980,16 +954,12 @@ public:
 
 	virtual bool Kill();
 protected: //functions
-	virtual void Nuke::Draw() {
-		if (surface) draw.BlitSquare(surface, 0 ,0, x_pos, y_pos); 
+	virtual void Nuke::draw(SDL_Renderer * renderer) {
+		BlitSquare(renderer, textures->getNukeSprites(), 0 ,0, x_pos, y_pos); 
 	}
 
 protected: //members
-		static SDL_Texture * surface;
 private: // functions
-	virtual void SetSurface() {
-		surface=draw.GetSurface("NUKE");
-	}
 private: //members
 
 };
@@ -997,17 +967,16 @@ private: //members
 class Rusty : public Static
 {
 public:
-	Rusty(int x, int y, int r=0) : Static(x,y,r), turn_right(r>8?0:1) {
-		if (!surface) SetSurface();
+	Rusty(int x, int y, Textures * textures, int r=0) : Static(x,y,textures,r), turn_right(r>8?0:1) {
 
 	}
 
-	virtual bool HitLeft() {ATile::HitLeft(); sound.PlayASound("collapse.wav", COLLAPSE); return Kill();}
-	virtual bool HitTop() {ATile::HitTop(); sound.PlayASound("collapse.wav", COLLAPSE); return Kill();}
-	virtual bool HitRight() {ATile::HitRight(); sound.PlayASound("collapse.wav", COLLAPSE); return Kill();}
-	virtual bool HitBottom() {ATile::HitBottom(); sound.PlayASound("collapse.wav", COLLAPSE); return Kill();}
+	virtual bool HitLeft() {ATile::HitLeft(); Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();}
+	virtual bool HitTop() {ATile::HitTop(); Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();}
+	virtual bool HitRight() {ATile::HitRight(); Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();}
+	virtual bool HitBottom() {ATile::HitBottom(); Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();}
 protected: //functions
-	virtual void Rusty::Draw() {
+	virtual void Rusty::draw(SDL_Renderer * renderer) {
 		if (rotation>=5) {
 			if (turn_right) {rotation++;
 				if (rotation>=9) rotation=5;
@@ -1017,52 +986,43 @@ protected: //functions
 					if (rotation<=4) rotation=8;
 			}
 		}
-		if (surface) draw.BlitSquare(surface, rotation%9 ,0, x_pos, y_pos); 
+		BlitSquare(renderer, textures->getRustySprites(), rotation%9 ,0, x_pos, y_pos); 
 	}
 
 
 
 protected: //members
-		static SDL_Texture * surface;
 private: // functions
 
 	bool turn_right;
-
-	virtual void SetSurface() {
-		surface=draw.GetSurface("RUSTY");
-	}
 };
 
 class RustyRedBlock :public RedBlock
 {
 public:
-	RustyRedBlock(int x, int y, int r=0) : RedBlock(x,y,1) {
-		if (!surface) SetSurface();
+	RustyRedBlock(int x, int y, Textures * textures, int r=0) : RedBlock(x,y,textures,1) {
 		SetRotation(r);
 
 	}
 	virtual BlockType GetBlockType() {
-		return REDBLOCK;
+		return BlockType::REDBLOCK;
 	}
 	virtual bool SetRotation(int r) {
 		rotation=1;
 		return false;
 	}
-	virtual bool HitLeft() {ATile::HitLeft(); sound.PlayASound("pop.wav", POP); return Kill();}
-	virtual bool HitTop() {ATile::HitTop(); sound.PlayASound("pop.wav", POP); return Kill();}
-	virtual bool HitRight() {ATile::HitRight(); sound.PlayASound("pop.wav", POP); return Kill();}
-	virtual bool HitBottom() {ATile::HitBottom(); sound.PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitLeft() {ATile::HitLeft(); Sound::PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitTop() {ATile::HitTop(); Sound::PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitRight() {ATile::HitRight(); Sound::PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitBottom() {ATile::HitBottom(); Sound::PlayASound("pop.wav", POP); return Kill();}
 
 protected: //functions
-	virtual void RustyRedBlock::Draw() {
-		if (surface) draw.BlitSquare(surface, 1 ,0, x_pos, y_pos); 
+	virtual void RustyRedBlock::draw(SDL_Renderer * renderer) {
+		BlitSquare(renderer, textures->getRedblockSprites(), 1 ,0, x_pos, y_pos); 
 	}
 
 protected: //members
 private: // functions
-	virtual void SetSurface() {
-		surface=draw.GetSurface("REDBLOCK");
-	}
 private: //members
 
 };
@@ -1070,8 +1030,7 @@ private: //members
 class EnemyNuke : public Nuke
 {
 public:
-	EnemyNuke(int x, int y, int r=0) : Nuke(x,y,r) {
-		if (!surface) SetSurface();
+	EnemyNuke(int x, int y, Textures * textures, int r=0) : Nuke(x,y,textures,r) {
 
 	}
 
@@ -1082,15 +1041,12 @@ public:
 
 
 protected: //functions
-	virtual void EnemyNuke::Draw() {
-		if (surface) draw.BlitSquare(surface, 1 ,0, x_pos, y_pos); 
+	virtual void EnemyNuke::draw(SDL_Renderer * renderer) {
+		BlitSquare(renderer, textures->getNukeSprites(), 1 ,0, x_pos, y_pos); 
 	}
 
 protected: //members
 private: // functions
-	virtual void SetSurface() {
-		surface=draw.GetSurface("NUKE");
-	}
 private: //members
 
 };
@@ -1098,8 +1054,7 @@ private: //members
 class Message : public Static
 {
 public:
-	Message(int x, int y, int r=0) : Static(x,y,r) {
-		if (!surface) SetSurface();
+	Message(int x, int y, Textures * textures, int r=0) : Static(x,y,textures,r) {
 		SetRotation(r);
 
 	}
@@ -1109,8 +1064,8 @@ public:
 	}
 
 protected: //functions
-	virtual void Message::Draw() {
-		if (surface) draw.BlitSquare(surface, rotation%14 ,rotation/14, x_pos, y_pos); 
+	virtual void Message::draw(SDL_Renderer * renderer) {
+		BlitSquare(renderer, textures->getMessageSprite(), rotation%14 ,rotation/14, x_pos, y_pos); 
 	}
 	virtual bool PushLeft() {return false;}
 	virtual bool PushRight() {return false;}
@@ -1118,12 +1073,7 @@ protected: //functions
 	virtual bool PushBottom() {return false;}
 
 protected: //members
-		static SDL_Texture * surface;
 private: // functions
-
-	virtual void SetSurface() {
-		surface=draw.GetSurface("MESSAGE");
-	}
 private: //members
 
 };
@@ -1131,9 +1081,8 @@ private: //members
 class BarsVert : public Static
 {
 public:
-	BarsVert(int x, int y, int r=0) : 
-	  Static(x,y,r) {
-		if (!surface) SetSurface();
+	BarsVert(int x, int y, Textures * textures, int r=0) : 
+	  Static(x,y,textures,r) {
 		SetRotation(0);
 
 	}
@@ -1143,9 +1092,9 @@ public:
 	}
 
 protected: //functions
-	virtual void BarsVert::Draw() {
+	virtual void BarsVert::draw(SDL_Renderer * renderer) {
 
-		if (surface) draw.BlitSquare(surface, 0 ,0, x_pos, y_pos); 
+		BlitSquare(renderer, textures->getBarSprites(), 0 ,0, x_pos, y_pos); 
 	}
 
 	virtual bool HitTop() {Tile::HitTop(); return ShootDown();}
@@ -1155,12 +1104,7 @@ protected: //functions
 	virtual bool LookBottom(BlockType type, int dist) {SeeMeUp(type, ++dist); return true;}
 
 protected: //members
-		static SDL_Texture * surface;
 private: // functions
-
-	virtual void SetSurface() {
-		surface=draw.GetSurface("BARS");
-	}
 private: //members
 
 };
@@ -1168,9 +1112,8 @@ private: //members
 class BarsHoriz : public BarsVert
 {
 public:
-	BarsHoriz(int x, int y, int r=0) : 
-	  BarsVert(x,y,r) {
-		if (!surface) SetSurface();
+	BarsHoriz(int x, int y, Textures * textures, int r=0) : 
+	  BarsVert(x,y,textures,r) {
 		SetRotation(0);
 
 	}
@@ -1180,9 +1123,9 @@ public:
 	}
 
 protected: //functions
-	virtual void BarsHoriz::Draw() {
+	virtual void BarsHoriz::draw(SDL_Renderer * renderer) {
 
-		if (surface) draw.BlitSquare(surface, 1 ,0, x_pos, y_pos); 
+		BlitSquare(renderer, textures->getBarSprites(), 1 ,0, x_pos, y_pos); 
 	}
 	virtual bool HitTop() {return Static::HitTop();}
 	virtual bool HitBottom() {return Static::HitBottom();}
@@ -1196,10 +1139,6 @@ protected: //functions
 
 protected: //members
 private: // functions
-
-	virtual void SetSurface() {
-		surface=draw.GetSurface("BARS");
-	}
 private: //members
 
 };
@@ -1207,9 +1146,8 @@ private: //members
 class BarsCross : public BarsVert
 {
 public:
-	BarsCross(int x, int y, int r=0) : 
-	  BarsVert(x,y,r) {
-		if (!surface) SetSurface();
+	BarsCross(int x, int y, Textures * textures, int r=0) : 
+	  BarsVert(x,y,textures,r) {
 		SetRotation(0);
 
 	}
@@ -1219,9 +1157,9 @@ public:
 	}
 
 protected: //functions
-	virtual void BarsCross::Draw() {
+	virtual void BarsCross::draw(SDL_Renderer * renderer) {
 
-		if (surface) draw.BlitSquare(surface, 2 ,0, x_pos, y_pos); 
+		BlitSquare(renderer, textures->getBarSprites(), 2 ,0, x_pos, y_pos); 
 	}
 
 	virtual bool HitTop() {Tile::HitTop(); return ShootDown();}
@@ -1236,10 +1174,6 @@ protected: //functions
 
 protected: //members
 private: // functions
-
-	virtual void SetSurface() {
-		surface=draw.GetSurface("BARS");
-	}
 private: //members
 
 };
@@ -1247,8 +1181,7 @@ private: //members
 class Triangle : public Mirror
 {
 public:
-	Triangle(int x, int y, int r=0) : Mirror(x,y,r) {
-		if (!surface) SetSurface();
+	Triangle(int x, int y, Textures * textures, int r=0) : Mirror(x,y,textures,r) {
 		SetRotation(r);
 
 	}
@@ -1263,14 +1196,14 @@ public:
 	virtual bool PushTop() {return false;}
 	virtual bool PushBottom() {return false;}
 
-	virtual bool HitLeft() {sound.PlayASound("donk.wav", DONK); return Mirror::HitLeft();}
-	virtual bool HitRight() {sound.PlayASound("donk.wav", DONK); return Mirror::HitRight();}
-	virtual bool HitTop() {sound.PlayASound("donk.wav", DONK); return Mirror::HitTop();}
-	virtual bool HitBottom() {sound.PlayASound("donk.wav", DONK); return Mirror::HitBottom();}
+	virtual bool HitLeft() {Sound::PlayASound("donk.wav", DONK); return Mirror::HitLeft();}
+	virtual bool HitRight() {Sound::PlayASound("donk.wav", DONK); return Mirror::HitRight();}
+	virtual bool HitTop() {Sound::PlayASound("donk.wav", DONK); return Mirror::HitTop();}
+	virtual bool HitBottom() {Sound::PlayASound("donk.wav", DONK); return Mirror::HitBottom();}
 
 protected: //functions
-	virtual void Triangle::Draw() {
-		if (surface) draw.BlitSquare(surface, rotation%4 , 5, x_pos, y_pos); 
+	virtual void Triangle::draw(SDL_Renderer * renderer) {
+		BlitSquare(renderer, textures->getMirrorSprites(), rotation%4 , 5, x_pos, y_pos); 
 	};
 
 
@@ -1278,42 +1211,37 @@ protected: //functions
 protected: //members
 
 private: // functions
-
-	virtual void SetSurface() {
-		surface=draw.GetSurface("MIRROR");
-	}
 private: //members
 };
 
 class RustyTriangle : public Triangle
 {
 public:
-	RustyTriangle(int x, int y, int r=0) : Triangle(x,y,r) {
-		if (!surface) SetSurface();
+	RustyTriangle(int x, int y, Textures * textures, int r=0) : Triangle(x,y,textures,r) {
 		SetRotation(r);
 
 	}
 
 	virtual bool HitLeft() {
 		Triangle::HitLeft();
-		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 	virtual bool HitRight() {
 		Triangle::HitRight();
-		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 	virtual bool HitTop() {
 		Triangle::HitTop();
-		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 	virtual bool HitBottom() {
 		Triangle::HitBottom();
-		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 
 protected: //functions
-	virtual void RustyTriangle::Draw() {
-		if (surface) draw.BlitSquare(surface, rotation%4 , 6, x_pos, y_pos); 
+	virtual void RustyTriangle::draw(SDL_Renderer * renderer) {
+		BlitSquare(renderer, textures->getMirrorSprites(), rotation%4 , 6, x_pos, y_pos); 
 	};
 
 
@@ -1321,46 +1249,37 @@ protected: //functions
 protected: //members
 
 private: // functions
-
-	virtual void SetSurface() {
-		surface=draw.GetSurface("MIRROR");
-	}
 private: //members
 };
 
 class RustyBarsVert : public BarsVert
 {
 public:
-	RustyBarsVert(int x, int y, int r=0) : 
-	  BarsVert(x,y,r) {
-		if (!surface) SetSurface();
+	RustyBarsVert(int x, int y, Textures * textures, int r=0) : 
+	  BarsVert(x,y,textures,r) {
 		SetRotation(0);
 
 	}
 
 	virtual bool HitLeft() {
 		ATile::HitLeft();
-		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 	virtual bool HitRight() {
 		ATile::HitRight();
-		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 
 protected: //functions
-	virtual void RustyBarsVert::Draw() {
+	virtual void RustyBarsVert::draw(SDL_Renderer * renderer) {
 
-		if (surface) draw.BlitSquare(surface, 0 ,1, x_pos, y_pos); 
+		BlitSquare(renderer, textures->getBarSprites(), 0 ,1, x_pos, y_pos); 
 	}
 
 
 
 protected: //members
 private: // functions
-
-	virtual void SetSurface() {
-		surface=draw.GetSurface("BARS");
-	}
 private: //members
 
 };
@@ -1368,36 +1287,31 @@ private: //members
 class RustyBarsHoriz : public BarsHoriz
 {
 public:
-	RustyBarsHoriz(int x, int y, int r=0) : 
-	  BarsHoriz(x,y,r) {
-		if (!surface) SetSurface();
+	RustyBarsHoriz(int x, int y, Textures * textures, int r=0) : 
+	  BarsHoriz(x,y,textures,r) {
 		SetRotation(0);
 
 	}
 
 	virtual bool HitTop() {
 		ATile::HitTop();
-		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 	virtual bool HitBottom() {
 		ATile::HitBottom();
-		sound.PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 
 protected: //functions
-	virtual void RustyBarsHoriz::Draw() {
+	virtual void RustyBarsHoriz::draw(SDL_Renderer * renderer) {
 
-		if (surface) draw.BlitSquare(surface, 1 ,1, x_pos, y_pos); 
+		BlitSquare(renderer, textures->getBarSprites(), 1 ,1, x_pos, y_pos); 
 	}
 
 
 
 protected: //members
 private: // functions
-
-	virtual void SetSurface() {
-		surface=draw.GetSurface("BARS");
-	}
 private: //members
 
 };
@@ -1405,27 +1319,23 @@ private: //members
 class RustyWhiteBlock : public WhiteBlock
 {
 public:
-	RustyWhiteBlock(int x, int y, int r=0) : WhiteBlock(x,y,3) {
-		if (!surface) SetSurface();
+	RustyWhiteBlock(int x, int y, Textures * textures, int r=0) : WhiteBlock(x,y,textures,3) {
 		SetRotation(r);
 
 	}
 	
-	virtual bool HitLeft() {ATile::HitLeft(); sound.PlayASound("pop.wav", POP); return Kill();}
-	virtual bool HitTop() {ATile::HitTop(); sound.PlayASound("pop.wav", POP); return Kill();}
-	virtual bool HitRight() {ATile::HitRight(); sound.PlayASound("pop.wav", POP); return Kill();}
-	virtual bool HitBottom() {ATile::HitBottom(); sound.PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitLeft() {ATile::HitLeft(); Sound::PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitTop() {ATile::HitTop(); Sound::PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitRight() {ATile::HitRight(); Sound::PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitBottom() {ATile::HitBottom(); Sound::PlayASound("pop.wav", POP); return Kill();}
 
 protected: //functions
-	virtual void RustyWhiteBlock::Draw() {
-		if (surface) draw.BlitSquare(surface, 3 ,0, x_pos, y_pos); 
+	virtual void RustyWhiteBlock::draw(SDL_Renderer * renderer) {
+		BlitSquare(renderer, textures->getRedblockSprites(), 3 ,0, x_pos, y_pos); 
 	}
 
 protected: //members
 private: // functions
-	virtual void SetSurface() {
-		surface=draw.GetSurface("REDBLOCK");
-	}
 private: //members
 
 };
