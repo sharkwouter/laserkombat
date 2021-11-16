@@ -12,6 +12,8 @@ public:
     static void BlitOther(SDL_Renderer * renderer, SDL_Texture * texture, int x, int y, int dx, int dy, int w, int h);
     static void BlackSquare(SDL_Renderer * renderer, SDL_Texture * texture, int dx, int dy);
 
+    static int animation;
+
 };
 
 #endif // DRAW_H

@@ -2,6 +2,8 @@
 
     #include "constants.h"
     
+    static int Draw::animation = 0;
+
     static void Draw::BlitSquare(SDL_Renderer * renderer, SDL_Texture * texture, int x, int y, int dx, int dy) {
         x *= IMAGE_WIDTH;
         y *= IMAGE_WIDTH;

@@ -161,8 +161,6 @@ private:
 
 	void DisplayHelp(SDL_Renderer * renderer);
 
-	void BlitOther(SDL_Renderer * renderer, SDL_Texture * surface, int x, int y, int dx, int dy, int w, int h);
-
 private: //data
 
 	bool help;

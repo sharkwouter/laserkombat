@@ -9,6 +9,7 @@
 #include "Sound.h"
 #include "GroundTile.h"
 #include "WaterTile.h"
+#include "Draw.h"
 
 Board::Board(Textures * textures) : help(true), cols(COLUMNS), rows(ROWS), tank_x(0), tank_y(0), level(0), textures(textures) {
 	LoadLevel();	
@@ -262,6 +263,8 @@ void Board::update() {
 	SetGroundTypes(); //Make ground tiles all line up nice
 
 	if (!array) return;
+	Draw::animation++;
+	Draw::animation%=40;
 	// for (int i=0; i<ROWS; i++) {
 	// 	for (int j=0; j<COLUMNS; j++) {
 	// 		if (!array[j][i]) continue;
@@ -374,17 +377,10 @@ void Board::Delay()
 	seconds_ago= current_time;
 }
 
-void Board::BlitOther(SDL_Renderer * renderer, SDL_Texture * surface, int x, int y, int dx, int dy, int w, int h)
-{
-	SDL_Rect sr={x,y,w,h};
-	SDL_Rect dr={dx,dy,w, h};
-    SDL_RenderCopy(renderer, surface, &sr, &dr);
-}
-
 void Board::DisplayHelp(SDL_Renderer * renderer)
 {
 	if (!help) return;
-	BlitOther(renderer, textures->getMainSprite(), 0, 0, 120, 40, 560, 520);
+	Draw::BlitOther(renderer, textures->getMainSprite(), 0, 0, 120, 40, 560, 520);
 }
 
 bool Board::SetChanged(bool change) {
