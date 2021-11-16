@@ -29,6 +29,12 @@ void Board::handleInput(std::vector<Input> input) {
 		case Input::LEFT:
 			SDL_Log("left");
 			break;
+		case Input::NEXTLEVEL:
+			LoadLevel();
+			break;
+		case Input::PREVIOUSLEVEL:
+			Previous();
+			break;
 		default:
 			break;
 		}
