@@ -15,9 +15,5 @@ public:
 
 	void draw(SDL_Renderer * renderer, int x, int y);
 
-private:
-
-	SDL_Texture * texture;
-
 };
 #endif // GROUNDTILE_H

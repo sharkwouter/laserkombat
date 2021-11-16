@@ -5,11 +5,16 @@
 #include <SDL2/SDL.h>
 
 #include "Exception.h"
-#include "BlockType.h"
 #include "Sound.h"
+#include "Draw.h"
+
+#include "BlockType.h"
+
 #include "tiles/GroundTile.h"
 #include "tiles/WaterTile.h"
-#include "Draw.h"
+
+#include "objects/RedBlock.h"
+#include "objects/RustyRedBlock.h"
 
 Board::Board(Textures * textures) : help(true), cols(COLUMNS), rows(ROWS), tank_x(0), tank_y(0), level(0), textures(textures) {
 	LoadLevel();	
@@ -71,7 +76,7 @@ void Board::CreateSquare(int x, int y)
 {
 	if (array[x][y]) return;
 	Tile* ground=NULL;
-	Tile* block=NULL;
+	Object* block=NULL;
 	BlockType type= groundTypeArray[x][y];
 	int r= groundRotationArray[x][y];
 
@@ -81,13 +86,13 @@ void Board::CreateSquare(int x, int y)
 	case BlockType::WATER:			ground=	new WaterTile(textures, r); break;
 	}
 
-	// type= blockTypeArray[x][y];
-	// r= blockRotationArray[x][y];
+	type= blockTypeArray[x][y];
+	r= blockRotationArray[x][y];
 
-	// switch(type) {
-	// default:			block= NULL; break;
-	// case BlockType::REDBLOCK:		block=	new RedBlock(x, y, textures, r); break;
-	// case BlockType::RUSTYREDBLOCK:	block=	new RustyRedBlock(x, y, textures, r); break;
+	switch(type) {
+	default:			block= NULL; break;
+	case BlockType::REDBLOCK:		block=	new RedBlock(textures, r); break;
+	case BlockType::RUSTYREDBLOCK:	block=	new RustyRedBlock(textures, r); break;
 	// case BlockType::WHITEBLOCK:	block=	new WhiteBlock(x, y, textures, r); break;
 	// case BlockType::TEE:			block=  new Tee(x, y, textures, r); break;
 	// case BlockType::MIRROR:		block=	new Mirror(x, y, textures, r); break;
@@ -105,10 +110,11 @@ void Board::CreateSquare(int x, int y)
 	// case BlockType::RUSTYBARSVERT:	block=	new RustyBarsVert(x, y, textures, r); break;
 	// case BlockType::RUSTYBARSHORIZ:block=	new RustyBarsHoriz(x, y, textures, r); break;
 	// case BlockType::RUSTYWHITEBLOCK:block= new RustyWhiteBlock(x, y, textures, r); break;
-	// }
+	}
 
 	if (!ground) ground= new GroundTile(textures, 33);
 	array[x][y]= ground;
+	objects[x][y]= block;
 }
 
 bool Board::Previous()
@@ -249,10 +255,13 @@ void Board::CheckArray()
 
 void Board::draw(SDL_Renderer * renderer) {
 	if (!array) return;
+	if (!objects) return;
 	for (int i=0; i<ROWS; i++) {
 		for (int j=0; j<COLUMNS; j++) {
-			if (!array[j][i]) continue;
-			array[j][i]->draw(renderer, j, i);
+			if (array[j][i] != NULL)
+				array[j][i]->draw(renderer, j, i);
+			if (objects[j][i] != NULL)
+				objects[j][i]->draw(renderer, j, i);
 		}
 	}
 	DisplayHelp(renderer);

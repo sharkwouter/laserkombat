@@ -19,7 +19,5 @@ private:
 
     int animation;
 
-	SDL_Texture * texture;
-
 };
 #endif // WATERTILE_H

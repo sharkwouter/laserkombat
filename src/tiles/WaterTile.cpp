@@ -3,8 +3,9 @@
 #include "constants.h"
 #include "Draw.h"
 
-WaterTile::WaterTile(Textures * textures, int rotation) : texture(textures->getWaterSprite()) {
+WaterTile::WaterTile(Textures * textures, int rotation) {
     this->blocktype = BlockType::WATER;
+    this->texture = textures->getWaterSprite();
     this->rotation = rotation;
 }
 

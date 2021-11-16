@@ -6,13 +6,28 @@
 
 #include <SDL.h>
 
+#include "BlockType.h"
+
 class Object {
     
 public:
 
     virtual void update() { }
 
-    virtual void draw(SDL_Renderer * renderer) = 0;
+    virtual void draw(SDL_Renderer * renderer, int x, int y) = 0;
+
+    virtual BlockType GetBlockType() {return blocktype;}
+
+	virtual int GetRotation() {return rotation;}
+
+protected:
+
+    BlockType blocktype;
+
+    int rotation;
+
+    SDL_Texture * texture;
+
 };
 
 

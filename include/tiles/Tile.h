@@ -28,5 +28,7 @@ protected:
 
 	unsigned int otherblocks;
 
+	SDL_Texture * texture;
+
 };
 #endif // TILE_H

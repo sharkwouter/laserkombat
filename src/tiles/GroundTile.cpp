@@ -3,8 +3,9 @@
 #include "constants.h"
 #include "Draw.h"
 
-GroundTile::GroundTile(Textures * textures, int rotation) : texture(textures->getGroundSprites()) {
+GroundTile::GroundTile(Textures * textures, int rotation) {
     this->blocktype = BlockType::GROUND;
+    this->texture = textures->getGroundSprites();
     this->rotation = rotation;
 }
 

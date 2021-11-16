@@ -8,6 +8,7 @@
 #include "Textures.h"
 #include "Sound.h"
 #include "tiles/Tile.h"
+#include "objects/Object.h"
 
 class Board {
 public:
@@ -172,6 +173,7 @@ private: //data
 	Textures * textures;
 
 	Tile* array[COLUMNS][ROWS];
+	Object* objects[COLUMNS][ROWS];
 	int rows, cols;
 	int tank_x, tank_y, origin_x, origin_y;
 	int level;
