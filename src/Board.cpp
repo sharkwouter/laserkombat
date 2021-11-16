@@ -20,11 +20,14 @@ Board::~Board() {
 
 void Board::handleInput(std::vector<Input> input) {
 	for (auto i : input) {
+		if (help) {
+			help = false;
+			return;
+		}
 		switch (i)
 		{
 		case Input::HELP:
-			SDL_Log("help");
-			help = !help;
+			help = true;
 			break;
 		case Input::LEFT:
 			SDL_Log("left");
@@ -34,8 +37,6 @@ void Board::handleInput(std::vector<Input> input) {
 			break;
 		case Input::PREVIOUSLEVEL:
 			Previous();
-			break;
-		default:
 			break;
 		}
 	}
@@ -257,7 +258,7 @@ void Board::draw(SDL_Renderer * renderer) {
 }
 
 void Board::update() {
-	// Delay();
+	Delay();
 	SetGroundTypes(); //Make ground tiles all line up nice
 
 	if (!array) return;
@@ -375,8 +376,9 @@ void Board::Delay()
 
 void Board::BlitOther(SDL_Renderer * renderer, SDL_Texture * surface, int x, int y, int dx, int dy, int w, int h)
 {
-	SDL_Rect r={x,y,x+w, y+h};
-    SDL_RenderCopy(renderer, surface, NULL, &r);
+	SDL_Rect sr={x,y,w,h};
+	SDL_Rect dr={dx,dy,w, h};
+    SDL_RenderCopy(renderer, surface, &sr, &dr);
 }
 
 void Board::DisplayHelp(SDL_Renderer * renderer)

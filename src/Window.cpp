@@ -35,9 +35,7 @@ std::vector<Input> Window::getInput() {
                 break;
             case SDL_KEYDOWN:
                 Input i = getInputForKeyboardKey(event.key.keysym.sym);
-                if (i != Input::NONE) {
-                    input.push_back(i);
-                }
+                input.push_back(i);
                 break;
         }
     }
@@ -99,7 +97,7 @@ Input Window::getInputForKeyboardKey(SDL_Keycode key) {
             break;
 
         default:
-            input = Input::NONE;
+            input = Input::ANY;
             break;
     }
 

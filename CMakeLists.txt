@@ -11,6 +11,7 @@ set(SOURCES
     src/Game.cpp
     src/Textures.cpp
     src/Board.cpp
+    src/Draw.cpp
     src/GroundTile.cpp
     src/WaterTile.cpp
 )
