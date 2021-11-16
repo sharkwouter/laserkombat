@@ -1,7 +1,7 @@
 #include "Window.h"
 
 Window::Window(const std::string &title, int width, int height) {
-    if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS) < 0){
+    if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS|SDL_INIT_GAMECONTROLLER) < 0){
         SDL_LogCritical(SDL_LOG_CATEGORY_SYSTEM, "Couldn't init SDL: %s", SDL_GetError());
         exit(1);
     }
@@ -17,6 +17,8 @@ Window::Window(const std::string &title, int width, int height) {
         SDL_LogCritical(SDL_LOG_CATEGORY_RENDER, "Couldn't create renderer: %s", SDL_GetError());
         exit(3);
     }
+
+    detectControllers();
 }
 
 Window::~Window() {
@@ -34,8 +36,13 @@ std::vector<Input> Window::getInput() {
                 input.push_back(Input::EXIT);
                 break;
             case SDL_KEYDOWN:
-                Input i = getInputForKeyboardKey(event.key.keysym.sym);
-                input.push_back(i);
+                input.push_back(getInputForKeyboardKey(event.key.keysym.sym));
+                break;
+            case SDL_CONTROLLERBUTTONDOWN:
+                input.push_back(getInputForControllerButton(event.cbutton.button));
+                break;
+            case SDL_CONTROLLERDEVICEADDED:
+                detectControllers();
                 break;
         }
     }
@@ -45,7 +52,7 @@ std::vector<Input> Window::getInput() {
 
 Input Window::getInputForKeyboardKey(SDL_Keycode key) {
     Input input;
-    
+
     switch (key) {
         case SDLK_a:
         case SDLK_LEFT:
@@ -102,4 +109,66 @@ Input Window::getInputForKeyboardKey(SDL_Keycode key) {
     }
 
     return input;
+}
+
+Input Window::getInputForControllerButton(Uint8 button) {
+    Input input;
+
+    switch (button) {
+        case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+            input = Input::LEFT;
+            break;
+
+        case SDL_CONTROLLER_BUTTON_DPAD_UP:
+            input = Input::UP;
+            break;
+
+        case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+            input = Input::RIGHT;
+            break;
+
+        case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+            input = Input::DOWN;
+            break;
+
+        case SDL_CONTROLLER_BUTTON_A:
+            input = Input::SHOOT;
+            break;
+
+        case SDL_CONTROLLER_BUTTON_BACK:
+            input = Input::RESTART;
+            break;
+
+        case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
+            input = Input::NEXTLEVEL;
+            break;
+
+        case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
+            input = Input::PREVIOUSLEVEL;
+            break;
+
+        case SDL_CONTROLLER_BUTTON_Y:
+            input = Input::HELP;
+            break;
+
+        case SDL_CONTROLLER_BUTTON_START:
+            input = Input::EXIT;
+            break;
+
+        default:
+            input = Input::ANY;
+            break;
+    }
+
+    return input;
+}
+
+void Window::detectControllers()
+{
+    for (int i = 0; i < SDL_NumJoysticks(); ++i)
+    {
+        if (SDL_IsGameController(i)) {
+            SDL_GameControllerOpen(i);
+        }
+    }
 }

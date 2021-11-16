@@ -25,6 +25,9 @@ private:
     SDL_Window * window;
 
     Input getInputForKeyboardKey(SDL_Keycode);
+    Input getInputForControllerButton(Uint8);
+
+    void detectControllers();
 
 };
 
