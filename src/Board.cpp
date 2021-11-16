@@ -7,8 +7,8 @@
 #include "Exception.h"
 #include "BlockType.h"
 #include "Sound.h"
-#include "GroundTile.h"
-#include "WaterTile.h"
+#include "tiles/GroundTile.h"
+#include "tiles/WaterTile.h"
 #include "Draw.h"
 
 Board::Board(Textures * textures) : help(true), cols(COLUMNS), rows(ROWS), tank_x(0), tank_y(0), level(0), textures(textures) {

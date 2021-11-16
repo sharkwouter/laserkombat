@@ -5,20 +5,11 @@ project(laserkombat)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -fpermissive")
 
-set(SOURCES
-    src/main.cpp
-    src/Window.cpp
-    src/Game.cpp
-    src/Textures.cpp
-    src/Board.cpp
-    src/Draw.cpp
-    src/GroundTile.cpp
-    src/WaterTile.cpp
+file(GLOB SOURCES
+    ${PROJECT_SOURCE_DIR}/src/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/tiles/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/objects/*.cpp
 )
-
-# file(GLOB SOURCES
-#     ${PROJECT_SOURCE_DIR}/src/*.cpp
-# )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 

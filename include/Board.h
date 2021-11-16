@@ -7,7 +7,7 @@
 #include "Input.h"
 #include "Textures.h"
 #include "Sound.h"
-#include "Tile.h"
+#include "tiles/Tile.h"
 
 class Board {
 public:

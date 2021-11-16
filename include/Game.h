@@ -1,7 +1,6 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "Object.h"
 #include "Window.h"
 #include "Textures.h"
 #include "Board.h"

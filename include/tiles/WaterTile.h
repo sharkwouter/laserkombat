@@ -3,7 +3,7 @@
 
 #include <SDL.h>
 
-#include "Tile.h"
+#include "tiles/Tile.h"
 #include "Textures.h"
 
 class WaterTile : public Tile {
