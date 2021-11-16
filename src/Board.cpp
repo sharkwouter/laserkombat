@@ -1,15 +1,14 @@
-// Board.cpp
+#include "Board.h"
 
 #include <string.h>
 #include <time.h>
 #include <SDL2/SDL.h>
-#include "Board.h"
+
 #include "Exception.h"
 #include "BlockType.h"
 #include "Sound.h"
-#include "Square.h"
-
-SDL_Texture *Board::help_surface=NULL;
+#include "GroundTile.h"
+#include "WaterTile.h"
 
 Board::Board(Textures * textures) : help(true), cols(COLUMNS), rows(ROWS), tank_x(0), tank_y(0), level(0), textures(textures) {
 	LoadLevel();	
@@ -20,7 +19,21 @@ Board::~Board() {
 }
 
 void Board::handleInput(std::vector<Input> input) {
-
+	for (auto i : input) {
+		switch (i)
+		{
+		case Input::HELP:
+			SDL_Log("help");
+			help = !help;
+			break;
+		case Input::LEFT:
+			SDL_Log("left");
+			break;
+		default:
+			break;
+		}
+	}
+	
 }
 
 void Board::FillArray(bool credits)
@@ -32,7 +45,7 @@ void Board::FillArray(bool credits)
 		tank_x=origin_x;
 		tank_y=origin_y;
 	}
-	GroundTile::SetChanged(1);
+	SetChanged(1);
 
 
 	for (int y=0; y<ROWS; y++) {
@@ -56,38 +69,38 @@ void Board::CreateSquare(int x, int y)
 
 	switch(type) {
 	default:
-	case BlockType::GROUND:		ground=	new GroundTile(x, y, textures, r); break;
-	case BlockType::WATER:			ground=	new Water(x, y, textures); break;
+	case BlockType::GROUND:		ground=	new GroundTile(textures, r); break;
+	case BlockType::WATER:			ground=	new WaterTile(textures, r); break;
 	}
 
-	type= blockTypeArray[x][y];
-	r= blockRotationArray[x][y];
+	// type= blockTypeArray[x][y];
+	// r= blockRotationArray[x][y];
 
-	switch(type) {
-	default:			block= NULL; break;
-	case BlockType::REDBLOCK:		block=	new RedBlock(x, y, textures, r); break;
-	case BlockType::RUSTYREDBLOCK:	block=	new RustyRedBlock(x, y, textures, r); break;
-	case BlockType::WHITEBLOCK:	block=	new WhiteBlock(x, y, textures, r); break;
-	case BlockType::TEE:			block=  new Tee(x, y, textures, r); break;
-	case BlockType::MIRROR:		block=	new Mirror(x, y, textures, r); break;
-	case BlockType::NUKE:			block=	new Nuke(x, y, textures, r); break;
-	case BlockType::ENEMYNUKE:		block=	new EnemyNuke(x, y, textures, r); break;
-	case BlockType::TANK:			block=	new Tank(x, y, textures, r); break;
-	case BlockType::ENEMYTANK:		block=	new EnemyTank(x, y, textures, r); number_of_enemies++; break;
-	case BlockType::STATIC:		block=	new Static(x, y, textures, r); break;
-	case BlockType::RUSTY:			block=	new Rusty(x, y, textures, r); break;
-	case BlockType::BARSVERT:		block=	new BarsVert(x, y, textures, r); break;
-	case BlockType::BARSHORIZ:		block=	new BarsHoriz(x, y, textures, r); break;
-	case BlockType::BARSCROSS:		block=	new BarsCross(x, y, textures, r); break;
-	case BlockType::TRIANGLE:		block=	new Triangle(x, y, textures, r); break;
-	case BlockType::RUSTYTRIANGLE:	block=	new RustyTriangle(x, y, textures, r); break;
-	case BlockType::RUSTYBARSVERT:	block=	new RustyBarsVert(x, y, textures, r); break;
-	case BlockType::RUSTYBARSHORIZ:block=	new RustyBarsHoriz(x, y, textures, r); break;
-	case BlockType::RUSTYWHITEBLOCK:block= new RustyWhiteBlock(x, y, textures, r); break;
-	}
+	// switch(type) {
+	// default:			block= NULL; break;
+	// case BlockType::REDBLOCK:		block=	new RedBlock(x, y, textures, r); break;
+	// case BlockType::RUSTYREDBLOCK:	block=	new RustyRedBlock(x, y, textures, r); break;
+	// case BlockType::WHITEBLOCK:	block=	new WhiteBlock(x, y, textures, r); break;
+	// case BlockType::TEE:			block=  new Tee(x, y, textures, r); break;
+	// case BlockType::MIRROR:		block=	new Mirror(x, y, textures, r); break;
+	// case BlockType::NUKE:			block=	new Nuke(x, y, textures, r); break;
+	// case BlockType::ENEMYNUKE:		block=	new EnemyNuke(x, y, textures, r); break;
+	// case BlockType::TANK:			block=	new Tank(x, y, textures, r); break;
+	// case BlockType::ENEMYTANK:		block=	new EnemyTank(x, y, textures, r); number_of_enemies++; break;
+	// case BlockType::STATIC:		block=	new Static(x, y, textures, r); break;
+	// case BlockType::RUSTY:			block=	new Rusty(x, y, textures, r); break;
+	// case BlockType::BARSVERT:		block=	new BarsVert(x, y, textures, r); break;
+	// case BlockType::BARSHORIZ:		block=	new BarsHoriz(x, y, textures, r); break;
+	// case BlockType::BARSCROSS:		block=	new BarsCross(x, y, textures, r); break;
+	// case BlockType::TRIANGLE:		block=	new Triangle(x, y, textures, r); break;
+	// case BlockType::RUSTYTRIANGLE:	block=	new RustyTriangle(x, y, textures, r); break;
+	// case BlockType::RUSTYBARSVERT:	block=	new RustyBarsVert(x, y, textures, r); break;
+	// case BlockType::RUSTYBARSHORIZ:block=	new RustyBarsHoriz(x, y, textures, r); break;
+	// case BlockType::RUSTYWHITEBLOCK:block= new RustyWhiteBlock(x, y, textures, r); break;
+	// }
 
-	if (!ground) ground= new GroundTile(x, y, textures, 33);
-	array[x][y]= new Square(block, ground);
+	if (!ground) ground= new GroundTile(textures, 33);
+	array[x][y]= ground;
 }
 
 bool Board::Previous()
@@ -118,7 +131,7 @@ bool Board::LoadLevel() {
 		if (size==COLUMNS*ROWS) size= fread(blockRotationArray, sizeof(int), COLUMNS*ROWS, file);
 		
 		fclose(file);
-		FillArray();
+		FillArray(false);
 		return (size==COLUMNS*ROWS);
 
 	}
@@ -128,39 +141,39 @@ bool Board::LoadLevel() {
 
 void Board::YouDied() {
 	if (died) return;
-	for (int y=ROWS/2-2, yy=0; y<ROWS/2+1; y++, yy++) {
-		for (int x=COLUMNS/2-3, xx=0; x<COLUMNS/2+3; x++, xx++) {
-			Tile* temp=array[x][y]->over;
-			array[x][y]->over=new Message(x,y,textures,yy*14+xx);
-			if (temp) array[x][y]->ground->AddDead(temp);
-		}
-	}
+	// for (int y=ROWS/2-2, yy=0; y<ROWS/2+1; y++, yy++) {
+	// 	for (int x=COLUMNS/2-3, xx=0; x<COLUMNS/2+3; x++, xx++) {
+	// 		Tile* temp=array[x][y]->over;
+	// 		array[x][y]->over=new Message(x,y,textures,yy*14+xx);
+	// 		if (temp) array[x][y]->ground->AddDead(temp);
+	// 	}
+	// }
 	died=true;
 }
 
 void Board::YouDefeated() {
-	if (!TankExists()) return;
+	// if (!TankExists()) return;
 	if (died) return;
 	if (defeated) return;
 	if (finished) return;
-	for (int y=ROWS/2-2, yy=0; y<ROWS/2+1; y++, yy++) {
-		for (int x=COLUMNS/2-4, xx=6; x<COLUMNS/2+4; x++, xx++) {
-			Tile* temp=array[x][y]->over;
-			array[x][y]->over=new Message(x,y,textures,yy*14+xx);
-			if (temp) array[x][y]->ground->AddDead(temp);
-		}
-	}
+	// for (int y=ROWS/2-2, yy=0; y<ROWS/2+1; y++, yy++) {
+	// 	for (int x=COLUMNS/2-4, xx=6; x<COLUMNS/2+4; x++, xx++) {
+	// 		Tile* temp=array[x][y]->over;
+	// 		array[x][y]->over=new Message(x,y,textures,yy*14+xx);
+	// 		if (temp) array[x][y]->ground->AddDead(temp);
+	// 	}
+	// }
 	defeated=true;
 }
 
 void Board::Credits() {
-	for (int y=ROWS/2-5, yy=3; y<ROWS/2+6; y++, yy++) {
-		for (int x=COLUMNS/2-7, xx=0; x<COLUMNS/2+7; x++, xx++) {
-			Tile* temp=array[x][y]->over;
-			array[x][y]->over=new Message(x,y,textures,yy*14+xx);
-			if (temp) array[x][y]->ground->AddDead(temp);
-		}
-	}
+	// for (int y=ROWS/2-5, yy=3; y<ROWS/2+6; y++, yy++) {
+	// 	for (int x=COLUMNS/2-7, xx=0; x<COLUMNS/2+7; x++, xx++) {
+	// 		Tile* temp=array[x][y]->over;
+	// 		array[x][y]->over=new Message(x,y,textures,yy*14+xx);
+	// 		if (temp) array[x][y]->ground->AddDead(temp);
+	// 	}
+	// }
 	finished=true;
 }
 
@@ -168,7 +181,7 @@ void Board::ClearArray()
 {
 	for (int i=0; i<ROWS; i++) {
 		for (int j=0; j<COLUMNS; j++) {
-			if (array[j][i]) delete array[j][i];
+			// if (array[j][i]) delete array[j][i];
 			array[j][i]=NULL;
 		}
 	}
@@ -178,87 +191,84 @@ void Board::CheckArray()
 {
 	for (int i=0; i<ROWS; i++) {
 		for (int j=0; j<COLUMNS; j++) {
-			if (!array[j][i]) throw Exception("Unfilled square.");
-			if (!array[j][i]->ground) throw Exception("Missing ground.");
+			if (!array[j][i]) throw Exception("Unfilled tile.");
 		}
 	}
 }
 
-bool Board::swap(int x, int y, int x1, int y1)
-{
-	if (x>=COLUMNS||x<0) return false;
-	if (y>=ROWS||y<0) return false;
-	if (!array[x][y]->block) return true;	//if you are nothing you can move anywhere
-	if (x1>=COLUMNS||x1<0) return false;
-	if (y1>=ROWS||y1<0) return false;
-	if (array[x1][y1]->block) return false; //cannot move into occupied space
-	Tile* temp=array[x][y]->block;
-	array[x][y]->block=array[x1][y1]->block;
-	array[x1][y1]->block=temp;
-	//let the ground know someone's moving on it
-	if (array[x1][y1]->block) array[x1][y1]->block->SetXY(x1,y1);
-	if (array[x][y]->block) array[x][y]->block->SetXY(x,y);
-	if (x==tank_x && y==tank_y) tank_x=x1, tank_y=y1;
-	array[x1][y1]->ground->BlockOver(array[x1][y1]->block, array[x1][y1]->ground);
-	return true;
-}
+// bool Board::swap(int x, int y, int x1, int y1)
+// {
+// 	if (x>=COLUMNS||x<0) return false;
+// 	if (y>=ROWS||y<0) return false;
+// 	if (!array[x][y]->block) return true;	//if you are nothing you can move anywhere
+// 	if (x1>=COLUMNS||x1<0) return false;
+// 	if (y1>=ROWS||y1<0) return false;
+// 	if (array[x1][y1]->block) return false; //cannot move into occupied space
+// 	Tile* temp=array[x][y]->block;
+// 	array[x][y]->block=array[x1][y1]->block;
+// 	array[x1][y1]->block=temp;
+// 	//let the ground know someone's moving on it
+// 	if (array[x1][y1]->block) array[x1][y1]->block->SetXY(x1,y1);
+// 	if (array[x][y]->block) array[x][y]->block->SetXY(x,y);
+// 	if (x==tank_x && y==tank_y) tank_x=x1, tank_y=y1;
+// 	array[x1][y1]->ground->BlockOver(array[x1][y1]->block, array[x1][y1]->ground);
+// 	return true;
+// }
 
-bool Board::MoveRight()
-{
-	bool retvalue=array[tank_x][tank_y]->block->PushLeft();
-	return retvalue;
-}
+// bool Board::MoveRight()
+// {
+// 	bool retvalue=array[tank_x][tank_y]->block->PushLeft();
+// 	return retvalue;
+// }
 
-bool Board::MoveLeft()
-{
-	bool retvalue=array[tank_x][tank_y]->block->PushRight();
-	return retvalue;
-}
+// bool Board::MoveLeft()
+// {
+// 	bool retvalue=array[tank_x][tank_y]->block->PushRight();
+// 	return retvalue;
+// }
 
-bool Board::MoveUp()
-{
-	bool retvalue=array[tank_x][tank_y]->block->PushBottom();
-	return retvalue;
-}
+// bool Board::MoveUp()
+// {
+// 	bool retvalue=array[tank_x][tank_y]->block->PushBottom();
+// 	return retvalue;
+// }
 
-bool Board::MoveDown()
-{
-	bool retvalue=array[tank_x][tank_y]->block->PushTop();
-	return retvalue;
-}
+// bool Board::MoveDown()
+// {
+// 	bool retvalue=array[tank_x][tank_y]->block->PushTop();
+// 	return retvalue;
+// }
 
 void Board::draw(SDL_Renderer * renderer) {
 	if (!array) return;
 	for (int i=0; i<ROWS; i++) {
 		for (int j=0; j<COLUMNS; j++) {
 			if (!array[j][i]) continue;
-			if (array[j][i]->ground) array[j][i]->ground->draw(renderer);
-			if (array[j][i]->block) array[j][i]->block->draw(renderer);
-			if (array[j][i]->over) array[j][i]->over->draw(renderer);
+			array[j][i]->draw(renderer, j, i);
 		}
 	}
 	DisplayHelp(renderer);
 }
 
 void Board::update() {
-	Delay();
+	// Delay();
 	SetGroundTypes(); //Make ground tiles all line up nice
 
 	if (!array) return;
-	for (int i=0; i<ROWS; i++) {
-		for (int j=0; j<COLUMNS; j++) {
-			if (!array[j][i]) continue;
-			if (array[j][i]->ground) array[j][i]->ground->Update();
-			if (array[j][i]->block) array[j][i]->block->Update();
-			if (array[j][i]->over) array[j][i]->over->Update();
-		}
-	}
-	AfterAnimate();
+	// for (int i=0; i<ROWS; i++) {
+	// 	for (int j=0; j<COLUMNS; j++) {
+	// 		if (!array[j][i]) continue;
+	// 		if (array[j][i]->ground) array[j][i]->ground->Update();
+	// 		if (array[j][i]->block) array[j][i]->block->Update();
+	// 		if (array[j][i]->over) array[j][i]->over->Update();
+	// 	}
+	// }
+	// AfterAnimate();
 }
 
 void Board::SetGroundTypes()
 {
-	if (!GroundTile::SetChanged(0)) return;
+	if (SetChanged(0)) return;
 	static unsigned int groundArray[COLUMNS+2][ROWS+2];
 	for (int i=0; i<COLUMNS+2; i++) groundArray[i][0]=1;
 	for (int i=0; i<COLUMNS+2; i++) groundArray[i][ROWS+1]=1;
@@ -269,8 +279,8 @@ void Board::SetGroundTypes()
 
 	for (int y=1; y<ROWS+1; y++) {
 		for (int x=1; x<COLUMNS+1; x++) {
-			if (array[x-1][y-1]->ground->GetBlockType()==BlockType::GROUND) {
-				r=array[x-1][y-1]->ground->GetRotation();
+			if (array[x-1][y-1]->GetBlockType()==BlockType::GROUND) {
+				r=array[x-1][y-1]->GetRotation();
 				
 				groundArray[x][y]=r;
 			}
@@ -280,7 +290,7 @@ void Board::SetGroundTypes()
 	for (int y=1; y<ROWS+1; y++) {
 		for (int x=1; x<COLUMNS+1; x++) {
 			r= groundArray[x][y]%100;
-			if (r>=30&&r<=33) array[x-1][y-1]->ground->SetOtherBlocks(GetGroundBits(groundArray, x, y));
+			if (r>=30&&r<=33) array[x-1][y-1]->SetOtherBlocks(GetGroundBits(groundArray, x, y));
 		}
 	}
 }
@@ -322,27 +332,27 @@ void Board::FillDefault()
 	Credits();
 }
 
-int Board::AnyKey(SDL_Keycode key) {
-	if (key==SDLK_F1&&!help) {help=true; return 0;}
-	if (help) {help=false; return 0;}
-	if (key==SDLK_ESCAPE||key==SDLK_F12) return 666;
-	if (defeated&&key==SDLK_RETURN) {LoadLevel(); return 0;}
-	else if (defeated) return 0;
-	else if (finished&&key!=SDLK_PAGEDOWN) return 0;
+// int Board::AnyKey(SDL_Keycode key) {
+// 	if (key==SDLK_F1&&!help) {help=true; return 0;}
+// 	if (help) {help=false; return 0;}
+// 	if (key==SDLK_ESCAPE||key==SDLK_F12) return 666;
+// 	if (defeated&&key==SDLK_RETURN) {LoadLevel(); return 0;}
+// 	else if (defeated) return 0;
+// 	else if (finished&&key!=SDLK_PAGEDOWN) return 0;
 
-	return 1;
-}
+// 	return 1;
+// }
 
 void Board::MoveForCredits() {
-	static int chop=0;
-	chop++;
-	chop%=4;
-	if (!chop) {
-		if (tank_x==2&& tank_y>1) Up();
-		else if (tank_x==COLUMNS-3 && tank_y< ROWS-2) Down();
-		else if (tank_y==1&& tank_x< COLUMNS-3) Right();
-		else if (tank_y==ROWS-2 && tank_x> 2) Left();
-	}
+	// static int chop=0;
+	// chop++;
+	// chop%=4;
+	// if (!chop) {
+	// 	if (tank_x==2&& tank_y>1) Up();
+	// 	else if (tank_x==COLUMNS-3 && tank_y< ROWS-2) Down();
+	// 	else if (tank_y==1&& tank_x< COLUMNS-3) Right();
+	// 	else if (tank_y==ROWS-2 && tank_x> 2) Left();
+	// }
 }
 
 void Board::Delay()
@@ -366,12 +376,11 @@ void Board::BlitOther(SDL_Renderer * renderer, SDL_Texture * surface, int x, int
 void Board::DisplayHelp(SDL_Renderer * renderer)
 {
 	if (!help) return;
-	if (!help_surface) SetHelpSurface();
-	if (!help_surface) return;
-	BlitOther(renderer, help_surface, 0, 0, 120, 40, 560, 520);
+	BlitOther(renderer, textures->getMainSprite(), 0, 0, 120, 40, 560, 520);
 }
 
-void Board::SetHelpSurface()
-{
-	help_surface=textures->getMainSprite();
+bool Board::SetChanged(bool change) {
+	bool ret=changed;
+	changed=change;
+	return ret;
 }

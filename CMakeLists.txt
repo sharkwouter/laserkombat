@@ -11,8 +11,8 @@ set(SOURCES
     src/Game.cpp
     src/Textures.cpp
     src/Board.cpp
-    src/Tile.cpp
-    src/Square.cpp
+    src/GroundTile.cpp
+    src/WaterTile.cpp
 )
 
 # file(GLOB SOURCES

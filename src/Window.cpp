@@ -90,6 +90,7 @@ Input Window::getInputForKeyboardKey(SDL_Keycode key) {
             break;
 
         case SDLK_F1:
+        case SDLK_h:
             input = Input::HELP;
             break;
 

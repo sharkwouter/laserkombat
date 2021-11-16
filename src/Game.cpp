@@ -1,7 +1,9 @@
 #include "Game.h"
 
-Game::Game(Window * window) : textures(window->renderer), board(&textures) {
-    this->window = window;
+Game::Game(Window * window) : textures(window->renderer), board(&textures), window(window) {
+    if (!textures.load()) {
+        exit(4);
+    }
 }
 
 Game::~Game() {
@@ -15,14 +17,13 @@ void Game::run() {
 
         board.handleInput(input);
         board.update();
-        
+
         SDL_SetRenderDrawColor(this->window->renderer, 255, 255, 255, 255);
         SDL_RenderClear(this->window->renderer);
 
-        board.draw(window->renderer);
+        board.draw(this->window->renderer);
 
         SDL_RenderPresent(this->window->renderer);
-        
         // Check if exit has been used
         for (Input i: input) {
             if (i == Input::EXIT) {

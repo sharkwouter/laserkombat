@@ -47,7 +47,7 @@ private:
     SDL_Texture * messageSprite;
     SDL_Texture * waterSprite;
 
-    bool loadImage(SDL_Texture * texture, const std::string &filename);
+    SDL_Texture * loadImage(const std::string &filename);
 
 };
 

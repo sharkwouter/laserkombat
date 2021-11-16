@@ -4,16 +4,11 @@
 // base.h
 // This is the base class for all game objects
 
-#include <vector>
 #include <SDL.h>
-
-#include "Input.h"
 
 class Object {
     
 public:
-
-    virtual void handleInput(std::vector<Input> input) { }
 
     virtual void update() { }
 
