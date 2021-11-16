@@ -17,11 +17,10 @@ Window::Window(const std::string &title, int width, int height) {
         SDL_LogCritical(SDL_LOG_CATEGORY_RENDER, "Couldn't create renderer: %s", SDL_GetError());
         exit(3);
     }
-
-    detectControllers();
 }
 
 Window::~Window() {
+    closeAllGameControllers();
     SDL_DestroyRenderer(this->renderer);
     SDL_DestroyWindow(this->window);
     SDL_Quit();
@@ -42,7 +41,10 @@ std::vector<Input> Window::getInput() {
                 input.push_back(getInputForControllerButton(event.cbutton.button));
                 break;
             case SDL_CONTROLLERDEVICEADDED:
-                detectControllers();
+                openGameController(event.cdevice.which);
+                break;
+            case SDL_CONTROLLERDEVICEREMOVED:
+                closeDisconnectedGameControllers();
                 break;
         }
     }
@@ -163,12 +165,33 @@ Input Window::getInputForControllerButton(Uint8 button) {
     return input;
 }
 
-void Window::detectControllers()
-{
-    for (int i = 0; i < SDL_NumJoysticks(); ++i)
-    {
-        if (SDL_IsGameController(i)) {
-            SDL_GameControllerOpen(i);
+void Window::openGameController(Sint32 index) {
+     if (SDL_IsGameController(index)) {
+        SDL_GameController * controller = SDL_GameControllerOpen(index);
+        SDL_Log("Adding controller: %s", SDL_GameControllerName(controller));
+        gameControllers.push_back(controller);
+    }
+}
+
+void Window::closeDisconnectedGameControllers() {
+    std::vector<SDL_GameController*> currentControllers;
+    for(SDL_GameController * controller : gameControllers) {
+        if (!SDL_GameControllerGetAttached(controller)) {
+            SDL_Log("Removing controller: %s", SDL_GameControllerName(controller));
+            SDL_GameControllerClose(controller);
+            controller = NULL;
+        } else {
+            currentControllers.push_back(controller);
         }
+    }
+
+    gameControllers = currentControllers;
+}
+
+void Window::closeAllGameControllers() {
+    for (int i = 0; i < gameControllers.size(); i++) {
+        SDL_Log("Removing controller: %s", SDL_GameControllerName(gameControllers[i]));
+        SDL_GameControllerClose(gameControllers[i]);
+        gameControllers[i] = NULL;
     }
 }

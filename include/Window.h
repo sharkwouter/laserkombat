@@ -27,8 +27,11 @@ private:
     Input getInputForKeyboardKey(SDL_Keycode);
     Input getInputForControllerButton(Uint8);
 
-    void detectControllers();
+    void openGameController(Sint32);
+    void closeDisconnectedGameControllers();
+    void closeAllGameControllers();
 
+    std::vector<SDL_GameController*> gameControllers;
 };
 
 #endif // WINDOW_H
