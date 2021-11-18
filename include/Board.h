@@ -7,18 +7,20 @@
 #include "Input.h"
 #include "Textures.h"
 #include "Sound.h"
-#include "tiles/Tile.h"
-#include "objects/Object.h"
+#include "BlockType.h"
+#include "Tile.h"
+#include "Square.h"
 
 class Board {
 public:
 	Board(Textures * textures);
 	~Board();
 
+
 	// int DecreaseEnemyCount() {--number_of_enemies; return number_of_enemies;}
 	// void GetTankXY(int &x, int& y) {x=tank_x; y=tank_y;}
 
-	// int AnyKey(int key);
+	void handleInput(std::vector<Input> input);
 	void NextLevel() {LoadLevel();}
 
 
@@ -26,30 +28,31 @@ public:
 		FillArray();
 	}
 
-	// void Animate();		//Update tiles
+	void Animate(SDL_Renderer * renderer);		//Update tiles
 
-	// void See() {
-	// 	for (int i=0; i<ROWS; i++) {
-	// 		for (int j=0; j<COLUMNS; j++) {
-	// 			if (array[j][i]&&array[j][i]->block) array[j][i]->block->PreSeeMe();
-	// 		}
-	// 	}
-	// }
-	// bool IsOver() {return died||defeated;}
+	void See() {
+		for (int i=0; i<ROWS; i++) {
+			for (int j=0; j<COLUMNS; j++) {
+				// if (array[j][i]&&array[j][i]->block) array[j][i]->block->PreSeeMe();
+			}
+		}
+	}
 
-	// void AfterAnimate() {	//called to change things that should be changed only after redraw
-	// 	Sound::Play();	//play the queued sound
-	// 	for (int i=0; i<ROWS; i++) {
-	// 		for (int j=0; j<COLUMNS; j++) {
-	// 			if (array[j][i]&&array[j][i]->over) array[j][i]->over->AfterAnimate();
-	// 		}
-	// 	}
+	bool IsOver() {return died||defeated;}
 
-	// 	if (finished) MoveForCredits();
-	// 	Water::IncStaticRotation(); //all water moves synchronously.
-	// 	if (!IsOver()) See(); //uncomment this if see changes need to be made 
-	// 	if (number_of_enemies<1) YouDefeated();
-	// }
+	void AfterAnimate() {	//called to change things that should be changed only after redraw
+		Sound::Play();	//play the queued sound
+		for (int i=0; i<ROWS; i++) {
+			for (int j=0; j<COLUMNS; j++) {
+				// if (array[j][i]&&array[j][i]->over) array[j][i]->over->AfterAnimate();
+			}
+		}
+
+		if (finished) MoveForCredits();
+		Water::IncStaticRotation(); //all water moves synchronously.
+		if (!IsOver()) See(); //uncomment this if see changes need to be made 
+		if (number_of_enemies<1) YouDefeated();
+	}
 
 
 	// bool IsYou(int x, int y) {
@@ -128,11 +131,6 @@ public:
 
 	bool Previous();
 
-	void handleInput(std::vector<Input> input);
-    void update();
-    void draw(SDL_Renderer * renderer);
-
-
 private:
 	void MoveForCredits();
 
@@ -147,13 +145,11 @@ private:
 
 	void SetGroundTypes();
 	unsigned int GetGroundBits(unsigned a[COLUMNS+2][ROWS+2], int x, int y);
-	// bool swap(int x, int y, int x1, int y1);
+	bool swap(int x, int y, int x1, int y1);
 
 	void FillArray(bool credits=false);
 	void ClearArray();
 	void CheckArray();
-
-	bool SetChanged(bool change);
 
 	// bool MoveUp();
 	// bool MoveDown();
@@ -161,6 +157,8 @@ private:
 	// bool MoveLeft();
 
 	void DisplayHelp(SDL_Renderer * renderer);
+
+	void AfterAnimate();
 
 private: //data
 
@@ -172,8 +170,7 @@ private: //data
 
 	Textures * textures;
 
-	Tile* array[COLUMNS][ROWS];
-	Object* objects[COLUMNS][ROWS];
+	Square* array[COLUMNS][ROWS];
 	int rows, cols;
 	int tank_x, tank_y, origin_x, origin_y;
 	int level;

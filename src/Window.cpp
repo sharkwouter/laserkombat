@@ -102,6 +102,7 @@ Input Window::getInputForKeyboardKey(SDL_Keycode key) {
             break;
 
         case SDLK_ESCAPE:
+        case SDLK_F12:
             input = Input::EXIT;
             break;
 

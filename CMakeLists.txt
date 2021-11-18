@@ -7,8 +7,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -fpermissive")
 
 file(GLOB SOURCES
     ${PROJECT_SOURCE_DIR}/src/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/tiles/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/objects/*.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})

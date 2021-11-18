@@ -16,14 +16,11 @@ void Game::run() {
         std::vector<Input> input = this->window->getInput();
 
         board.handleInput(input);
-        board.update();
 
         SDL_SetRenderDrawColor(this->window->renderer, 255, 255, 255, 255);
         SDL_RenderClear(this->window->renderer);
 
-        board.draw(this->window->renderer);
-
-        SDL_RenderPresent(this->window->renderer);
+        board.Animate(this->window->renderer);
         // Check if exit has been used
         for (Input i: input) {
             if (i == Input::EXIT) {
