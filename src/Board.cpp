@@ -58,7 +58,7 @@ void Board::FillArray(bool credits)
 		tank_x=origin_x;
 		tank_y=origin_y;
 	}
-	GroundTile::SetChanged(true);
+	GroundTile::SetChanged(1);
 
 
 	for (int y=0; y<ROWS; y++) {
@@ -83,7 +83,7 @@ void Board::CreateSquare(int x, int y)
 	switch(type) {
 	default:
 	case BlockType::GROUND:		ground=	new GroundTile(textures, r); break;
-	// case BlockType::WATER:			ground=	new Water(textures, r); break;
+	case BlockType::WATER:			ground=	new Water(textures, r); break;
 	}
 
 	type= blockTypeArray[x][y];
@@ -194,7 +194,7 @@ void Board::ClearArray()
 {
 	for (int i=0; i<ROWS; i++) {
 		for (int j=0; j<COLUMNS; j++) {
-			if (array[j][i]) delete array[j][i];
+			// if (array[j][i]) delete array[j][i];
 			array[j][i]=NULL;
 		}
 	}
@@ -261,9 +261,9 @@ void Board::Animate(SDL_Renderer * renderer) {
 	for (int i=0; i<ROWS; i++) {
 		for (int j=0; j<COLUMNS; j++) {
 			if (!array[j][i]) continue;
-			if (array[j][i]->ground) array[j][i]->ground->Update();
-			if (array[j][i]->block) array[j][i]->block->Update();
-			if (array[j][i]->over) array[j][i]->over->Update();
+			if (array[j][i]->ground) array[j][i]->ground->Update(renderer, j, i);
+			if (array[j][i]->block) array[j][i]->block->Update(renderer, j, i);
+			if (array[j][i]->over) array[j][i]->over->Update(renderer, j, i);
 		}
 	}
 	DisplayHelp(renderer);
@@ -273,12 +273,12 @@ void Board::Animate(SDL_Renderer * renderer) {
 
 void Board::SetGroundTypes()
 {
-	if (!GroundTile::SetChanged(false)) return;
+	if (GroundTile::SetChanged(0)) return;
 	static unsigned int groundArray[COLUMNS+2][ROWS+2];
 	for (int i=0; i<COLUMNS+2; i++) groundArray[i][0]=1;
-	for (i    =0; i<COLUMNS+2; i++) groundArray[i][ROWS+1]=1;
-	for (i    =0; i<ROWS+2   ; i++) groundArray[COLUMNS+1][i]=1;
-	for (i    =0; i<ROWS+2   ; i++) groundArray[0][i]=1;
+	for (int i=0; i<COLUMNS+2; i++) groundArray[i][ROWS+1]=1;
+	for (int i=0; i<ROWS+2   ; i++) groundArray[COLUMNS+1][i]=1;
+	for (int i=0; i<ROWS+2   ; i++) groundArray[0][i]=1;
 
 	int r;
 
@@ -292,7 +292,7 @@ void Board::SetGroundTypes()
 			else groundArray[x][y]=0x0u;
 		}
 	}
-	for (y=1; y<ROWS+1; y++) {
+	for (int y=1; y<ROWS+1; y++) {
 		for (int x=1; x<COLUMNS+1; x++) {
 			r= groundArray[x][y]%100;
 			if (r>=30&&r<=33) array[x-1][y-1]->ground->SetOtherBlocks(GetGroundBits(groundArray, x, y));
@@ -353,10 +353,10 @@ void Board::MoveForCredits() {
 	chop++;
 	chop%=4;
 	if (!chop) {
-		if (tank_x==2&& tank_y>1) Up();
-		else if (tank_x==COLUMNS-3 && tank_y< ROWS-2) Down();
-		else if (tank_y==1&& tank_x< COLUMNS-3) Right();
-		else if (tank_y==ROWS-2 && tank_x> 2) Left();
+		// if (tank_x==2&& tank_y>1) Up();
+		// else if (tank_x==COLUMNS-3 && tank_y< ROWS-2) Down();
+		// else if (tank_y==1&& tank_x< COLUMNS-3) Right();
+		// else if (tank_y==ROWS-2 && tank_x> 2) Left();
 	}
 }
 

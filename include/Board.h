@@ -17,8 +17,8 @@ public:
 	~Board();
 
 
-	// int DecreaseEnemyCount() {--number_of_enemies; return number_of_enemies;}
-	// void GetTankXY(int &x, int& y) {x=tank_x; y=tank_y;}
+	int DecreaseEnemyCount() {--number_of_enemies; return number_of_enemies;}
+	void GetTankXY(int &x, int& y) {x=tank_x; y=tank_y;}
 
 	void handleInput(std::vector<Input> input);
 	void NextLevel() {LoadLevel();}
@@ -55,26 +55,26 @@ public:
 	}
 
 
-	// bool IsYou(int x, int y) {
-	// 	if (x==tank_x&&y==tank_y) return true;
-	// 	return false;
-	// }
+	bool IsYou(int x, int y) {
+		if (x==tank_x&&y==tank_y) return true;
+		return false;
+	}
 
-	// bool CheckInRange(int x, int y) {
-	// 	if (x>=COLUMNS||x<0) return false;
-	// 	if (y>=ROWS||y<0) return false;
-	// 	return true;
-	// }
+	bool CheckInRange(int x, int y) {
+		if (x>=COLUMNS||x<0) return false;
+		if (y>=ROWS||y<0) return false;
+		return true;
+	}
 
 
-	// bool TankExists() {
-	// 	bool ret;
-	// 	if (!CheckInRange(tank_x, tank_y)) ret= false;
-	// 	else ret= ((array[tank_x][tank_y]->block)?true:false);
+	bool TankExists() {
+		bool ret;
+		if (!CheckInRange(tank_x, tank_y)) ret= false;
+		else ret= ((array[tank_x][tank_y]->block)?true:false);
 
-	// 	if (!ret) YouDied();
-	// 	return ret;
-	// }
+		if (!ret) YouDied();
+		return ret;
+	}
 
 
 	// void Right() {	//user presses right arrow, ect.
@@ -157,8 +157,6 @@ private:
 	// bool MoveLeft();
 
 	void DisplayHelp(SDL_Renderer * renderer);
-
-	void AfterAnimate();
 
 private: //data
 

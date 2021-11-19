@@ -18,7 +18,7 @@ public:
     };
     ~Tile() {};
 
-    virtual BlockType GetBlockType() {return blockType;};
+    virtual BlockType GetBlockType() {return BlockType::NONE;};
     virtual int GetRotation() {return rotation;}
 
     virtual bool SetRotation(int r) {
@@ -51,10 +51,6 @@ protected:
 
     int rotation;
 
-    BlockType blockType;
-
-    SDL_Texture * texture;
-
     bool moved;
 
 };
@@ -65,9 +61,10 @@ class GroundTile : public Tile {
 public:
     GroundTile(Textures * textures, int rotation=33) : Tile(rotation) {
         SetRotation(rotation);
-        texture = textures->getGroundSprites();
-        blockType = BlockType::GROUND;
+        if(!surface) SetSurface(textures);
     }
+
+    virtual BlockType GetBlockType() {return BlockType::GROUND;};
 
     virtual bool SetRotation(int r) {
 		rotation=r;
@@ -92,7 +89,7 @@ protected:
             int r;
             if (rotation>=100) r=33-rotation/100, rotation-=100; 
             else r=rotation;
-            Draw::BlitSquare(renderer, texture, r%11 ,r/11, x, y);
+            if (surface) Draw::BlitSquare(renderer, surface, r%11 ,r/11, x, y);
         } else {
             //calculate pieces of images to stick together
 
@@ -108,20 +105,75 @@ protected:
             corners[3] = ((otherblocks& mask)/0x40u);
             mask*=0x4u;
 
-            for (int i=0; i<4; i++) {
-                Draw::BlitOther(renderer, texture,
-                    corners[i]*IMAGE_WIDTH + ((i==0||i==3)?0:(IMAGE_WIDTH/2)),
-                    3*IMAGE_WIDTH + ((i<2)?0:(IMAGE_WIDTH/2)),
-                    x*IMAGE_WIDTH + ((i==0||i==3)?0:(IMAGE_WIDTH/2)),
-                    y*IMAGE_WIDTH + ((i<2)?0:(IMAGE_WIDTH/2)),
-                    IMAGE_WIDTH/2, IMAGE_WIDTH/2);
+            if (surface) {
+                for (int i=0; i<4; i++) {
+                    Draw::BlitOther(renderer, surface,
+                        corners[i]*IMAGE_WIDTH + ((i==0||i==3)?0:(IMAGE_WIDTH/2)),
+                        3*IMAGE_WIDTH + ((i<2)?0:(IMAGE_WIDTH/2)),
+                        x*IMAGE_WIDTH + ((i==0||i==3)?0:(IMAGE_WIDTH/2)),
+                        y*IMAGE_WIDTH + ((i<2)?0:(IMAGE_WIDTH/2)),
+                        IMAGE_WIDTH/2, IMAGE_WIDTH/2);
+                }
             }
         }
     }
 
 private:
 
-    static bool changed;
+    virtual void SetSurface(Textures * textures) {
+		surface=textures->getGroundSprites();
+	}
+
+    SDL_Texture * surface = NULL;
+
+    inline static bool changed=false;
     unsigned int otherblocks;
 };
+
+class Water : public GroundTile
+{
+public:
+	Water(Textures * textures, int rotation=0) : GroundTile(textures, rotation) {
+		SetRotation(rotation);
+        if (!surface) SetSurface(textures);
+	}
+
+	virtual bool SetRotation(int r) {
+		rotation=r;
+		return true;
+	}
+	virtual BlockType GetBlockType() {
+		return BlockType::WATER;
+	}
+
+	static void IncStaticRotation() {
+		static bool chop=true;
+		chop=!chop;
+		if (chop) {
+			Water::static_rotation++;
+			Water::static_rotation%=40;
+		}
+	}
+
+protected: //functions
+	virtual void Water::Draw(SDL_Renderer * renderer, int x, int y) {
+		//Exception::Output("Tank::draw called.");
+		if (rotation>=100) {
+			GroundTile::Draw(renderer, x, y);
+			return;
+		}
+		if (surface) Draw::BlitSquare(renderer, surface, static_rotation%10 ,static_rotation/10, x, y); 
+	}
+
+private: // functions
+	virtual void SetSurface(Textures * textures) {
+		surface=textures->getWaterSprite();
+	}
+
+private: //members
+	inline static int static_rotation=0;
+
+    SDL_Texture * surface = NULL;
+};
+
 #endif // TILE_H

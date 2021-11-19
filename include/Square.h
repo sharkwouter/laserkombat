@@ -12,7 +12,7 @@ public:
 
 	Tile* over;
 	Tile* block;
-	Tile* ground;
+	GroundTile* ground;
 
 };
 
