@@ -156,10 +156,15 @@ private:
 	bool MoveRight(Tile* p);
 	bool MoveLeft(Tile* p);
 
-	bool RightBlock(Tile* p);
-	bool LeftBlock(Tile* p);
-	bool TopBlock(Tile* p);
-	bool BottomBlock(Tile* p);
+	bool RightBlock(SDL_Point pos, Tile** p);
+	bool LeftBlock(SDL_Point pos, Tile** p);
+	bool TopBlock(SDL_Point pos, Tile** p);
+	bool BottomBlock(SDL_Point pos, Tile** p);
+
+	bool PushLeft(Tile* p) ;
+	bool PushRight(Tile* p);
+	bool PushTop(Tile* p);
+	bool PushBottom(Tile* p);
 
 	void DisplayHelp(SDL_Renderer * renderer);
 

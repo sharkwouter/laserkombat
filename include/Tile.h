@@ -72,10 +72,7 @@ public:
 		return true;
 	}
 
-	virtual bool PushLeft() {return MoveRight();}
-	virtual bool PushRight() {return MoveLeft();}
-	virtual bool PushTop() {return MoveDown();}
-	virtual bool PushBottom() {return MoveUp();}
+	virtual bool CanMove() {return true;};
 
 	virtual bool HitLeft() {
 		Tile* ground=GetGround();
@@ -476,10 +473,10 @@ public:
 		return false;
 	}
 
-	virtual bool HitLeft() {Tile::HitLeft(); PushLeft(); return true;}
-	virtual bool HitTop() {Tile::HitTop(); PushTop(); return true;}
-	virtual bool HitRight() {Tile::HitRight(); PushRight(); return true;}
-	virtual bool HitBottom() {Tile::HitBottom(); PushBottom(); return true;}
+	// virtual bool HitLeft() {Tile::HitLeft(); PushLeft(); return true;}
+	// virtual bool HitTop() {Tile::HitTop(); PushTop(); return true;}
+	// virtual bool HitRight() {Tile::HitRight(); PushRight(); return true;}
+	// virtual bool HitBottom() {Tile::HitBottom(); PushBottom(); return true;}
 
 protected: //functions
 	virtual void RedBlock::draw(SDL_Renderer * renderer) {
@@ -595,10 +592,7 @@ protected: //functions
 		}
 		BlitSquare(renderer, textures->getStaticSprites(), rotation%9 ,0, x_pos, y_pos); 
 	}
-	virtual bool PushLeft() {return false;}
-	virtual bool PushRight() {return false;}
-	virtual bool PushTop() {return false;}
-	virtual bool PushBottom() {return false;}
+	virtual bool CanMove() {return false;};
 
 	virtual bool HitLeft() {Sound::PlayASound("donk.wav", DONK); return span=1;}
 	virtual bool HitRight() {Sound::PlayASound("donk.wav", DONK); return span=1;}
@@ -652,7 +646,7 @@ protected: //functions
 			break;
 		case 0:
 		case 3:
-			return PushLeft();
+			// return PushLeft();
 			break;
 		default:
 			return false;
@@ -666,7 +660,7 @@ protected: //functions
 		switch(rotation%4) {
 		case 0:
 		case 1:
-			return PushTop();
+			// return PushTop();
 			break;
 		case 2: if (Firing) return false;
 			ShootLeft();
@@ -689,7 +683,7 @@ protected: //functions
 			break;
 		case 1:
 		case 2:
-			return PushRight();
+			// return PushRight();
 			break;
 		case 3: if (Firing) return false;
 			ShootUp();
@@ -712,7 +706,7 @@ protected: //functions
 			break;
 		case 2:
 		case 3:
-			return PushBottom();
+			// return PushBottom();
 			break;
 		default:
 			return false;
@@ -768,7 +762,7 @@ protected: //functions
 			break;
 		case 3:
 		case 6:
-			return PushLeft();
+			// return PushLeft();
 			break;
 		case 4: if (Firing) return false;
 			ShootUp();
@@ -794,7 +788,7 @@ protected: //functions
 			break;
 		case 0:
 		case 5:
-			return PushTop();
+			// return PushTop();
 			break;
 		case 2: if (Firing) return false;
 			ShootLeft();
@@ -828,7 +822,7 @@ protected: //functions
 			break;
 		case 1:
 		case 6:
-			return PushRight();
+			// return PushRight();
 		case 2: if (Firing) return false;
 			ShootLeft();
 			ShootUp();
@@ -869,7 +863,7 @@ protected: //functions
 			break;
 		case 2:
 		case 5:
-			return PushBottom();
+			// return PushBottom();
 			break;
 		case 4: if (Firing) return false;
 			ShootLeft();
@@ -1071,10 +1065,7 @@ protected: //functions
 	virtual void Message::draw(SDL_Renderer * renderer) {
 		BlitSquare(renderer, textures->getMessageSprite(), rotation%14 ,rotation/14, x_pos, y_pos); 
 	}
-	virtual bool PushLeft() {return false;}
-	virtual bool PushRight() {return false;}
-	virtual bool PushTop() {return false;}
-	virtual bool PushBottom() {return false;}
+	virtual bool CanMove() {return false;};
 
 protected: //members
 private: // functions
@@ -1195,10 +1186,7 @@ public:
 		return true;
 	}
 
-	virtual bool PushLeft() {return false;}
-	virtual bool PushRight() {return false;}
-	virtual bool PushTop() {return false;}
-	virtual bool PushBottom() {return false;}
+	virtual bool CanMove() {return false;};
 
 	virtual bool HitLeft() {Sound::PlayASound("donk.wav", DONK); return Mirror::HitLeft();}
 	virtual bool HitRight() {Sound::PlayASound("donk.wav", DONK); return Mirror::HitRight();}
