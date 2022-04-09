@@ -16,7 +16,7 @@ void Tile::AddDead(Tile* tile) {
 	if(!tile) return;
 	Tile *current_tile=this;
 	if (tile->GetBlockType()==BlockType::ENEMYTANK) {
-		//board.DecreaseEnemyCount();
+		// board.DecreaseEnemyCount();
 	}
 	while (current_tile->deadBlock) {
 		current_tile=current_tile->deadBlock;
@@ -223,8 +223,6 @@ bool Tile::BottomGround(Tile* &p)
 	// p=board.array[x_pos][y_pos+1]->ground;
 	return true;
 }
-
-
 
 
 bool Tile::MoveUp() {

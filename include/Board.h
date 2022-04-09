@@ -110,16 +110,16 @@ public:
 		Tile* tank=array[tank_x][tank_y]->block;
 		switch(rotation) {
 		case 0:
-			tank->ShootLeft();
+			ShootLeft(tank);
 			break;
 		case 1:
-			tank->ShootUp();
+			ShootUp(tank);
 			break;
 		case 2:
-			tank->ShootRight();
+			ShootRight(tank);
 			break;
 		case 3:
-			tank->ShootDown();
+			ShootDown(tank);
 			break;
 		default:
 			break;
@@ -160,10 +160,15 @@ private:
 	bool TopBlock(SDL_Point pos, Tile** p);
 	bool BottomBlock(SDL_Point pos, Tile** p);
 
-	bool PushLeft(Tile* p) ;
-	bool PushRight(Tile* p);
-	bool PushTop(Tile* p);
-	bool PushBottom(Tile* p);
+	bool RightGround(SDL_Point pos, Tile** p);
+	bool LeftGround(SDL_Point pos, Tile** p);
+	bool TopGround(SDL_Point pos, Tile** p);
+	bool BottomGround(SDL_Point pos, Tile** p);
+
+	bool ShootUp(Tile* p);
+	bool ShootDown(Tile* p);
+	bool ShootRight(Tile* p);
+	bool ShootLeft(Tile* p);
 
 	void DisplayHelp(SDL_Renderer * renderer);
 

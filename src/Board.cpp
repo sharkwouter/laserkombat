@@ -17,7 +17,12 @@ Board::Board(Textures * textures) : help(true), cols(COLUMNS), rows(ROWS), tank_
 }
 
 Board::~Board() {
-	ClearArray();
+	for (int i=0; i<ROWS; i++) {
+		for (int j=0; j<COLUMNS; j++) {
+			if (array[j][i] != NULL) delete array[j][i];
+			array[j][i]=NULL;
+		}
+	}
 }
 
 void Board::handleInput(std::vector<Input> input) {
@@ -43,6 +48,9 @@ void Board::handleInput(std::vector<Input> input) {
 			break;
 		case Input::DOWN:
 			Down();
+			break;
+		case Input::SHOOT:
+			Fire();
 			break;
 		case Input::NEXTLEVEL:
 			LoadLevel();
@@ -72,6 +80,7 @@ void Board::FillArray(bool credits)
 
 	for (int y=0; y<ROWS; y++) {
 		for (int x=0; x<COLUMNS; x++) {
+			array[x][y] = NULL;
 			CreateSquare(x, y);
 		}
 	}
@@ -203,7 +212,6 @@ void Board::ClearArray()
 {
 	for (int i=0; i<ROWS; i++) {
 		for (int j=0; j<COLUMNS; j++) {
-			// if (array[j][i]) delete array[j][i];
 			array[j][i]=NULL;
 		}
 	}
@@ -309,6 +317,153 @@ bool Board::BottomBlock(SDL_Point pos, Tile** p)
 	*p=array[pos.x][pos.y+1]->block;
 	return true;
 }
+
+bool Board::RightGround(SDL_Point pos, Tile** p)
+{
+	if (pos.x>=COLUMNS-1) {p=NULL; return false;}
+	*p=array[pos.x+1][pos.y]->ground;
+	return true;
+}
+
+bool Board::LeftGround(SDL_Point pos, Tile** p)
+{
+	if (pos.x<=0) {p=NULL; return false;}
+	*p=array[pos.x-1][pos.y]->ground;
+	return true;
+}
+
+bool Board::TopGround(SDL_Point pos, Tile** p)
+{
+	if (pos.y<=0) {p=NULL; return false;}
+	*p=array[pos.x][pos.y-1]->ground;
+	return true;
+}
+
+bool Board::BottomGround(SDL_Point pos, Tile** p)
+{
+	if (pos.y>=ROWS-1) {p=NULL; return false;}
+	*p=array[pos.x][pos.y+1]->ground;
+	return true;
+}
+
+bool Board::ShootUp(Tile* p)
+{
+	SDL_Point pos = p->getXY();
+	p->SetRotation(1);
+	Tile* ground=array[pos.x][pos.y]->ground;
+	if (ground) ground->HadFired=ground->HadFiredUp=BEAM_PERSISTANCE;
+	p->Firing=p->FiringUp=true;
+	p->HadFired=p->HadFiredUp=BEAM_PERSISTANCE;
+	Tile* block = NULL; TopBlock(pos, &block);
+	if (block) block->HitBottom();
+	else {
+		TopGround(pos, &block);
+		if (block) block->HitBottom();
+	}
+	return true;
+}
+
+bool Board::ShootDown(Tile* p)
+{
+	SDL_Point pos = p->getXY();
+	p->SetRotation(3);
+	Tile* ground=array[pos.x][pos.y]->ground;
+	if (ground) ground->HadFired=ground->HadFiredDown=BEAM_PERSISTANCE;
+	p->Firing=p->FiringDown=true;
+	p->HadFired=p->HadFiredDown=BEAM_PERSISTANCE;
+	Tile* block = NULL; BottomBlock(pos, &block);
+	if (block) block->HitTop();
+	else {
+		BottomGround(pos, &block);
+		if (block) block->HitTop();
+	}
+	return true;
+}
+
+bool Board::ShootRight(Tile* p)
+{
+	SDL_Point pos = p->getXY();
+	p->SetRotation(2);
+	Tile* ground=array[pos.x][pos.y]->ground;
+	if (ground) ground->HadFired=ground->HadFiredRight=BEAM_PERSISTANCE;
+	p->Firing=p->FiringRight=true;
+	p->HadFired=p->HadFiredRight=BEAM_PERSISTANCE;
+	Tile* block; RightBlock(pos, &block);
+	if (block) block->HitLeft();
+	else {
+		RightGround(pos, &block);
+		if (block) block->HitLeft();
+	}
+	return true;
+}
+
+bool Board::ShootLeft(Tile* p)
+{
+	SDL_Point pos = p->getXY();
+	p->SetRotation(0);
+	Tile* ground=array[pos.x][pos.y]->ground;
+	if (ground) ground->HadFired=ground->HadFiredLeft=BEAM_PERSISTANCE;
+	p->Firing=p->FiringLeft=true;
+	p->HadFired=p->HadFiredLeft=BEAM_PERSISTANCE;
+	Tile* block; LeftBlock(pos, &block);
+	if (block) block->HitRight();
+	else {
+		LeftGround(pos, &block);
+		if (block) block->HitRight();
+	}
+	return true;
+}
+
+// bool Board::SeeMeUp(BlockType type, int dist)
+// {
+// 	Tile* block = NULL; TopBlock(block);
+// 	if (block) block->LookBottom(type, dist);
+// 	else {
+// 		TopGround(block);
+// 		if (block) block->LookBottom(type, dist);
+// 	}
+// 	return true;
+// }
+
+// bool Board::SeeMeDown(BlockType type, int dist)
+// {
+// 	Tile* block = NULL; BottomBlock(block);
+// 	if (block) block->LookTop(type, dist);
+// 	else {
+// 		BottomGround(block);
+// 		if (block) block->LookTop(type, dist);
+// 	}
+// 	return true;
+// }
+// bool Board::SeeMeRight(BlockType type, int dist)
+// {
+// 	Tile* block = NULL; RightBlock(block);
+// 	if (block) block->LookLeft(type, dist);
+// 	else {
+// 		RightGround(block);
+// 		if (block) block->LookLeft(type, dist);
+// 	}
+// 	return true;
+// }
+// bool Board::SeeMeLeft(BlockType type, int dist)
+// {
+// 	Tile* block = NULL; LeftBlock(block);
+// 	if (block) block->LookRight(type, dist);
+// 	else {
+// 		LeftGround(block);
+// 		if (block) block->LookRight(type, dist);
+// 	}
+// 	return true;
+// }
+
+// bool Board::Kill(Tile *p) {
+// 	if (!board.array[x_pos][y_pos]->block) return true;
+// 	Tile* temp=board.array[x_pos][y_pos]->block;
+// 	board.array[x_pos][y_pos]->block=NULL;
+// 	//Schedule for deletion
+// 	board.array[x_pos][y_pos]->ground->AddDead(this);
+// 	return true;
+// }
 
 void Board::Animate(SDL_Renderer * renderer) {
 	Delay();

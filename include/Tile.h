@@ -149,6 +149,10 @@ public:
 public: // members
 	bool moved;
 
+	bool FiringUp, FiringDown, FiringLeft, FiringRight, Firing;
+	int WasHitLeft, WasHitRight, WasHitTop, WasHitBottom, WasHit;
+	int HadFiredLeft, HadFiredRight, HadFiredUp, HadFiredDown, HadFired;
+
 protected: //functions
 	virtual int BeamState();
 	bool SeeMe(BlockType type) {
@@ -235,10 +239,6 @@ protected: //functions
 	}
 
 protected: //members
-	bool FiringUp, FiringDown, FiringLeft, FiringRight, Firing;
-	int WasHitLeft, WasHitRight, WasHitTop, WasHitBottom, WasHit;
-	int HadFiredLeft, HadFiredRight, HadFiredUp, HadFiredDown, HadFired;
-
 	int cols;
 	int rows;
 
