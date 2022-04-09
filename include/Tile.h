@@ -429,7 +429,9 @@ protected: //functions
 	virtual int BeamState() {
 		return 0;
 	}
-	virtual void Tank::draw(SDL_Renderer * renderer);
+	virtual void Tank::draw(SDL_Renderer * renderer) {
+		BlitSquare(renderer, textures->getTankSprites(), rotation%4 ,rotation/4, x_pos, y_pos);
+	}
 	virtual bool MoveUp() {
 		bool ret=ATile::MoveUp();
 		return ret;

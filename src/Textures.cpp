@@ -45,11 +45,17 @@ bool Textures::load() {
 
 SDL_Texture * Textures::loadImage(const std::string &filename) {
     std::string path = "assets/images/" + filename;
-
+    uint32_t colorKey;
     SDL_Surface *surface = SDL_LoadBMP(path.c_str());
     if (!surface) {
         SDL_LogCritical(SDL_LOG_CATEGORY_RENDER, "Failed to load image %s: %s", path.c_str(), SDL_GetError());
         return nullptr;
+    }
+
+    // Key out black if this is not static.bmp
+    if (filename != "static.bmp") {
+        colorKey = SDL_MapRGB(surface->format, 0, 0, 0);
+        SDL_SetColorKey(surface, SDL_TRUE, colorKey);
     }
 
     SDL_Texture * texture = SDL_CreateTextureFromSurface(this->renderer, surface);

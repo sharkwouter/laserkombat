@@ -385,16 +385,6 @@ bool Tile::SeeMeLeft(BlockType type, int dist)
 	return true;
 }
 
-void Tank::draw(SDL_Renderer * renderer) {
-	// if (!board.IsYou(x_pos, y_pos)) { 
-	// 	int rotate=rand()%1000;
-	// 	if (rotate==0) RotateRight();	//make tanks rotate randomly
-	// 	else if (rotate==1) RotateLeft();
-	// }
-	
-	BlitSquare(renderer, textures->getTankSprites(), rotation%4 ,rotation/4, x_pos, y_pos); 
-}
-
 int Tile::BeamState() {
 	// if (HadFired) {
 	// 	if (HadFiredRight&&!board.IsOver()) HadFiredRight--;

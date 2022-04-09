@@ -49,6 +49,7 @@ private:
 
     SDL_Texture * loadImage(const std::string &filename);
 
+    uint32_t colorKey = 0;
 };
 
 #endif // ASSETS_H
