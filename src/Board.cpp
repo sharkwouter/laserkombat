@@ -243,7 +243,7 @@ bool Board::MoveRight(Tile* p)
 	SDL_Point pos = p->getXY();
 	if (p->moved) return false;
 	Tile* block = NULL; RightBlock(pos, &block);
-	if (block) PushLeft(block);
+	if (block && block->CanMove()) MoveRight(block);
 	bool ret =swap(pos.x, pos.y, pos.x+1, pos.y);
 	if (ret&&p->GetBlockType()!=BlockType::TANK) Sound::PlayASound("scrape.wav", SoundPriority::SCRAPE);
 	return p->moved=ret;
@@ -253,8 +253,8 @@ bool Board::MoveLeft(Tile* p)
 {
 	SDL_Point pos = p->getXY();
 	if (p->moved) return false;
-	Tile* block; LeftBlock(pos, &block);
-	if (block) PushRight(block);
+	Tile* block = NULL; LeftBlock(pos, &block);
+	if (block && block->CanMove()) MoveLeft(block);
 	bool ret =swap(pos.x, pos.y, pos.x-1, pos.y);
 	if (ret&&p->GetBlockType()!=BlockType::TANK) Sound::PlayASound("scrape.wav", SoundPriority::SCRAPE);
 	return p->moved=ret;
@@ -265,7 +265,7 @@ bool Board::MoveUp(Tile* p)
 	SDL_Point pos = p->getXY();
 	if (p->moved) return false;
 	Tile* block = NULL; TopBlock(pos, &block);
-	if (block) PushBottom(block);
+	if (block && block->CanMove()) MoveUp(block);
 	bool ret =swap(pos.x, pos.y, pos.x, pos.y-1);
 	if (ret&&p->GetBlockType()!=BlockType::TANK) Sound::PlayASound("scrape.wav", SoundPriority::SCRAPE);
 	return p->moved=ret;
@@ -276,7 +276,7 @@ bool Board::MoveDown(Tile* p)
 	SDL_Point pos = p->getXY();
 	if (p->moved) return false;
 	Tile* block = NULL; BottomBlock(pos, &block);
-	if (block) PushTop(block);
+	if (block && block->CanMove()) MoveDown(block);
 	bool ret =swap(pos.x, pos.y, pos.x, pos.y+1);
 	if (ret&&p->GetBlockType()!=BlockType::TANK) Sound::PlayASound("scrape.wav", SoundPriority::SCRAPE);
 	return p->moved=ret;
@@ -308,23 +308,6 @@ bool Board::BottomBlock(SDL_Point pos, Tile** p)
 	if (pos.y>=ROWS-1) {p=NULL; return false;}
 	*p=array[pos.x][pos.y+1]->block;
 	return true;
-}
-
-bool Board::PushLeft(Tile* p) {
-	if (p && p->GetBlockType() == BlockType::STATIC) return false;
-	return MoveRight(p);
-}
-
-bool Board::PushRight(Tile* p) {
-	return MoveLeft(p);
-}
-
-bool Board::PushTop(Tile* p) {
-	return MoveDown(p);
-}
-
-bool Board::PushBottom(Tile* p) {
-	return MoveUp(p);
 }
 
 void Board::Animate(SDL_Renderer * renderer) {

@@ -85,9 +85,8 @@ public:
 	}
 	void Left() {
 		if (!TankExists()) return;
-		if (array[tank_x][tank_y]->block->GetRotation()==0) {
-			MoveLeft(array[tank_x][tank_y]->block), See();
-		}
+		if (array[tank_x][tank_y]->block->GetRotation()==0)
+		{MoveLeft(array[tank_x][tank_y]->block), See();}
 		else array[tank_x][tank_y]->block->SetRotation(0);
 		TankExists();
 	}
