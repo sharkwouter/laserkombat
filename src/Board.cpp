@@ -238,28 +238,80 @@ bool Board::swap(int x, int y, int x1, int y1)
 	return true;
 }
 
-bool Board::MoveRight()
+bool Board::MoveRight(Tile* p)
 {
-	bool retvalue=array[tank_x][tank_y]->block->PushLeft();
-	return retvalue;
+	SDL_Point pos = p->getXY();
+	if (p->moved) return false;
+	Tile* block; RightBlock(block);
+	if (block) block->PushLeft();
+	bool ret =swap(pos.x, pos.y, pos.x+1, pos.y);
+	if (ret&&p->GetBlockType()!=BlockType::TANK) Sound::PlayASound("scrape.wav", SoundPriority::SCRAPE);
+	return p->moved=ret;
 }
 
-bool Board::MoveLeft()
+bool Board::MoveLeft(Tile* p)
 {
-	bool retvalue=array[tank_x][tank_y]->block->PushRight();
-	return retvalue;
+	SDL_Point pos = p->getXY();
+	if (p->moved) return false;
+	Tile* block; LeftBlock(block);
+	if (block) block->PushRight();
+	bool ret =swap(pos.x, pos.y, pos.x-1, pos.y);
+	if (ret&&p->GetBlockType()!=BlockType::TANK) Sound::PlayASound("scrape.wav", SoundPriority::SCRAPE);
+	return p->moved=ret;
 }
 
-bool Board::MoveUp()
+bool Board::MoveUp(Tile* p)
 {
-	bool retvalue=array[tank_x][tank_y]->block->PushBottom();
-	return retvalue;
+	SDL_Point pos = p->getXY();
+	if (p->moved) return false;
+	Tile* block; TopBlock(block);
+	if (block) block->PushBottom();
+	bool ret =swap(pos.x, pos.y, pos.x, pos.y-1);
+	if (ret&&p->GetBlockType()!=BlockType::TANK) Sound::PlayASound("scrape.wav", SoundPriority::SCRAPE);
+	return p->moved=ret;
 }
 
-bool Board::MoveDown()
+bool Board::MoveDown(Tile* p)
 {
-	bool retvalue=array[tank_x][tank_y]->block->PushTop();
-	return retvalue;
+	SDL_Point pos = p->getXY();
+	if (p->moved) return false;
+	Tile* block; BottomBlock(block);
+	if (block) block->PushTop();
+	bool ret =swap(pos.x, pos.y, pos.x, pos.y+1);
+	if (ret&&p->GetBlockType()!=BlockType::TANK) Sound::PlayASound("scrape.wav", SoundPriority::SCRAPE);
+	return p->moved=ret;
+}
+
+bool Board::RightBlock(Tile* p)
+{
+	SDL_Point position = p->getXY();
+	if (position.x>=COLUMNS-1) {p=NULL; return false;}
+	p=array[position.x+1][position.y]->block;
+	return true;
+}
+
+bool Board::LeftBlock(Tile* p)
+{
+	SDL_Point position = p->getXY();
+	if (position.x<=0) {p=NULL; return false;}
+	p=array[position.x-1][position.y]->block;
+	return true;
+}
+
+bool Board::TopBlock(Tile* p)
+{
+	SDL_Point position = p->getXY();
+	if (position.y<=0) {p=NULL; return false;}
+	p=array[position.x][position.y-1]->block;
+	return true;
+}
+
+bool Board::BottomBlock(Tile* p)
+{
+	SDL_Point position = p->getXY();
+	if (position.y>=ROWS-1) {p=NULL; return false;}
+	p=array[position.x][position.y+1]->block;
+	return true;
 }
 
 void Board::Animate(SDL_Renderer * renderer) {
@@ -270,9 +322,9 @@ void Board::Animate(SDL_Renderer * renderer) {
 	for (int i=0; i<ROWS; i++) {
 		for (int j=0; j<COLUMNS; j++) {
 			if (!array[j][i]) continue;
-			if (array[j][i]->ground) array[j][i]->ground->draw(renderer);
-			if (array[j][i]->block) array[j][i]->block->draw(renderer);
-			if (array[j][i]->over) array[j][i]->over->draw(renderer);
+			if (array[j][i]->ground) {array[j][i]->ground->Update(); array[j][i]->ground->draw(renderer);};
+			if (array[j][i]->block) {array[j][i]->block->Update(); array[j][i]->block->draw(renderer);};
+			if (array[j][i]->over) {array[j][i]->over->Update(); array[j][i]->over->draw(renderer);};
 		}
 	}
 	DisplayHelp(renderer);

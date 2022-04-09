@@ -39,6 +39,8 @@ public:
 	}
 
 	void SetXY(int x, int y) {x_pos=x, y_pos=y;}
+	void SetXY(SDL_Point xy) {x_pos=xy.x, y_pos=xy.y;}
+	SDL_Point getXY() {return {x_pos, y_pos};}
 
 	virtual void SetOtherBlocks (unsigned int around) {}
 
@@ -147,6 +149,9 @@ public:
 		BlackSquare(renderer, x_pos, y_pos); 
 	}
 
+public: // members
+	bool moved;
+
 protected: //functions
 	virtual int BeamState();
 	bool SeeMe(BlockType type) {
@@ -236,7 +241,6 @@ protected: //members
 	bool FiringUp, FiringDown, FiringLeft, FiringRight, Firing;
 	int WasHitLeft, WasHitRight, WasHitTop, WasHitBottom, WasHit;
 	int HadFiredLeft, HadFiredRight, HadFiredUp, HadFiredDown, HadFired;
-	bool moved;
 
 	int cols;
 	int rows;

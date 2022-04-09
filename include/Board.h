@@ -79,28 +79,29 @@ public:
 	void Right() {	//user presses right arrow, ect.
 		if (!TankExists()) return;
 		if (array[tank_x][tank_y]->block->GetRotation()==2)
-		{MoveRight(); See();}
+		{MoveRight(array[tank_x][tank_y]->block); See();}
 		else array[tank_x][tank_y]->block->SetRotation(2);
 		TankExists();
 	}
 	void Left() {
 		if (!TankExists()) return;
-		if (array[tank_x][tank_y]->block->GetRotation()==0)
-			MoveLeft(), See();
+		if (array[tank_x][tank_y]->block->GetRotation()==0) {
+			MoveLeft(array[tank_x][tank_y]->block), See();
+		}
 		else array[tank_x][tank_y]->block->SetRotation(0);
 		TankExists();
 	}
 	void Up() {
 		if (!TankExists()) return;
 		if (array[tank_x][tank_y]->block->GetRotation()==1)
-		{MoveUp(); See();}
+		{MoveUp(array[tank_x][tank_y]->block); See();}
 		else array[tank_x][tank_y]->block->SetRotation(1);
 		TankExists();
 	}
 	void Down() {
 		if (!TankExists()) return;
 		if (array[tank_x][tank_y]->block->GetRotation()==3)
-		{MoveDown(); See();}
+		{MoveDown(array[tank_x][tank_y]->block); See();}
 		else array[tank_x][tank_y]->block->SetRotation(3);
 		TankExists();
 	}
@@ -150,15 +151,15 @@ private:
 	void ClearArray();
 	void CheckArray();
 
-	bool MoveUp();
-	bool MoveDown();
-	bool MoveRight();
-	bool MoveLeft();
+	bool MoveUp(Tile* p);
+	bool MoveDown(Tile* p);
+	bool MoveRight(Tile* p);
+	bool MoveLeft(Tile* p);
 
-	// bool MoveUp();
-	// bool MoveDown();
-	// bool MoveRight();
-	// bool MoveLeft();
+	bool RightBlock(Tile* p);
+	bool LeftBlock(Tile* p);
+	bool TopBlock(Tile* p);
+	bool BottomBlock(Tile* p);
 
 	void DisplayHelp(SDL_Renderer * renderer);
 
