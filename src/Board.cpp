@@ -82,37 +82,37 @@ void Board::CreateSquare(int x, int y)
 
 	switch(type) {
 	default:
-	case BlockType::GROUND:		ground=	new GroundTile(textures, r); break;
-	case BlockType::WATER:			ground=	new Water(textures, r); break;
+	case BlockType::GROUND:		ground=	new GroundTile(x, y, textures, r); break;
+	case BlockType::WATER:			ground=	new Water(x, y, textures, r); break;
 	}
 
 	type= blockTypeArray[x][y];
 	r= blockRotationArray[x][y];
 
 	switch(type) {
-	default:			block= NULL; break;
-	// case BlockType::REDBLOCK:		block=	new RedBlock(textures, r); break;
-	// case BlockType::RUSTYREDBLOCK:	block=	new RustyRedBlock(textures, r); break;
-	// case BlockType::WHITEBLOCK:	block=	new WhiteBlock(x, y, textures, r); break;
-	// case BlockType::TEE:			block=  new Tee(x, y, textures, r); break;
-	// case BlockType::MIRROR:		block=	new Mirror(x, y, textures, r); break;
-	// case BlockType::NUKE:			block=	new Nuke(x, y, textures, r); break;
-	// case BlockType::ENEMYNUKE:		block=	new EnemyNuke(x, y, textures, r); break;
-	// case BlockType::TANK:			block=	new Tank(x, y, textures, r); break;
-	// case BlockType::ENEMYTANK:		block=	new EnemyTank(x, y, textures, r); number_of_enemies++; break;
-	// case BlockType::STATIC:		block=	new Static(x, y, textures, r); break;
-	// case BlockType::RUSTY:			block=	new Rusty(x, y, textures, r); break;
-	// case BlockType::BARSVERT:		block=	new BarsVert(x, y, textures, r); break;
-	// case BlockType::BARSHORIZ:		block=	new BarsHoriz(x, y, textures, r); break;
-	// case BlockType::BARSCROSS:		block=	new BarsCross(x, y, textures, r); break;
-	// case BlockType::TRIANGLE:		block=	new Triangle(x, y, textures, r); break;
-	// case BlockType::RUSTYTRIANGLE:	block=	new RustyTriangle(x, y, textures, r); break;
-	// case BlockType::RUSTYBARSVERT:	block=	new RustyBarsVert(x, y, textures, r); break;
-	// case BlockType::RUSTYBARSHORIZ:block=	new RustyBarsHoriz(x, y, textures, r); break;
-	// case BlockType::RUSTYWHITEBLOCK:block= new RustyWhiteBlock(x, y, textures, r); break;
+	default:			            block= NULL; break;
+	case BlockType::REDBLOCK:		block=	new RedBlock(x, y, textures, r); break;
+	case BlockType::RUSTYREDBLOCK:	block=	new RustyRedBlock(x, y, textures, r); break;
+	case BlockType::WHITEBLOCK:	    block=	new WhiteBlock(x, y, textures, r); break;
+	case BlockType::TEE:			block=  new Tee(x, y, textures, r); break;
+	case BlockType::MIRROR:		    block=	new Mirror(x, y, textures, r); break;
+	case BlockType::NUKE:			block=	new Nuke(x, y, textures, r); break;
+	case BlockType::ENEMYNUKE:		block=	new EnemyNuke(x, y, textures, r); break;
+	case BlockType::TANK:			block=	new Tank(x, y, textures, r); break;
+	case BlockType::ENEMYTANK:		block=	new EnemyTank(x, y, textures, r); number_of_enemies++; break;
+	case BlockType::STATIC:		    block=	new Static(x, y, textures, r); break;
+	case BlockType::RUSTY:			block=	new Rusty(x, y, textures, r); break;
+	case BlockType::BARSVERT:		block=	new BarsVert(x, y, textures, r); break;
+	case BlockType::BARSHORIZ:		block=	new BarsHoriz(x, y, textures, r); break;
+	case BlockType::BARSCROSS:		block=	new BarsCross(x, y, textures, r); break;
+	case BlockType::TRIANGLE:		block=	new Triangle(x, y, textures, r); break;
+	case BlockType::RUSTYTRIANGLE:	block=	new RustyTriangle(x, y, textures, r); break;
+	case BlockType::RUSTYBARSVERT:	block=	new RustyBarsVert(x, y, textures, r); break;
+	case BlockType::RUSTYBARSHORIZ: block=	new RustyBarsHoriz(x, y, textures, r); break;
+	case BlockType::RUSTYWHITEBLOCK:block= new RustyWhiteBlock(x, y, textures, r); break;
 	}
 
-	if (!ground) ground= new GroundTile(textures, 33);
+	if (!ground) ground= new GroundTile(x, y, textures, 33);
 	array[x][y] = new Square(block, ground);
 }
 
@@ -261,9 +261,9 @@ void Board::Animate(SDL_Renderer * renderer) {
 	for (int i=0; i<ROWS; i++) {
 		for (int j=0; j<COLUMNS; j++) {
 			if (!array[j][i]) continue;
-			if (array[j][i]->ground) array[j][i]->ground->Update(renderer, j, i);
-			if (array[j][i]->block) array[j][i]->block->Update(renderer, j, i);
-			if (array[j][i]->over) array[j][i]->over->Update(renderer, j, i);
+			if (array[j][i]->ground) array[j][i]->ground->draw(renderer);
+			if (array[j][i]->block) array[j][i]->block->draw(renderer);
+			if (array[j][i]->over) array[j][i]->over->draw(renderer);
 		}
 	}
 	DisplayHelp(renderer);

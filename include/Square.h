@@ -10,9 +10,9 @@ public:
 	Square(Tile* b, Tile* g);
 	~Square();
 
-	Tile* over;
-	Tile* block;
-	GroundTile* ground;
+	Tile* over = nullptr;
+	Tile* block = nullptr;
+	GroundTile* ground = nullptr;
 
 };
 
