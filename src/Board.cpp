@@ -33,7 +33,16 @@ void Board::handleInput(std::vector<Input> input) {
 				help = true;
 			break;
 		case Input::LEFT:
-			SDL_Log("left");
+			Left();
+			break;
+		case Input::RIGHT:
+			Right();
+			break;
+		case Input::UP:
+			Up();
+			break;
+		case Input::DOWN:
+			Down();
 			break;
 		case Input::NEXTLEVEL:
 			LoadLevel();
@@ -157,36 +166,36 @@ void Board::YouDied() {
 	for (int y=ROWS/2-2, yy=0; y<ROWS/2+1; y++, yy++) {
 		for (int x=COLUMNS/2-3, xx=0; x<COLUMNS/2+3; x++, xx++) {
 			Tile* temp=array[x][y]->over;
-			// array[x][y]->over=new Message(x,y,textures,yy*14+xx);
-			// if (temp) array[x][y]->ground->AddDead(temp);
+			array[x][y]->over=new Message(x,y,textures,yy*14+xx);
+			if (temp) array[x][y]->ground->AddDead(temp);
 		}
 	}
 	died=true;
 }
 
 void Board::YouDefeated() {
-	// if (!TankExists()) return;
+	if (!TankExists()) return;
 	if (died) return;
 	if (defeated) return;
 	if (finished) return;
-	// for (int y=ROWS/2-2, yy=0; y<ROWS/2+1; y++, yy++) {
-	// 	for (int x=COLUMNS/2-4, xx=6; x<COLUMNS/2+4; x++, xx++) {
-	// 		Tile* temp=array[x][y]->over;
-	// 		array[x][y]->over=new Message(x,y,textures,yy*14+xx);
-	// 		if (temp) array[x][y]->ground->AddDead(temp);
-	// 	}
-	// }
+	for (int y=ROWS/2-2, yy=0; y<ROWS/2+1; y++, yy++) {
+		for (int x=COLUMNS/2-4, xx=6; x<COLUMNS/2+4; x++, xx++) {
+			Tile* temp=array[x][y]->over;
+			array[x][y]->over=new Message(x,y,textures,yy*14+xx);
+			if (temp) array[x][y]->ground->AddDead(temp);
+		}
+	}
 	defeated=true;
 }
 
 void Board::Credits() {
-	// for (int y=ROWS/2-5, yy=3; y<ROWS/2+6; y++, yy++) {
-	// 	for (int x=COLUMNS/2-7, xx=0; x<COLUMNS/2+7; x++, xx++) {
-	// 		Tile* temp=array[x][y]->over;
-	// 		array[x][y]->over=new Message(x,y,textures,yy*14+xx);
-	// 		if (temp) array[x][y]->ground->AddDead(temp);
-	// 	}
-	// }
+	for (int y=ROWS/2-5, yy=3; y<ROWS/2+6; y++, yy++) {
+		for (int x=COLUMNS/2-7, xx=0; x<COLUMNS/2+7; x++, xx++) {
+			Tile* temp=array[x][y]->over;
+			array[x][y]->over=new Message(x,y,textures,yy*14+xx);
+			if (temp) array[x][y]->ground->AddDead(temp);
+		}
+	}
 	finished=true;
 }
 
@@ -214,7 +223,7 @@ bool Board::swap(int x, int y, int x1, int y1)
 {
 	if (x>=COLUMNS||x<0) return false;
 	if (y>=ROWS||y<0) return false;
-	// if (!array[x][y]->block) return false;	//if you are nothing you can move anywhere
+	if (!array[x][y]->block) return false;	//if you are nothing you can move anywhere
 	if (x1>=COLUMNS||x1<0) return false;
 	if (y1>=ROWS||y1<0) return false;
 	if (array[x1][y1]->block) return false; //cannot move into occupied space
@@ -222,36 +231,36 @@ bool Board::swap(int x, int y, int x1, int y1)
 	array[x][y]->block=array[x1][y1]->block;
 	array[x1][y1]->block=temp;
 	//let the ground know someone's moving on it
-	// if (array[x1][y1]->block) array[x1][y1]->block->SetXY(x1,y1);
-	// if (array[x][y]->block) array[x][y]->block->SetXY(x,y);
+	if (array[x1][y1]->block) array[x1][y1]->block->SetXY(x1,y1);
+	if (array[x][y]->block) array[x][y]->block->SetXY(x,y);
 	if (x==tank_x && y==tank_y) tank_x=x1, tank_y=y1;
-	// array[x1][y1]->ground->BlockOver(array[x1][y1]->block, array[x1][y1]->ground);
+	array[x1][y1]->ground->BlockOver(array[x1][y1]->block, array[x1][y1]->ground);
 	return true;
 }
 
-// bool Board::MoveRight()
-// {
-// 	bool retvalue=array[tank_x][tank_y]->block->PushLeft();
-// 	return retvalue;
-// }
+bool Board::MoveRight()
+{
+	bool retvalue=array[tank_x][tank_y]->block->PushLeft();
+	return retvalue;
+}
 
-// bool Board::MoveLeft()
-// {
-// 	bool retvalue=array[tank_x][tank_y]->block->PushRight();
-// 	return retvalue;
-// }
+bool Board::MoveLeft()
+{
+	bool retvalue=array[tank_x][tank_y]->block->PushRight();
+	return retvalue;
+}
 
-// bool Board::MoveUp()
-// {
-// 	bool retvalue=array[tank_x][tank_y]->block->PushBottom();
-// 	return retvalue;
-// }
+bool Board::MoveUp()
+{
+	bool retvalue=array[tank_x][tank_y]->block->PushBottom();
+	return retvalue;
+}
 
-// bool Board::MoveDown()
-// {
-// 	bool retvalue=array[tank_x][tank_y]->block->PushTop();
-// 	return retvalue;
-// }
+bool Board::MoveDown()
+{
+	bool retvalue=array[tank_x][tank_y]->block->PushTop();
+	return retvalue;
+}
 
 void Board::Animate(SDL_Renderer * renderer) {
 	Delay();
@@ -337,26 +346,15 @@ void Board::FillDefault()
 	Credits();
 }
 
-// int Board::AnyKey(SDL_Keycode key) {
-// 	if (key==SDLK_F1&&!help) {help=true; return 0;}
-// 	if (help) {help=false; return 0;}
-// 	if (key==SDLK_ESCAPE||key==SDLK_F12) return 666;
-// 	if (defeated&&key==SDLK_RETURN) {LoadLevel(); return 0;}
-// 	else if (defeated) return 0;
-// 	else if (finished&&key!=SDLK_PAGEDOWN) return 0;
-
-// 	return 1;
-// }
-
 void Board::MoveForCredits() {
 	static int chop=0;
 	chop++;
 	chop%=4;
 	if (!chop) {
-		// if (tank_x==2&& tank_y>1) Up();
-		// else if (tank_x==COLUMNS-3 && tank_y< ROWS-2) Down();
-		// else if (tank_y==1&& tank_x< COLUMNS-3) Right();
-		// else if (tank_y==ROWS-2 && tank_x> 2) Left();
+		if (tank_x==2&& tank_y>1) Up();
+		else if (tank_x==COLUMNS-3 && tank_y< ROWS-2) Down();
+		else if (tank_y==1&& tank_x< COLUMNS-3) Right();
+		else if (tank_y==ROWS-2 && tank_x> 2) Left();
 	}
 }
 

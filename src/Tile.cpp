@@ -345,7 +345,7 @@ bool Tile::ShootLeft()
 
 bool Tile::SeeMeUp(BlockType type, int dist)
 {
-	Tile* block; TopBlock(block);
+	Tile* block = NULL; TopBlock(block);
 	if (block) block->LookBottom(type, dist);
 	else {
 		TopGround(block);
@@ -356,7 +356,7 @@ bool Tile::SeeMeUp(BlockType type, int dist)
 
 bool Tile::SeeMeDown(BlockType type, int dist)
 {
-	Tile* block; BottomBlock(block);
+	Tile* block = NULL; BottomBlock(block);
 	if (block) block->LookTop(type, dist);
 	else {
 		BottomGround(block);
@@ -366,7 +366,7 @@ bool Tile::SeeMeDown(BlockType type, int dist)
 }
 bool Tile::SeeMeRight(BlockType type, int dist)
 {
-	Tile* block; RightBlock(block);
+	Tile* block = NULL; RightBlock(block);
 	if (block) block->LookLeft(type, dist);
 	else {
 		RightGround(block);
@@ -376,7 +376,7 @@ bool Tile::SeeMeRight(BlockType type, int dist)
 }
 bool Tile::SeeMeLeft(BlockType type, int dist)
 {
-	Tile* block; LeftBlock(block);
+	Tile* block = NULL; LeftBlock(block);
 	if (block) block->LookRight(type, dist);
 	else {
 		LeftGround(block);

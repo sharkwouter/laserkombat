@@ -12,7 +12,7 @@ public:
 
 	Tile* over = nullptr;
 	Tile* block = nullptr;
-	GroundTile* ground = nullptr;
+	Tile* ground = nullptr;
 
 };
 

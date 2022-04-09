@@ -33,7 +33,7 @@ public:
 	void See() {
 		for (int i=0; i<ROWS; i++) {
 			for (int j=0; j<COLUMNS; j++) {
-				// if (array[j][i]&&array[j][i]->block) array[j][i]->block->PreSeeMe();
+				if (array[j][i]&&array[j][i]->block) array[j][i]->block->PreSeeMe();
 			}
 		}
 	}
@@ -44,7 +44,7 @@ public:
 		Sound::Play();	//play the queued sound
 		for (int i=0; i<ROWS; i++) {
 			for (int j=0; j<COLUMNS; j++) {
-				// if (array[j][i]&&array[j][i]->over) array[j][i]->over->AfterAnimate();
+				if (array[j][i]&&array[j][i]->over) array[j][i]->over->AfterAnimate();
 			}
 		}
 
@@ -76,58 +76,57 @@ public:
 		return ret;
 	}
 
-
-	// void Right() {	//user presses right arrow, ect.
-	// 	if (!TankExists()) return;
-	// 	if (array[tank_x][tank_y]->block->GetRotation()==2)
-	// 	{MoveRight(); See();}
-	// 	else array[tank_x][tank_y]->block->SetRotation(2);
-	// 	TankExists();
-	// }
-	// void Left() {
-	// 	if (!TankExists()) return;
-	// 	if (array[tank_x][tank_y]->block->GetRotation()==0)
-	// 		MoveLeft(), See();
-	// 	else array[tank_x][tank_y]->block->SetRotation(0);
-	// 	TankExists();
-	// }
-	// void Up() {
-	// 	if (!TankExists()) return;
-	// 	if (array[tank_x][tank_y]->block->GetRotation()==1)
-	// 	{MoveUp(); See();}
-	// 	else array[tank_x][tank_y]->block->SetRotation(1);
-	// 	TankExists();
-	// }
-	// void Down() {
-	// 	if (!TankExists()) return;
-	// 	if (array[tank_x][tank_y]->block->GetRotation()==3)
-	// 	{MoveDown(); See();}
-	// 	else array[tank_x][tank_y]->block->SetRotation(3);
-	// 	TankExists();
-	// }
-	// void Fire() {         //user presses fire button
-	// 	if (!TankExists()) return;
-	// 	int rotation= array[tank_x][tank_y]->block->GetRotation();
-	// 	Tile* tank=array[tank_x][tank_y]->block;
-	// 	switch(rotation) {
-	// 	case 0:
-	// 		tank->ShootLeft();
-	// 		break;
-	// 	case 1:
-	// 		tank->ShootUp();
-	// 		break;
-	// 	case 2:
-	// 		tank->ShootRight();
-	// 		break;
-	// 	case 3:
-	// 		tank->ShootDown();
-	// 		break;
-	// 	default:
-	// 		break;
-	// 	}
-	// 	See();
-	// 	TankExists();
-	// }
+	void Right() {	//user presses right arrow, ect.
+		if (!TankExists()) return;
+		if (array[tank_x][tank_y]->block->GetRotation()==2)
+		{MoveRight(); See();}
+		else array[tank_x][tank_y]->block->SetRotation(2);
+		TankExists();
+	}
+	void Left() {
+		if (!TankExists()) return;
+		if (array[tank_x][tank_y]->block->GetRotation()==0)
+			MoveLeft(), See();
+		else array[tank_x][tank_y]->block->SetRotation(0);
+		TankExists();
+	}
+	void Up() {
+		if (!TankExists()) return;
+		if (array[tank_x][tank_y]->block->GetRotation()==1)
+		{MoveUp(); See();}
+		else array[tank_x][tank_y]->block->SetRotation(1);
+		TankExists();
+	}
+	void Down() {
+		if (!TankExists()) return;
+		if (array[tank_x][tank_y]->block->GetRotation()==3)
+		{MoveDown(); See();}
+		else array[tank_x][tank_y]->block->SetRotation(3);
+		TankExists();
+	}
+	void Fire() {         //user presses fire button
+		if (!TankExists()) return;
+		int rotation= array[tank_x][tank_y]->block->GetRotation();
+		Tile* tank=array[tank_x][tank_y]->block;
+		switch(rotation) {
+		case 0:
+			tank->ShootLeft();
+			break;
+		case 1:
+			tank->ShootUp();
+			break;
+		case 2:
+			tank->ShootRight();
+			break;
+		case 3:
+			tank->ShootDown();
+			break;
+		default:
+			break;
+		}
+		See();
+		TankExists();
+	}
 
 	bool Previous();
 
@@ -150,6 +149,11 @@ private:
 	void FillArray(bool credits=false);
 	void ClearArray();
 	void CheckArray();
+
+	bool MoveUp();
+	bool MoveDown();
+	bool MoveRight();
+	bool MoveLeft();
 
 	// bool MoveUp();
 	// bool MoveDown();
