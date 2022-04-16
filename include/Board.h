@@ -79,28 +79,28 @@ public:
 	void Right() {	//user presses right arrow, ect.
 		if (!TankExists()) return;
 		if (array[tank_x][tank_y]->block->GetRotation()==2)
-		{MoveRight(array[tank_x][tank_y]->block); See();}
+		{MoveRight(); See();}
 		else array[tank_x][tank_y]->block->SetRotation(2);
 		TankExists();
 	}
 	void Left() {
 		if (!TankExists()) return;
 		if (array[tank_x][tank_y]->block->GetRotation()==0)
-		{MoveLeft(array[tank_x][tank_y]->block), See();}
+			MoveLeft(), See();
 		else array[tank_x][tank_y]->block->SetRotation(0);
 		TankExists();
 	}
 	void Up() {
 		if (!TankExists()) return;
 		if (array[tank_x][tank_y]->block->GetRotation()==1)
-		{MoveUp(array[tank_x][tank_y]->block); See();}
+		{MoveUp(); See();}
 		else array[tank_x][tank_y]->block->SetRotation(1);
 		TankExists();
 	}
 	void Down() {
 		if (!TankExists()) return;
 		if (array[tank_x][tank_y]->block->GetRotation()==3)
-		{MoveDown(array[tank_x][tank_y]->block); See();}
+		{MoveDown(); See();}
 		else array[tank_x][tank_y]->block->SetRotation(3);
 		TankExists();
 	}
@@ -110,16 +110,16 @@ public:
 		Tile* tank=array[tank_x][tank_y]->block;
 		switch(rotation) {
 		case 0:
-			ShootLeft(tank);
+			tank->ShootLeft();
 			break;
 		case 1:
-			ShootUp(tank);
+			tank->ShootUp();
 			break;
 		case 2:
-			ShootRight(tank);
+			tank->ShootRight();
 			break;
 		case 3:
-			ShootDown(tank);
+			tank->ShootDown();
 			break;
 		default:
 			break;
@@ -129,6 +129,10 @@ public:
 	}
 
 	bool Previous();
+	bool swap(int x, int y, int x1, int y1);
+
+public:
+	Square* array[COLUMNS][ROWS];
 
 private:
 	void MoveForCredits();
@@ -144,31 +148,15 @@ private:
 
 	void SetGroundTypes();
 	unsigned int GetGroundBits(unsigned a[COLUMNS+2][ROWS+2], int x, int y);
-	bool swap(int x, int y, int x1, int y1);
 
 	void FillArray(bool credits=false);
 	void ClearArray();
 	void CheckArray();
 
-	bool MoveUp(Tile* p);
-	bool MoveDown(Tile* p);
-	bool MoveRight(Tile* p);
-	bool MoveLeft(Tile* p);
-
-	bool RightBlock(SDL_Point pos, Tile** p);
-	bool LeftBlock(SDL_Point pos, Tile** p);
-	bool TopBlock(SDL_Point pos, Tile** p);
-	bool BottomBlock(SDL_Point pos, Tile** p);
-
-	bool RightGround(SDL_Point pos, Tile** p);
-	bool LeftGround(SDL_Point pos, Tile** p);
-	bool TopGround(SDL_Point pos, Tile** p);
-	bool BottomGround(SDL_Point pos, Tile** p);
-
-	bool ShootUp(Tile* p);
-	bool ShootDown(Tile* p);
-	bool ShootRight(Tile* p);
-	bool ShootLeft(Tile* p);
+	bool MoveUp();
+	bool MoveDown();
+	bool MoveRight();
+	bool MoveLeft();
 
 	void DisplayHelp(SDL_Renderer * renderer);
 
@@ -178,11 +166,9 @@ private: //data
 	bool died;
 	bool defeated;
 	bool finished;
-	bool changed;
 
 	Textures * textures;
 
-	Square* array[COLUMNS][ROWS];
 	int rows, cols;
 	int tank_x, tank_y, origin_x, origin_y;
 	int level;
