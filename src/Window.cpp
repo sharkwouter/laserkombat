@@ -89,11 +89,11 @@ Input Window::getInputForKeyboardKey(SDL_Keycode key) {
             break;
 
         case SDLK_PAGEUP:
-            input = Input::NEXTLEVEL;
+            input = Input::PREVIOUSLEVEL;
             break;
 
         case SDLK_PAGEDOWN:
-            input = Input::PREVIOUSLEVEL;
+            input = Input::NEXTLEVEL;
             break;
 
         case SDLK_F1:
