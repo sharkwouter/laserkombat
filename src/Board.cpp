@@ -60,7 +60,11 @@ void Board::handleInput(std::vector<Input> input) {
 			Previous();
 			break;
 		case Input::RESTART:
-			Restart();
+			if(defeated) {
+				LoadLevel();
+			} else {
+				Restart();
+			}
 			break;
 		}
 	}
