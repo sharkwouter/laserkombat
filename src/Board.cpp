@@ -239,7 +239,7 @@ void Board::Animate(SDL_Renderer * renderer) {
 
 void Board::SetGroundTypes()
 {
-	if (GroundTile::SetChanged(0)) return;
+	if (!GroundTile::SetChanged(0)) return;
 	static unsigned int groundArray[COLUMNS+2][ROWS+2];
 	for (int i=0; i<COLUMNS+2; i++) groundArray[i][0]=1;
 	for (int i=0; i<COLUMNS+2; i++) groundArray[i][ROWS+1]=1;
