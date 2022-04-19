@@ -6,7 +6,7 @@ enum class Input {
     UP,
     RIGHT,
     DOWN,
-    SHOOT,
+    FIRE,
     RESTART,
     NEXTLEVEL,
     PREVIOUSLEVEL,

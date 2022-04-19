@@ -20,7 +20,7 @@ public:
 	int DecreaseEnemyCount() {--number_of_enemies; return number_of_enemies;}
 	void GetTankXY(int &x, int& y) {x=tank_x; y=tank_y;}
 
-	void handleInput(std::vector<Input> input);
+	int AnyKey(Input key);
 	void NextLevel() {LoadLevel();}
 
 

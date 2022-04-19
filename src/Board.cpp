@@ -26,51 +26,6 @@ Board::~Board() {
 	ClearArray();
 }
 
-void Board::handleInput(std::vector<Input> input) {
-	for (auto i : input) {
-		if (help) {
-			help = false;
-			return;
-		}
-		switch (i)
-		{
-		case Input::HELP:
-			if (!help)
-				help = true;
-			break;
-		case Input::LEFT:
-			Left();
-			break;
-		case Input::RIGHT:
-			Right();
-			break;
-		case Input::UP:
-			Up();
-			break;
-		case Input::DOWN:
-			Down();
-			break;
-		case Input::SHOOT:
-			Fire();
-			break;
-		case Input::NEXTLEVEL:
-			LoadLevel();
-			break;
-		case Input::PREVIOUSLEVEL:
-			Previous();
-			break;
-		case Input::RESTART:
-			if(defeated) {
-				LoadLevel();
-			} else {
-				Restart();
-			}
-			break;
-		}
-	}
-	
-}
-
 void Board::FillArray(bool credits)
 {
 	ClearArray();
@@ -354,6 +309,17 @@ void Board::FillDefault()
 	tank_x=tank_y=origin_x=origin_y=1;
 	FillArray(true);
 	Credits();
+}
+
+int Board::AnyKey(Input key) {
+	if (key==Input::HELP&&!help) {help=true; return 0;}
+	if (help) {help=false; return 0;}
+	if (key==Input::EXIT) return 666;
+	if (defeated&&key==Input::RESTART) {LoadLevel(); return 0;}
+	else if (defeated) return 0;
+	else if (finished&&key!=Input::PREVIOUSLEVEL) return 0;
+
+	return 1;
 }
 
 void Board::MoveForCredits() {

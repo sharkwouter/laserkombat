@@ -79,7 +79,7 @@ Input Window::getInputForKeyboardKey(SDL_Keycode key) {
         case SDLK_SPACE:
         case SDLK_LCTRL:
         case SDLK_RCTRL:
-            input = Input::SHOOT;
+            input = Input::FIRE;
             break;
 
         case SDLK_r:
@@ -135,7 +135,7 @@ Input Window::getInputForControllerButton(Uint8 button) {
             break;
 
         case SDL_CONTROLLER_BUTTON_A:
-            input = Input::SHOOT;
+            input = Input::FIRE;
             break;
 
         case SDL_CONTROLLER_BUTTON_BACK:
