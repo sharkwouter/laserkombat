@@ -1,0 +1,60 @@
+name: Build
+
+on:
+  push:
+
+jobs:
+  Linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake libsdl2-dev
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        run: |
+          cmake -DCMAKE_BUILD_TYPE=Release .
+          make
+          strip --strip-unneeded laserkombat
+      - name: Publish artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: laserkombat-linux
+          path: |
+            laserkombat
+            assets
+            COPYING
+  Windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - name: Install dependencies
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          install: >-
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-binutils
+            mingw-w64-x86_64-make
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-SDL2
+          update: true
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        run: |
+          cmake -DCMAKE_BUILD_TYPE=Release -G "MinGW Makefiles" .
+          cmake --build .
+          strip --strip-unneeded laserkombat.exe
+      - name: Publish artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: laserkombat-windows
+          path: |
+            laserkombat.exe
+            assets
+            COPYING
