@@ -13,12 +13,6 @@
 #include "Tile.h"
 
 Board::Board(Textures * textures) : help(true), cols(COLUMNS), rows(ROWS), tank_x(0), tank_y(0), level(0), textures(textures) {
-	// Fill square array with null pointers
-	for (int i=0; i<ROWS; i++) {
-		for (int j=0; j<COLUMNS; j++) {
-			array[j][i]=NULL;
-		}
-	}
 	LoadLevel();	
 }
 
