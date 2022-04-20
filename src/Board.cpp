@@ -10,7 +10,7 @@
 #include "Square.h"
 #include "Tile.h"
 
-Board::Board(Textures * textures) : help(true), cols(COLUMNS), rows(ROWS), tank_x(0), tank_y(0), level(0), textures(textures) {
+Board::Board(Textures * textures, Sound * sound) : help(true), cols(COLUMNS), rows(ROWS), tank_x(0), tank_y(0), level(0), textures(textures), sound(sound) {
 	LoadLevel();	
 }
 
