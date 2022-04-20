@@ -101,14 +101,14 @@ bool Nuke::Kill() {
 	Tile* &ground=GetGround();
 	if (ground) {
 		Tile* temp=ground;
-		ground=new Water(x_pos,y_pos, textures, board);
+		ground=new Water(x_pos,y_pos, textures, sound, board);
 		ground->AddDead(temp);
 		ground->SetRotation(ground->GetRotation()+300);
 
 	}
 
 	GroundTile::SetChanged(true);	//flag for changes to update images draw
-	Sound::PlayASound("nuke.wav", SoundPriority::NUKE_SOUND);
+	sound->PlayASound("nuke.wav", SoundPriority::NUKE_SOUND);
 	return true;
 }
 
@@ -231,7 +231,7 @@ bool Tile::MoveUp() {
 	Tile* block = NULL; TopBlock(&block);
 	if (block) block->PushBottom();
 	bool ret = board->swap(x_pos, y_pos, x_pos, y_pos-1);
-	if (ret&&GetBlockType()!=BlockType::TANK) Sound::PlayASound("scrape.wav", SoundPriority::SCRAPE);
+	if (ret&&GetBlockType()!=BlockType::TANK) sound->PlayASound("scrape.wav", SoundPriority::SCRAPE);
 	return moved=ret;
 	return false;
 }
@@ -240,7 +240,7 @@ bool Tile::MoveDown() {
 	Tile* block = NULL; BottomBlock(&block);
 	if (block) block->PushTop();
 	bool ret =board->swap(x_pos, y_pos, x_pos, y_pos+1);
-	if (ret&&GetBlockType()!=BlockType::TANK) Sound::PlayASound("scrape.wav", SoundPriority::SCRAPE);
+	if (ret&&GetBlockType()!=BlockType::TANK) sound->PlayASound("scrape.wav", SoundPriority::SCRAPE);
 	return moved=ret;
 	return false;
 
@@ -250,7 +250,7 @@ bool Tile::MoveRight() {
 	Tile* block = NULL; RightBlock(&block);
 	if (block) block->PushLeft();
 	bool ret =board->swap(x_pos, y_pos, x_pos+1, y_pos);
-	if (ret&&GetBlockType()!=BlockType::TANK) Sound::PlayASound("scrape.wav", SoundPriority::SCRAPE);
+	if (ret&&GetBlockType()!=BlockType::TANK) sound->PlayASound("scrape.wav", SoundPriority::SCRAPE);
 	return moved=ret;
 	return false;
 }
@@ -259,7 +259,7 @@ bool Tile::MoveLeft() {
 	Tile* block = NULL; LeftBlock(&block);
 	if (block) block->PushRight();
 	bool ret =board->swap(x_pos, y_pos, x_pos-1, y_pos);
-	if (ret&&GetBlockType()!=BlockType::TANK) Sound::PlayASound("scrape.wav", SoundPriority::SCRAPE);
+	if (ret&&GetBlockType()!=BlockType::TANK) sound->PlayASound("scrape.wav", SoundPriority::SCRAPE);
 	return moved=ret;
 	return false;
 }
@@ -275,12 +275,12 @@ bool Water::BlockOver(Tile* &block, Tile* &ground)
 	if (temp->GetBlockType()==BlockType::WHITEBLOCK) return true;
 
 	if (temp->GetBlockType()==BlockType::REDBLOCK) {
-		ground=new GroundTile(x_pos, y_pos, textures, board, 10);
+		ground=new GroundTile(x_pos, y_pos, textures, sound, board, 10);
 		ground->AddDead(this);
 	}
 	block->WillKill(1); // 1 for drown
 	GroundTile::SetChanged(1);
-	Sound::PlayASound("splash.wav", SoundPriority::SPLASH);
+	sound->PlayASound("splash.wav", SoundPriority::SPLASH);
 	return true;
 }
 

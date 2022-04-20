@@ -10,7 +10,12 @@
 #include "Square.h"
 #include "Tile.h"
 
-Board::Board(Textures * textures) : help(true), cols(COLUMNS), rows(ROWS), tank_x(0), tank_y(0), level(0), textures(textures) {
+Board::Board(Textures * textures, Sound * sound) : help(true), cols(COLUMNS), rows(ROWS), tank_x(0), tank_y(0), level(0), textures(textures), sound(sound) {
+	for (int i=0; i<ROWS; i++) {
+		for (int j=0; j<COLUMNS; j++) {
+			array[j][i]=NULL;
+		}
+	}
 	LoadLevel();	
 }
 
@@ -51,8 +56,8 @@ void Board::CreateSquare(int x, int y)
 
 	switch(type) {
 	default:
-	case BlockType::GROUND:		ground=	new GroundTile(x, y, textures, this, r); break;
-	case BlockType::WATER:			ground=	new Water(x, y, textures, this, r); break;
+	case BlockType::GROUND:		ground=	new GroundTile(x, y, textures, sound, this, r); break;
+	case BlockType::WATER:			ground=	new Water(x, y, textures, sound, this, r); break;
 	}
 
 	type= blockTypeArray[x][y];
@@ -60,28 +65,28 @@ void Board::CreateSquare(int x, int y)
 
 	switch(type) {
 	default:			            block= NULL; break;
-	case BlockType::REDBLOCK:		block=	new RedBlock(x, y, textures, this, r); break;
-	case BlockType::RUSTYREDBLOCK:	block=	new RustyRedBlock(x, y, textures, this, r); break;
-	case BlockType::WHITEBLOCK:	    block=	new WhiteBlock(x, y, textures, this, r); break;
-	case BlockType::TEE:			block=  new Tee(x, y, textures, this, r); break;
-	case BlockType::MIRROR:		    block=	new Mirror(x, y, textures, this, r); break;
-	case BlockType::NUKE:			block=	new Nuke(x, y, textures, this, r); break;
-	case BlockType::ENEMYNUKE:		block=	new EnemyNuke(x, y, textures, this, r); break;
-	case BlockType::TANK:			block=	new Tank(x, y, textures, this, r); break;
-	case BlockType::ENEMYTANK:		block=	new EnemyTank(x, y, textures, this, r); number_of_enemies++; break;
-	case BlockType::STATIC:		    block=	new Static(x, y, textures, this, r); break;
-	case BlockType::RUSTY:			block=	new Rusty(x, y, textures, this, r); break;
-	case BlockType::BARSVERT:		block=	new BarsVert(x, y, textures, this, r); break;
-	case BlockType::BARSHORIZ:		block=	new BarsHoriz(x, y, textures, this, r); break;
-	case BlockType::BARSCROSS:		block=	new BarsCross(x, y, textures, this, r); break;
-	case BlockType::TRIANGLE:		block=	new Triangle(x, y, textures, this, r); break;
-	case BlockType::RUSTYTRIANGLE:	block=	new RustyTriangle(x, y, textures, this, r); break;
-	case BlockType::RUSTYBARSVERT:	block=	new RustyBarsVert(x, y, textures, this, r); break;
-	case BlockType::RUSTYBARSHORIZ: block=	new RustyBarsHoriz(x, y, textures, this, r); break;
-	case BlockType::RUSTYWHITEBLOCK:block= new RustyWhiteBlock(x, y, textures, this, r); break;
+	case BlockType::REDBLOCK:		block=	new RedBlock(x, y, textures, sound, this, r); break;
+	case BlockType::RUSTYREDBLOCK:	block=	new RustyRedBlock(x, y, textures, sound, this, r); break;
+	case BlockType::WHITEBLOCK:	    block=	new WhiteBlock(x, y, textures, sound, this, r); break;
+	case BlockType::TEE:			block=  new Tee(x, y, textures, sound, this, r); break;
+	case BlockType::MIRROR:		    block=	new Mirror(x, y, textures, sound, this, r); break;
+	case BlockType::NUKE:			block=	new Nuke(x, y, textures, sound, this, r); break;
+	case BlockType::ENEMYNUKE:		block=	new EnemyNuke(x, y, textures, sound, this, r); break;
+	case BlockType::TANK:			block=	new Tank(x, y, textures, sound, this, r); break;
+	case BlockType::ENEMYTANK:		block=	new EnemyTank(x, y, textures, sound, this, r); number_of_enemies++; break;
+	case BlockType::STATIC:		    block=	new Static(x, y, textures, sound, this, r); break;
+	case BlockType::RUSTY:			block=	new Rusty(x, y, textures, sound, this, r); break;
+	case BlockType::BARSVERT:		block=	new BarsVert(x, y, textures, sound, this, r); break;
+	case BlockType::BARSHORIZ:		block=	new BarsHoriz(x, y, textures, sound, this, r); break;
+	case BlockType::BARSCROSS:		block=	new BarsCross(x, y, textures, sound, this, r); break;
+	case BlockType::TRIANGLE:		block=	new Triangle(x, y, textures, sound, this, r); break;
+	case BlockType::RUSTYTRIANGLE:	block=	new RustyTriangle(x, y, textures, sound, this, r); break;
+	case BlockType::RUSTYBARSVERT:	block=	new RustyBarsVert(x, y, textures, sound, this, r); break;
+	case BlockType::RUSTYBARSHORIZ: block=	new RustyBarsHoriz(x, y, textures, sound, this, r); break;
+	case BlockType::RUSTYWHITEBLOCK:block= new RustyWhiteBlock(x, y, textures, sound, this, r); break;
 	}
 
-	if (!ground) ground= new GroundTile(x, y, textures, this, 33);
+	if (!ground) ground= new GroundTile(x, y, textures, sound, this, 33);
 	array[x][y] = new Square(block, ground);
 }
 
@@ -126,7 +131,7 @@ void Board::YouDied() {
 	for (int y=ROWS/2-2, yy=0; y<ROWS/2+1; y++, yy++) {
 		for (int x=COLUMNS/2-3, xx=0; x<COLUMNS/2+3; x++, xx++) {
 			Tile* temp=array[x][y]->over;
-			array[x][y]->over=new Message(x,y,textures, this, yy*14+xx);
+			array[x][y]->over=new Message(x,y,textures,sound,this,yy*14+xx);
 			if (temp) array[x][y]->ground->AddDead(temp);
 		}
 	}
@@ -141,7 +146,7 @@ void Board::YouDefeated() {
 	for (int y=ROWS/2-2, yy=0; y<ROWS/2+1; y++, yy++) {
 		for (int x=COLUMNS/2-4, xx=6; x<COLUMNS/2+4; x++, xx++) {
 			Tile* temp=array[x][y]->over;
-			array[x][y]->over=new Message(x,y,textures,this, yy*14+xx);
+			array[x][y]->over=new Message(x,y,textures,sound,this, yy*14+xx);
 			if (temp) array[x][y]->ground->AddDead(temp);
 		}
 	}
@@ -152,7 +157,7 @@ void Board::Credits() {
 	for (int y=ROWS/2-5, yy=3; y<ROWS/2+6; y++, yy++) {
 		for (int x=COLUMNS/2-7, xx=0; x<COLUMNS/2+7; x++, xx++) {
 			Tile* temp=array[x][y]->over;
-			array[x][y]->over=new Message(x,y,textures, this, yy*14+xx);
+			array[x][y]->over=new Message(x,y,textures,sound,this,yy*14+xx);
 			if (temp) array[x][y]->ground->AddDead(temp);
 		}
 	}
@@ -163,7 +168,7 @@ void Board::ClearArray()
 {
 	for (int i=0; i<ROWS; i++) {
 		for (int j=0; j<COLUMNS; j++) {
-			if (array[j][i] != NULL) delete array[j][i];
+			if (array[j][i]) delete array[j][i];
 			array[j][i]=NULL;
 		}
 	}
