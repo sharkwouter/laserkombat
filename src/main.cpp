@@ -45,7 +45,7 @@ void handleInput(std::vector<Input> input) {
 
 int main(int, char**) {
     Window window(TITLE, WINDOW_WIDTH, WINDOW_HEIGHT);
-    Textures * textures = new Textures();
+    Textures * textures = new Textures(window.renderer);
     Sound * sound = new Sound();
     board = new Board(textures, sound);
     running = true;
