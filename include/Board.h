@@ -42,7 +42,7 @@ public:
 	bool IsOver() {return died||defeated;}
 
 	void AfterAnimate() {	//called to change things that should be changed only after redraw
-		Sound::Play();	//play the queued sound
+		sound->Play();	//play the queued sound
 		for (int i=0; i<ROWS; i++) {
 			for (int j=0; j<COLUMNS; j++) {
 				if (array[j][i]&&array[j][i]->over) array[j][i]->over->AfterAnimate();

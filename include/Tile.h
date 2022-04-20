@@ -376,10 +376,10 @@ public:
 		return ret;
 
 	}
-	virtual bool HitLeft() {ATile::HitLeft(); Sound::PlayASound("pop.wav", POP); return WillKill();}
-	virtual bool HitTop() {ATile::HitTop(); Sound::PlayASound("pop.wav", POP); return WillKill();}
-	virtual bool HitRight() {ATile::HitRight(); Sound::PlayASound("pop.wav", POP); return WillKill();}
-	virtual bool HitBottom() {ATile::HitBottom(); Sound::PlayASound("pop.wav", POP); return WillKill();}
+	virtual bool HitLeft() {ATile::HitLeft(); sound->PlayASound("pop.wav", POP); return WillKill();}
+	virtual bool HitTop() {ATile::HitTop(); sound->PlayASound("pop.wav", POP); return WillKill();}
+	virtual bool HitRight() {ATile::HitRight(); sound->PlayASound("pop.wav", POP); return WillKill();}
+	virtual bool HitBottom() {ATile::HitBottom(); sound->PlayASound("pop.wav", POP); return WillKill();}
 
 	virtual bool RotateLeft() {
 		int row=rotation/4;
@@ -481,10 +481,10 @@ protected: //functions
 	virtual void WhiteBlock::Draw(SDL_Renderer * renderer) {
 		Draw::BlitSquare(renderer, textures->getRedblockSprites(), 2 ,0, x_pos, y_pos);
 	}
-	virtual bool MoveUp() {Sound::PlayASound(NULL, SCRAPE); return Tile::MoveUp();}
-	virtual bool MoveDown() {Sound::PlayASound(NULL, SCRAPE); return Tile::MoveDown();}
-	virtual bool MoveLeft() {Sound::PlayASound(NULL, SCRAPE); return Tile::MoveLeft();}
-	virtual bool MoveRight() {Sound::PlayASound(NULL, SCRAPE); return Tile::MoveRight();}
+	virtual bool MoveUp() {sound->PlayASound(NULL, SCRAPE); return Tile::MoveUp();}
+	virtual bool MoveDown() {sound->PlayASound(NULL, SCRAPE); return Tile::MoveDown();}
+	virtual bool MoveLeft() {sound->PlayASound(NULL, SCRAPE); return Tile::MoveLeft();}
+	virtual bool MoveRight() {sound->PlayASound(NULL, SCRAPE); return Tile::MoveRight();}
 protected: //members
 private: // functions
 private: //members
@@ -569,10 +569,10 @@ protected: //functions
 	virtual bool PushTop() {return false;}
 	virtual bool PushBottom() {return false;}
 
-	virtual bool HitLeft() {Sound::PlayASound("donk.wav", DONK); return span=1;}
-	virtual bool HitRight() {Sound::PlayASound("donk.wav", DONK); return span=1;}
-	virtual bool HitTop() {Sound::PlayASound("donk.wav", DONK); return span=1;}
-	virtual bool HitBottom() {Sound::PlayASound("donk.wav", DONK); return span=1;}
+	virtual bool HitLeft() {sound->PlayASound("donk.wav", DONK); return span=1;}
+	virtual bool HitRight() {sound->PlayASound("donk.wav", DONK); return span=1;}
+	virtual bool HitTop() {sound->PlayASound("donk.wav", DONK); return span=1;}
+	virtual bool HitBottom() {sound->PlayASound("donk.wav", DONK); return span=1;}
 
 
 
@@ -943,10 +943,10 @@ public:
 
 	}
 
-	virtual bool HitLeft() {ATile::HitLeft(); Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();}
-	virtual bool HitTop() {ATile::HitTop(); Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();}
-	virtual bool HitRight() {ATile::HitRight(); Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();}
-	virtual bool HitBottom() {ATile::HitBottom(); Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();}
+	virtual bool HitLeft() {ATile::HitLeft(); sound->PlayASound("collapse.wav", COLLAPSE); return Kill();}
+	virtual bool HitTop() {ATile::HitTop(); sound->PlayASound("collapse.wav", COLLAPSE); return Kill();}
+	virtual bool HitRight() {ATile::HitRight(); sound->PlayASound("collapse.wav", COLLAPSE); return Kill();}
+	virtual bool HitBottom() {ATile::HitBottom(); sound->PlayASound("collapse.wav", COLLAPSE); return Kill();}
 protected: //functions
 	virtual void Rusty::Draw(SDL_Renderer * renderer) {
 		if (rotation>=5) {
@@ -983,10 +983,10 @@ public:
 		rotation=1;
 		return false;
 	}
-	virtual bool HitLeft() {ATile::HitLeft(); Sound::PlayASound("pop.wav", POP); return Kill();}
-	virtual bool HitTop() {ATile::HitTop(); Sound::PlayASound("pop.wav", POP); return Kill();}
-	virtual bool HitRight() {ATile::HitRight(); Sound::PlayASound("pop.wav", POP); return Kill();}
-	virtual bool HitBottom() {ATile::HitBottom(); Sound::PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitLeft() {ATile::HitLeft(); sound->PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitTop() {ATile::HitTop(); sound->PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitRight() {ATile::HitRight(); sound->PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitBottom() {ATile::HitBottom(); sound->PlayASound("pop.wav", POP); return Kill();}
 
 protected: //functions
 	virtual void RustyRedBlock::Draw(SDL_Renderer * renderer) {
@@ -1159,10 +1159,10 @@ public:
 		return true;
 	}
 
-	virtual bool HitLeft() {Sound::PlayASound("donk.wav", DONK); return Mirror::HitLeft();}
-	virtual bool HitRight() {Sound::PlayASound("donk.wav", DONK); return Mirror::HitRight();}
-	virtual bool HitTop() {Sound::PlayASound("donk.wav", DONK); return Mirror::HitTop();}
-	virtual bool HitBottom() {Sound::PlayASound("donk.wav", DONK); return Mirror::HitBottom();}
+	virtual bool HitLeft() {sound->PlayASound("donk.wav", DONK); return Mirror::HitLeft();}
+	virtual bool HitRight() {sound->PlayASound("donk.wav", DONK); return Mirror::HitRight();}
+	virtual bool HitTop() {sound->PlayASound("donk.wav", DONK); return Mirror::HitTop();}
+	virtual bool HitBottom() {sound->PlayASound("donk.wav", DONK); return Mirror::HitBottom();}
 
 protected: //functions
 	virtual void Triangle::Draw(SDL_Renderer * renderer) {
@@ -1187,19 +1187,19 @@ public:
 
 	virtual bool HitLeft() {
 		Triangle::HitLeft();
-		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		sound->PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 	virtual bool HitRight() {
 		Triangle::HitRight();
-		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		sound->PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 	virtual bool HitTop() {
 		Triangle::HitTop();
-		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		sound->PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 	virtual bool HitBottom() {
 		Triangle::HitBottom();
-		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		sound->PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 
 protected: //functions
@@ -1226,11 +1226,11 @@ public:
 
 	virtual bool HitLeft() {
 		ATile::HitLeft();
-		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		sound->PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 	virtual bool HitRight() {
 		ATile::HitRight();
-		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		sound->PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 
 protected: //functions
@@ -1258,11 +1258,11 @@ public:
 
 	virtual bool HitTop() {
 		ATile::HitTop();
-		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		sound->PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 	virtual bool HitBottom() {
 		ATile::HitBottom();
-		Sound::PlayASound("collapse.wav", COLLAPSE); return Kill();	
+		sound->PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 
 protected: //functions
@@ -1287,10 +1287,10 @@ public:
 
 	}
 	
-	virtual bool HitLeft() {ATile::HitLeft(); Sound::PlayASound("pop.wav", POP); return Kill();}
-	virtual bool HitTop() {ATile::HitTop(); Sound::PlayASound("pop.wav", POP); return Kill();}
-	virtual bool HitRight() {ATile::HitRight(); Sound::PlayASound("pop.wav", POP); return Kill();}
-	virtual bool HitBottom() {ATile::HitBottom(); Sound::PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitLeft() {ATile::HitLeft(); sound->PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitTop() {ATile::HitTop(); sound->PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitRight() {ATile::HitRight(); sound->PlayASound("pop.wav", POP); return Kill();}
+	virtual bool HitBottom() {ATile::HitBottom(); sound->PlayASound("pop.wav", POP); return Kill();}
 
 protected: //functions
 	virtual void RustyWhiteBlock::Draw(SDL_Renderer * renderer) {
