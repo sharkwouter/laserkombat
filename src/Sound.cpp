@@ -1,6 +1,8 @@
 // sound.cpp
 #include "Sound.h"
 
+#include <string>
+
 Sound::Sound() : sound(0), maxx(SoundPriority::NOPLAY) {
     deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
 }
@@ -30,7 +32,7 @@ bool Sound::PlayASound(const char* name, SoundPriority priority)
 	return true;
 }
 
-void PlaySound(const char* name) {
+void Sound::PlaySound(const char* name) {
     if(!name) {
         SDL_PauseAudioDevice(deviceId, 1);
         return;
