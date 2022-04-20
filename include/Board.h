@@ -7,7 +7,6 @@
 #include "Input.h"
 #include "Textures.h"
 #include "Sound.h"
-#include "Sound.h"
 #include "BlockType.h"
 #include "Tile.h"
 #include "Square.h"

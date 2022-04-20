@@ -3,7 +3,16 @@
 
 #include <SDL.h>
 
+#include <map>
+#include <string>
+
 enum SoundPriority { NOPLAY,TICK, DONK, SCRAPE, SPLASH, POP, COLLAPSE, NUKE_SOUND };
+
+struct Wav {
+	SDL_AudioSpec spec;
+    Uint32 length;
+	Uint8 *buffer;
+};
 
 class Sound
 {
@@ -19,7 +28,7 @@ private:
 	SoundPriority maxx;
 	const char* sound;
 
-	Uint8 *wavBuffer = NULL;
+    std::map<std::string,  Wav*> sounds;
 };
 
 #endif // SOUND_H

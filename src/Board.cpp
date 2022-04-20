@@ -11,6 +11,11 @@
 #include "Tile.h"
 
 Board::Board(Textures * textures, Sound * sound) : help(true), cols(COLUMNS), rows(ROWS), tank_x(0), tank_y(0), level(0), textures(textures), sound(sound) {
+	for (int i=0; i<ROWS; i++) {
+		for (int j=0; j<COLUMNS; j++) {
+			array[j][i]=NULL;
+		}
+	}
 	LoadLevel();	
 }
 
@@ -163,7 +168,7 @@ void Board::ClearArray()
 {
 	for (int i=0; i<ROWS; i++) {
 		for (int j=0; j<COLUMNS; j++) {
-			if (array[j][i] != NULL) delete array[j][i];
+			if (array[j][i]) delete array[j][i];
 			array[j][i]=NULL;
 		}
 	}

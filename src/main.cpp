@@ -57,5 +57,6 @@ int main(int, char**) {
     delete textures;
     delete sound;
     delete board;
+
     return 0;
 }
