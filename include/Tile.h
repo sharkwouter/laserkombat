@@ -1159,6 +1159,11 @@ public:
 		return true;
 	}
 
+	virtual bool PushLeft() {return false;}
+	virtual bool PushRight() {return false;}
+	virtual bool PushTop() {return false;}
+	virtual bool PushBottom() {return false;}
+
 	virtual bool HitLeft() {sound->PlayASound("donk.wav", DONK); return Mirror::HitLeft();}
 	virtual bool HitRight() {sound->PlayASound("donk.wav", DONK); return Mirror::HitRight();}
 	virtual bool HitTop() {sound->PlayASound("donk.wav", DONK); return Mirror::HitTop();}
