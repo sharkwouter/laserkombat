@@ -3,12 +3,14 @@
 
 #include "Window.h"
 #include "Textures.h"
+#include "Sound.h"
 #include "Board.h"
 #include "constants.h"
 
 Window window(TITLE, WINDOW_WIDTH, WINDOW_HEIGHT);
 Textures textures(window.renderer);
-Board board(&textures);
+Sound sound();
+Board board(&textures, &sound);
 
 bool running = false;
 

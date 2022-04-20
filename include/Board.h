@@ -7,13 +7,14 @@
 #include "Input.h"
 #include "Textures.h"
 #include "Sound.h"
+#include "Sound.h"
 #include "BlockType.h"
 #include "Tile.h"
 #include "Square.h"
 
 class Board {
 public:
-	Board(Textures * textures);
+	Board(Textures * textures, Sound * sound);
 	~Board();
 
 
@@ -168,6 +169,7 @@ private: //data
 	bool finished;
 
 	Textures * textures;
+	Sound * sound;
 
 	int rows, cols;
 	int tank_x, tank_y, origin_x, origin_y;

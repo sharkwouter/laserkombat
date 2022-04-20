@@ -27,7 +27,7 @@ class Tile
 {
 	friend class ATile;
 public:
-	Tile(int x, int y, Textures * textures, Board * board, int r=0) : x_pos(x), y_pos(y), deadBlock(0), willKillFlag(0), textures(textures), board(board) {
+	Tile(int x, int y, Textures * textures, Sound * sound, Board * board, int r=0) : x_pos(x), y_pos(y), deadBlock(0), willKillFlag(0), textures(textures), sound(sound), board(board) {
 		SetRotation(r);
 		FiringUp=FiringDown=FiringLeft=FiringRight=Firing=0;
 		WasHitLeft=WasHitRight=WasHitTop=WasHitBottom=WasHit=0;
@@ -215,6 +215,7 @@ protected: //members
 	int rotation;
 
 	Textures * textures;
+	Sound * sound;
 	Board * board;
 
 private: // functions
@@ -232,7 +233,7 @@ private: //members
 class GroundTile : public Tile
 {
 public:
-	GroundTile(int x, int y, Textures * textures, Board * board, int r=33) : Tile(x,y,textures,board,r), otherblocks(0) {
+	GroundTile(int x, int y, Textures * textures, Sound * sound, Board * board, int r=33) : Tile(x,y,textures,sound,board,r), otherblocks(0) {
 		SetRotation(r);
 
 	}
@@ -313,7 +314,7 @@ class ATile : public Tile
 {
 public:
 
-	ATile(int x, int y, Textures * textures,  Board * board, int r=0) : Tile(x,y,textures,board,r) {
+	ATile(int x, int y, Textures * textures, Sound * sound, Board * board, int r=0) : Tile(x,y,textures,sound,board,r) {
 
 	}
 
@@ -336,7 +337,7 @@ private: //members
 class Tank : public ATile
 {
 public:
-	Tank(int x, int y, Textures * textures, Board * board, int r=0) : ATile(x,y,textures,board,r) {
+	Tank(int x, int y, Textures * textures, Sound * sound, Board * board, int r=0) : ATile(x,y,textures,sound,board,r) {
 		SetRotation(r);
 
 	}
@@ -432,7 +433,7 @@ private: //members
 class RedBlock : public ATile
 {
 public:
-	RedBlock(int x, int y, Textures * textures, Board * board, int r=0) : ATile(x,y,textures,board,0) {
+	RedBlock(int x, int y, Textures * textures, Sound * sound, Board * board, int r=0) : ATile(x,y,textures,sound,board,0) {
 		SetRotation(r);
 
 	}
@@ -463,7 +464,7 @@ private: //members
 class WhiteBlock : public RedBlock
 {
 public:
-	WhiteBlock(int x, int y, Textures * textures, Board * board, int r=0) : RedBlock(x,y,textures,board,2) {
+	WhiteBlock(int x, int y, Textures * textures, Sound * sound, Board * board, int r=0) : RedBlock(x,y,textures,sound,board,2) {
 		SetRotation(r);
 
 	}
@@ -493,7 +494,7 @@ private: //members
 class Water : public GroundTile
 {
 public:
-	Water(int x, int y, Textures * textures, Board * board, int r=0) : GroundTile(x,y,textures,board,r) {
+	Water(int x, int y, Textures * textures, Sound * sound, Board * board, int r=0) : GroundTile(x,y,textures,sound,board,r) {
 		SetRotation(r);
 
 	}
@@ -534,8 +535,8 @@ private: //members
 class Static : public ATile
 {
 public:
-	Static(int x, int y, Textures * textures, Board * board, int r=0) : 
-	  ATile(x,y,textures,board,r), turn_right(r>8?0:1) , time(0), span(0) {
+	Static(int x, int y, Textures * textures, Sound * sound, Board * board, int r=0) : 
+	  ATile(x,y,textures,sound,board,r), turn_right(r>8?0:1) , time(0), span(0) {
 		SetRotation(r);
 
 	}
@@ -586,7 +587,7 @@ private: //members
 class Mirror : public ATile
 {
 public:
-	Mirror(int x, int y, Textures * textures, Board * board, int r=0) : ATile(x,y,textures,board,r), rotation2(0){
+	Mirror(int x, int y, Textures * textures, Sound * sound, Board * board, int r=0) : ATile(x,y,textures,sound,board,r), rotation2(0){
 		SetRotation(r);
 
 	}
@@ -702,7 +703,7 @@ private: //members
 class Tee : public Mirror
 {
 public:
-	Tee(int x, int y, Textures * textures, Board * board, int r=0) : Mirror(x,y,textures,board,r) {
+	Tee(int x, int y, Textures * textures, Sound * sound, Board * board, int r=0) : Mirror(x,y,textures,sound,board,r) {
 		SetRotation(r);
 
 	}
@@ -864,7 +865,7 @@ private: //members
 class EnemyTank : public Tank
 {
 public:
-	EnemyTank(int x, int y, Textures * textures, Board * board, int r=0) : Tank(x,y,textures,board,r) {
+	EnemyTank(int x, int y, Textures * textures, Sound * sound, Board * board, int r=0) : Tank(x,y,textures,sound,board,r) {
 
 	}
 	virtual bool SetRotation(int r) {return ATile::SetRotation(r);}
@@ -915,7 +916,7 @@ private: //members
 class Nuke : public ATile
 {
 public:
-	Nuke(int x, int y, Textures * textures, Board * board, int r=0) : ATile(x,y,textures,board,r) {
+	Nuke(int x, int y, Textures * textures, Sound * sound, Board * board, int r=0) : ATile(x,y,textures,sound,board,r) {
 
 	}
 	virtual bool HitLeft() {ATile::HitLeft(); Kill(); return true;}
@@ -938,7 +939,7 @@ private: //members
 class Rusty : public Static
 {
 public:
-	Rusty(int x, int y, Textures * textures, Board * board, int r=0) : Static(x,y,textures,board,r), turn_right(r>8?0:1) {
+	Rusty(int x, int y, Textures * textures, Sound * sound, Board * board, int r=0) : Static(x,y,textures,sound,board,r), turn_right(r>8?0:1) {
 
 	}
 
@@ -971,7 +972,7 @@ private: // functions
 class RustyRedBlock :public RedBlock
 {
 public:
-	RustyRedBlock(int x, int y, Textures * textures, Board * board, int r=0) : RedBlock(x,y,textures,board,1) {
+	RustyRedBlock(int x, int y, Textures * textures, Sound * sound, Board * board, int r=0) : RedBlock(x,y,textures,sound,board,1) {
 		SetRotation(r);
 
 	}
@@ -1001,7 +1002,7 @@ private: //members
 class EnemyNuke : public Nuke
 {
 public:
-	EnemyNuke(int x, int y, Textures * textures, Board * board, int r=0) : Nuke(x,y,textures,board,r) {
+	EnemyNuke(int x, int y, Textures * textures, Sound * sound, Board * board, int r=0) : Nuke(x,y,textures,sound,board,r) {
 
 	}
 
@@ -1025,7 +1026,7 @@ private: //members
 class Message : public Static
 {
 public:
-	Message(int x, int y, Textures * textures, Board * board, int r=0) : Static(x,y,textures,board,r) {
+	Message(int x, int y, Textures * textures, Sound * sound, Board * board, int r=0) : Static(x,y,textures,sound,board,r) {
 		SetRotation(r);
 
 	}
@@ -1048,8 +1049,8 @@ private: //members
 class BarsVert : public Static
 {
 public:
-	BarsVert(int x, int y, Textures * textures, Board * board, int r=0) : 
-	  Static(x,y,textures,board,r) {
+	BarsVert(int x, int y, Textures * textures, Sound * sound, Board * board, int r=0) : 
+	  Static(x,y,textures,sound,board,r) {
 		SetRotation(0);
 
 	}
@@ -1079,8 +1080,8 @@ private: //members
 class BarsHoriz : public BarsVert
 {
 public:
-	BarsHoriz(int x, int y, Textures * textures, Board * board, int r=0) : 
-	  BarsVert(x,y,textures,board,r) {
+	BarsHoriz(int x, int y, Textures * textures, Sound * sound, Board * board, int r=0) : 
+	  BarsVert(x,y,textures,sound,board,r) {
 		SetRotation(0);
 
 	}
@@ -1113,8 +1114,8 @@ private: //members
 class BarsCross : public BarsVert
 {
 public:
-	BarsCross(int x, int y, Textures * textures, Board * board, int r=0) : 
-	  BarsVert(x,y,textures,board,r) {
+	BarsCross(int x, int y, Textures * textures, Sound * sound, Board * board, int r=0) : 
+	  BarsVert(x,y,textures,sound,board,r) {
 		SetRotation(0);
 
 	}
@@ -1148,7 +1149,7 @@ private: //members
 class Triangle : public Mirror
 {
 public:
-	Triangle(int x, int y, Textures * textures, Board * board, int r=0) : Mirror(x,y,textures,board,r) {
+	Triangle(int x, int y, Textures * textures, Sound * sound, Board * board, int r=0) : Mirror(x,y,textures,sound,board,r) {
 		SetRotation(r);
 
 	}
@@ -1179,7 +1180,7 @@ private: //members
 class RustyTriangle : public Triangle
 {
 public:
-	RustyTriangle(int x, int y, Textures * textures, Board * board, int r=0) : Triangle(x,y,textures,board,r) {
+	RustyTriangle(int x, int y, Textures * textures, Sound * sound, Board * board, int r=0) : Triangle(x,y,textures,sound,board,r) {
 		SetRotation(r);
 
 	}
@@ -1217,8 +1218,8 @@ private: //members
 class RustyBarsVert : public BarsVert
 {
 public:
-	RustyBarsVert(int x, int y, Textures * textures, Board * board, int r=0) : 
-	  BarsVert(x,y,textures,board,r) {
+	RustyBarsVert(int x, int y, Textures * textures, Sound * sound, Board * board, int r=0) : 
+	  BarsVert(x,y,textures,sound,board,r) {
 		SetRotation(0);
 
 	}
@@ -1249,8 +1250,8 @@ private: //members
 class RustyBarsHoriz : public BarsHoriz
 {
 public:
-	RustyBarsHoriz(int x, int y, Textures * textures, Board * board, int r=0) : 
-	  BarsHoriz(x,y,textures,board,r) {
+	RustyBarsHoriz(int x, int y, Textures * textures, Sound * sound, Board * board, int r=0) : 
+	  BarsHoriz(x,y,textures,sound,board,r) {
 		SetRotation(0);
 
 	}
@@ -1281,7 +1282,7 @@ private: //members
 class RustyWhiteBlock : public WhiteBlock
 {
 public:
-	RustyWhiteBlock(int x, int y, Textures * textures, Board * board, int r=0) : WhiteBlock(x,y,textures,board,3) {
+	RustyWhiteBlock(int x, int y, Textures * textures, Sound * sound, Board * board, int r=0) : WhiteBlock(x,y,textures,sound,board,3) {
 		SetRotation(r);
 
 	}
