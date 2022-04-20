@@ -35,7 +35,7 @@ void PlaySound(const char* name) {
         SDL_PauseAudioDevice(deviceId, 1);
         return;
     }
-    std::string path = "assets/images/" + name + ".wav";
+    std::string path = "assets/sounds/" + name + ".wav";
     SDL_AudioSpec wavSpec;
     Uint32 wavLength;
     
