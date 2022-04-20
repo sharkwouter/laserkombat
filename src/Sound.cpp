@@ -4,7 +4,6 @@
 #include <string>
 
 Sound::Sound() : sound(0), maxx(SoundPriority::NOPLAY) {
-    deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
 }
 
 Sound::~Sound() {
@@ -42,6 +41,7 @@ void Sound::PlaySound(const char* name) {
     Uint32 wavLength;
     
     SDL_LoadWAV(path.c_str(), &wavSpec, &wavBuffer, &wavLength);
+    deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
     SDL_QueueAudio(deviceId, wavBuffer, wavLength);
     SDL_PauseAudioDevice(deviceId, 0);
 }
