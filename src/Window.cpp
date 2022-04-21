@@ -138,7 +138,7 @@ Input Window::getInputForControllerButton(Uint8 button) {
             input = Input::FIRE;
             break;
 
-        case SDL_CONTROLLER_BUTTON_BACK:
+        case SDL_CONTROLLER_BUTTON_START:
             input = Input::RESTART;
             break;
 
@@ -154,7 +154,7 @@ Input Window::getInputForControllerButton(Uint8 button) {
             input = Input::HELP;
             break;
 
-        case SDL_CONTROLLER_BUTTON_START:
+        case SDL_CONTROLLER_BUTTON_BACK:
             input = Input::EXIT;
             break;
 
