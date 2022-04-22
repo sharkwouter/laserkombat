@@ -1,2 +1,7 @@
 build/
 .vscode/
+bin/
+*.exe
+*.iso
+*.obj
+*.cpp.d

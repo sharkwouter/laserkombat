@@ -1,0 +1,15 @@
+XBE_TITLE = Laser\ Kombat
+GEN_XISO = $(XBE_TITLE).iso
+SRCS = $(CURDIR)/src/main.cpp \
+		$(CURDIR)/src/Board.cpp \
+		$(CURDIR)/src/Draw.cpp \
+		$(CURDIR)/src/Sound.cpp \
+		$(CURDIR)/src/Square.cpp \
+		$(CURDIR)/src/Textures.cpp \
+		$(CURDIR)/src/Tile.cpp \
+		$(CURDIR)/src/Window.cpp
+NXDK_CXXFLAGS += -I $(CURDIR)/include
+NXDK_SDL = y
+NXDK_CXX = y
+
+include $(NXDK_DIR)/Makefile
