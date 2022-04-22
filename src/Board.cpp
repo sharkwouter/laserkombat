@@ -11,11 +11,7 @@
 #include "Tile.h"
 
 Board::Board(Textures * textures, Sound * sound) : help(true), cols(COLUMNS), rows(ROWS), tank_x(0), tank_y(0), level(0), textures(textures), sound(sound) {
-	for (int i=0; i<ROWS; i++) {
-		for (int j=0; j<COLUMNS; j++) {
-			array[j][i]=NULL;
-		}
-	}
+	CreateArray();
 	LoadLevel();	
 }
 
@@ -40,7 +36,6 @@ void Board::FillArray(bool credits)
 			CreateSquare(x, y);
 		}
 	}
-	CheckArray();	//Make sure no empty spots
 	if (!credits) {
 		if (number_of_enemies<1) YouDefeated();
 	}
@@ -174,12 +169,11 @@ void Board::ClearArray()
 	}
 }
 
-void Board::CheckArray()
+void Board::CreateArray()
 {
 	for (int i=0; i<ROWS; i++) {
 		for (int j=0; j<COLUMNS; j++) {
-			if (!array[j][i]) throw Exception("Unfilled square.");
-			if (!array[j][i]->ground) throw Exception("Missing ground.");
+			array[j][i]=NULL;
 		}
 	}
 }

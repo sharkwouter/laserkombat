@@ -151,7 +151,7 @@ private:
 
 	void FillArray(bool credits=false);
 	void ClearArray();
-	void CheckArray();
+	void CreateArray();
 
 	bool MoveUp();
 	bool MoveDown();
