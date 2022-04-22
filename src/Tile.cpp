@@ -1,5 +1,5 @@
 //Tile.cpp
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include "Tile.h"
 #include "Board.h"
 

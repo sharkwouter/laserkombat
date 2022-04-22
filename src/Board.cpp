@@ -1,6 +1,6 @@
 #include "Board.h"
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #include "Exception.h"
 #include "Sound.h"
@@ -333,10 +333,10 @@ void Board::MoveForCredits() {
 
 void Board::Delay()
 {
-	float current_time=(float(clock()))/(float(CLOCKS_PER_SEC));
-	float difference=current_time-seconds_ago;
-	if (difference < .025) {
-		int sleep = long((.025 - difference)*1000);
+	unsigned int current_time=SDL_GetTicks();
+	unsigned int difference=current_time-seconds_ago;
+	if (difference < 25) {
+		int sleep = 25 - difference;
 		if (sleep>25) sleep=25;
 		SDL_Delay(sleep);
 	}

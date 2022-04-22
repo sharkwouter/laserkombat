@@ -181,7 +181,7 @@ private: //data
 	int blockRotationArray[COLUMNS][ROWS];
 
 	int number_of_enemies;
-	float seconds_ago;
+	unsigned int seconds_ago;
 };
 
 #endif // BOARD_H
