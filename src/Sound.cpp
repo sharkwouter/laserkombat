@@ -47,7 +47,7 @@ void Sound::PlaySound(const char* name) {
         return;
     }
     std::string file = name; 
-    if(!sounds.contains(file)) {
+    if(!sounds.count(file)) {
         Wav * wav = new Wav{};
         std::string path = "assets/sounds/" + file;
         SDL_LoadWAV(path.c_str(), &wav->spec, &wav->buffer, &wav->length);
