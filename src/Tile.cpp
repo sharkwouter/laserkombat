@@ -1,13 +1,11 @@
-//Tile.cpp
-#include <SDL.h>
 #include "Tile.h"
-#include "Board.h"
 
-#include "Exception.h"
+#include <SDL.h>
+
 #include "constants.h"
+#include "Board.h"
 #include "Sound.h"
 #include "BlockType.h"
-
 
 bool GroundTile::changed=true;
 
