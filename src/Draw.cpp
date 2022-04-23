@@ -5,7 +5,7 @@
 Draw::Draw(SDL_Renderer * renderer) : renderer(renderer) {
     animation = 0;
     renderTarget = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
-                                 SDL_TEXTUREACCESS_TARGET, WINDOW_WIDTH, WINDOW_HEIGHT);
+                                 SDL_TEXTUREACCESS_TARGET, IMAGE_WIDTH*COLUMNS, IMAGE_WIDTH*ROWS);
 }
 
 void Draw::BlitSquare(SDL_Texture * texture, int x, int y, int dx, int dy) {

@@ -1,8 +1,14 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-inline constexpr int WINDOW_WIDTH = 800;
-inline constexpr int WINDOW_HEIGHT = 600;
+#ifdef NXDK
+    inline constexpr int WINDOW_WIDTH = 640;
+    inline constexpr int WINDOW_HEIGHT = 480;
+#else
+    inline constexpr int WINDOW_WIDTH = 800;
+    inline constexpr int WINDOW_HEIGHT = 600;
+#endif
+
 inline constexpr int COLUMNS = 20;
 inline constexpr int ROWS = 15;
 inline constexpr int IMAGE_WIDTH = 40;
