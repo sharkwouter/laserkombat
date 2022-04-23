@@ -45,13 +45,14 @@ void handleInput(std::vector<Input> input) {
 
 int main(int, char**) {
     Window window(TITLE, WINDOW_WIDTH, WINDOW_HEIGHT);
+    Draw * draw = new Draw(window.renderer);
     Textures * textures = new Textures(window.renderer);
     Sound * sound = new Sound();
-    board = new Board(textures, sound);
+    board = new Board(draw, textures, sound);
     running = true;
     while(running) {
         handleInput(window.getInput());
-        board->Animate(window.renderer);
+        board->Animate();
     }
 
     delete textures;

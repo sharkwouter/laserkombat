@@ -10,10 +10,11 @@
 #include "BlockType.h"
 #include "Tile.h"
 #include "Square.h"
+#include "Draw.h"
 
 class Board {
 public:
-	Board(Textures * textures, Sound * sound);
+	Board(Draw * draw, Textures * textures, Sound * sound);
 	~Board();
 
 
@@ -28,7 +29,7 @@ public:
 		FillArray();
 	}
 
-	void Animate(SDL_Renderer * renderer);		//Update tiles
+	void Animate();		//Update tiles
 
 	void See() {
 		for (int i=0; i<ROWS; i++) {
@@ -158,7 +159,7 @@ private:
 	bool MoveRight();
 	bool MoveLeft();
 
-	void DisplayHelp(SDL_Renderer * renderer);
+	void DisplayHelp();
 
 private: //data
 
@@ -167,6 +168,7 @@ private: //data
 	bool defeated;
 	bool finished;
 
+	Draw * draw;
 	Textures * textures;
 	Sound * sound;
 

@@ -2,9 +2,13 @@
 
 #include "constants.h"
 
-int Draw::animation = 0;
+Draw::Draw(SDL_Renderer * renderer) : renderer(renderer) {
+    animation = 0;
+    renderTarget = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
+                                 SDL_TEXTUREACCESS_TARGET, WINDOW_WIDTH, WINDOW_HEIGHT);
+}
 
-void Draw::BlitSquare(SDL_Renderer * renderer, SDL_Texture * texture, int x, int y, int dx, int dy) {
+void Draw::BlitSquare(SDL_Texture * texture, int x, int y, int dx, int dy) {
     x *= IMAGE_WIDTH;
     y *= IMAGE_WIDTH;
     dx *= IMAGE_WIDTH;
@@ -14,13 +18,13 @@ void Draw::BlitSquare(SDL_Renderer * renderer, SDL_Texture * texture, int x, int
     SDL_RenderCopy(renderer, texture, &sr, &dr);
 }
 
-void Draw::BlitOther(SDL_Renderer * renderer, SDL_Texture * texture, int x, int y, int dx, int dy, int w, int h) {
+void Draw::BlitOther(SDL_Texture * texture, int x, int y, int dx, int dy, int w, int h) {
     SDL_Rect sr={x,y,w,h};
     SDL_Rect dr={dx,dy,w, h};
     SDL_RenderCopy(renderer, texture, &sr, &dr);
 }
 
-void Draw::BlackSquare(SDL_Renderer * renderer, int x, int y) {
+void Draw::BlackSquare(int x, int y) {
     x *= IMAGE_WIDTH;
     y *= IMAGE_WIDTH;
     SDL_Rect r={x,y,IMAGE_WIDTH,IMAGE_WIDTH};
@@ -28,6 +32,9 @@ void Draw::BlackSquare(SDL_Renderer * renderer, int x, int y) {
     SDL_RenderFillRect(renderer, &r);
 }
 
-void Draw::Flip(SDL_Renderer * renderer) {
+void Draw::Flip() {
+    SDL_SetRenderTarget(renderer, NULL);
+    SDL_RenderCopy(renderer, renderTarget, NULL, NULL);
     SDL_RenderPresent(renderer);
+    SDL_SetRenderTarget(renderer, renderTarget);
 }

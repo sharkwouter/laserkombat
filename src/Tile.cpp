@@ -101,7 +101,7 @@ bool Nuke::Kill() {
 	Tile* &ground=GetGround();
 	if (ground) {
 		Tile* temp=ground;
-		ground=new Water(x_pos,y_pos, textures, sound, board);
+		ground=new Water(x_pos,y_pos, draw, textures, sound, board);
 		ground->AddDead(temp);
 		ground->SetRotation(ground->GetRotation()+300);
 
@@ -275,7 +275,7 @@ bool Water::BlockOver(Tile* &block, Tile* &ground)
 	if (temp->GetBlockType()==BlockType::WHITEBLOCK) return true;
 
 	if (temp->GetBlockType()==BlockType::REDBLOCK) {
-		ground=new GroundTile(x_pos, y_pos, textures, sound, board, 10);
+		ground=new GroundTile(x_pos, y_pos, draw, textures, sound, board, 10);
 		ground->AddDead(this);
 	}
 	block->WillKill(1); // 1 for drown

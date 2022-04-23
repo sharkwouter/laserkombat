@@ -6,7 +6,7 @@ Window::Window(const std::string &title, int width, int height) {
         exit(1);
     }
 
-    window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_RESIZABLE);
     if (this->window == nullptr) {
         SDL_LogCritical(SDL_LOG_CATEGORY_SYSTEM, "Couldn't create window: %s", SDL_GetError());
         exit(2);
