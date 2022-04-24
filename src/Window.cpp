@@ -1,6 +1,14 @@
 #include "Window.h"
 
+#ifdef NXDK
+    #include <hal/video.h>
+#endif
+
 Window::Window(const std::string &title, int width, int height) {
+    #ifdef NXDK
+        XVideoSetMode(width, height, 16, REFRESH_DEFAULT);
+    #endif
+
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO|SDL_INIT_TIMER|SDL_INIT_GAMECONTROLLER) < 0){
         SDL_LogCritical(SDL_LOG_CATEGORY_SYSTEM, "Couldn't init SDL: %s", SDL_GetError());
         exit(1);
