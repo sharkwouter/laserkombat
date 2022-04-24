@@ -16,10 +16,18 @@ if(WIN32)
     add_executable(${PROJECT_NAME} WIN32 ${SOURCES})
     if(MINGW)
         set(CMAKE_CXX_FLAGS "-static ${CMAKE_CXX_FLAGS}")
-        target_link_libraries(${PROJECT_NAME} PRIVATE mingw32 SDL2main SDL2::SDL2-static)
+        target_link_libraries(${PROJECT_NAME} PRIVATE mingw32)
     endif()
 else()
     add_executable(${PROJECT_NAME} ${SOURCES})
+endif()
+
+if(WIN32 OR PSP)
+    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2main)
+endif()
+
+if(MINGW OR VITA)
+    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2-static)
 endif()
 
 include_directories(
@@ -29,4 +37,18 @@ include_directories(
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES})
 
-file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
+if(VITA)
+    include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
+    vita_create_self(${PROJECT_NAME}.self ${PROJECT_NAME})
+
+    vita_create_vpk(${PROJECT_NAME}.vpk "LKRE00001" ${PROJECT_NAME}.self
+        VERSION "01.00"
+        NAME "Laser Kombat"
+        FILE platform/vita/sce_sys sce_sys
+        FILE README.md README.md
+        FILE COPYING COPYING
+        FILE assets assets
+    )
+else()
+    file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
+endif()

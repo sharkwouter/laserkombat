@@ -1,9 +1,12 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#ifdef NXDK
+#if defined(NXDK)
     inline constexpr int WINDOW_WIDTH = 640;
     inline constexpr int WINDOW_HEIGHT = 480;
+#elif defined(__vita__)
+    inline constexpr int WINDOW_WIDTH = 960;
+    inline constexpr int WINDOW_HEIGHT = 544;
 #else
     inline constexpr int WINDOW_WIDTH = 800;
     inline constexpr int WINDOW_HEIGHT = 600;
