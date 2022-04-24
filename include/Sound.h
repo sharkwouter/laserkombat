@@ -6,7 +6,7 @@
 #include <map>
 #include <string>
 
-enum SoundPriority { NOPLAY,TICK, DONK, SCRAPE, SPLASH, POP, COLLAPSE, NUKE_SOUND };
+enum SoundPriority { NOPLAY,TICK, DONK, THUNK, SCRAPE, SPLASH, POP, COLLAPSE, NUKE_SOUND };
 
 struct Wav {
 	SDL_AudioSpec spec;

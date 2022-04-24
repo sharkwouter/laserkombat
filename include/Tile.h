@@ -477,15 +477,14 @@ public:
 		return false;
 	}
 
-
 protected: //functions
 	virtual void Display() {
 		draw->BlitSquare(textures->getRedblockSprites(), 2 ,0, x_pos, y_pos);
 	}
-	virtual bool MoveUp() {sound->PlayASound(NULL, SCRAPE); return Tile::MoveUp();}
-	virtual bool MoveDown() {sound->PlayASound(NULL, SCRAPE); return Tile::MoveDown();}
-	virtual bool MoveLeft() {sound->PlayASound(NULL, SCRAPE); return Tile::MoveLeft();}
-	virtual bool MoveRight() {sound->PlayASound(NULL, SCRAPE); return Tile::MoveRight();}
+	virtual bool MoveUp() {sound->PlayASound("thunk.wav", THUNK); return Tile::MoveUp();}
+	virtual bool MoveDown() {sound->PlayASound("thunk.wav", THUNK); return Tile::MoveDown();}
+	virtual bool MoveLeft() {sound->PlayASound("thunk.wav", THUNK); return Tile::MoveLeft();}
+	virtual bool MoveRight() {sound->PlayASound("thunk.wav", THUNK); return Tile::MoveRight();}
 protected: //members
 private: // functions
 private: //members

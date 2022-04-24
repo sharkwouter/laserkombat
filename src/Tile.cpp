@@ -226,41 +226,42 @@ bool Tile::MoveUp() {
 	Tile* block = NULL; TopBlock(&block);
 	if (block) block->PushBottom();
 	bool ret = board->swap(x_pos, y_pos, x_pos, y_pos-1);
-	if (ret&&GetBlockType()!=BlockType::TANK) sound->PlayASound("scrape.wav", SoundPriority::SCRAPE);
+	if (ret&&GetBlockType()!=BlockType::TANK&&GetBlockType()!=BlockType::WHITEBLOCK)
+		sound->PlayASound("scrape.wav", SoundPriority::SCRAPE);
 	return moved=ret;
-	return false;
 }
+
 bool Tile::MoveDown() {
 	if (moved) return false;
 	Tile* block = NULL; BottomBlock(&block);
 	if (block) block->PushTop();
 	bool ret =board->swap(x_pos, y_pos, x_pos, y_pos+1);
-	if (ret&&GetBlockType()!=BlockType::TANK) sound->PlayASound("scrape.wav", SoundPriority::SCRAPE);
+	if (ret&&GetBlockType()!=BlockType::TANK&&GetBlockType()!=BlockType::WHITEBLOCK)
+		sound->PlayASound("scrape.wav", SoundPriority::SCRAPE);
 	return moved=ret;
-	return false;
-
 }
+
 bool Tile::MoveRight() {
 	if (moved) return false;
 	Tile* block = NULL; RightBlock(&block);
 	if (block) block->PushLeft();
 	bool ret =board->swap(x_pos, y_pos, x_pos+1, y_pos);
-	if (ret&&GetBlockType()!=BlockType::TANK) sound->PlayASound("scrape.wav", SoundPriority::SCRAPE);
+	if (ret&&GetBlockType()!=BlockType::TANK&&GetBlockType()!=BlockType::WHITEBLOCK)
+		sound->PlayASound("scrape.wav", SoundPriority::SCRAPE);
 	return moved=ret;
-	return false;
 }
+
 bool Tile::MoveLeft() {
 	if (moved) return false;
 	Tile* block = NULL; LeftBlock(&block);
 	if (block) block->PushRight();
 	bool ret =board->swap(x_pos, y_pos, x_pos-1, y_pos);
-	if (ret&&GetBlockType()!=BlockType::TANK) sound->PlayASound("scrape.wav", SoundPriority::SCRAPE);
+	if (ret&&GetBlockType()!=BlockType::TANK&&GetBlockType()!=BlockType::WHITEBLOCK)
+		sound->PlayASound("scrape.wav", SoundPriority::SCRAPE);
 	return moved=ret;
-	return false;
 }
 
-bool Water::BlockOver(Tile* &block, Tile* &ground)
-{
+bool Water::BlockOver(Tile* &block, Tile* &ground) {
 	Tile::BlockOver(block, ground);
 	if (!block) return false;
 	
