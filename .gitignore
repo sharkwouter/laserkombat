@@ -5,3 +5,4 @@ bin/
 *.iso
 *.obj
 *.cpp.d
+*.pdb
