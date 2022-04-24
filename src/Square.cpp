@@ -1,6 +1,6 @@
 #include "Square.h"
 
-Square::Square(Tile* b, Tile* g) : block(b), ground(g), over(0) {
+Square::Square(Tile* b, Tile* g) : block(b), ground(g) {
 
 }
 

@@ -25,8 +25,8 @@ private:
 	void PlaySound(const char* name);
 	SDL_AudioDeviceID deviceId;
 
-	SoundPriority maxx;
 	const char* sound;
+	SoundPriority maxx;
 
     std::map<std::string,  Wav*> sounds;
 };

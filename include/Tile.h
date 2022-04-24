@@ -271,7 +271,7 @@ public:
 	}
 
 protected: //functions
-	virtual void GroundTile::Display() {
+	virtual void Display() {
 		if (rotation!=33) {
 			int r;
 			if (rotation>=100) r=33-rotation/100, rotation-=100; 
@@ -452,7 +452,7 @@ public:
 	virtual bool HitBottom() {Tile::HitBottom(); PushBottom(); return true;}
 
 protected: //functions
-	virtual void RedBlock::Display() {
+	virtual void Display() {
 		draw->BlitSquare(textures->getRedblockSprites(), 0 ,0, x_pos, y_pos);
 	}
 
@@ -479,7 +479,7 @@ public:
 
 
 protected: //functions
-	virtual void WhiteBlock::Display() {
+	virtual void Display() {
 		draw->BlitSquare(textures->getRedblockSprites(), 2 ,0, x_pos, y_pos);
 	}
 	virtual bool MoveUp() {sound->PlayASound(NULL, SCRAPE); return Tile::MoveUp();}
@@ -519,7 +519,7 @@ public:
 	}
 
 protected: //functions
-	virtual void Water::Display() {
+	virtual void Display() {
 		if (rotation>=100) {
 			GroundTile::Display();
 			return;
@@ -548,7 +548,7 @@ public:
 	}
 
 protected: //functions
-	virtual void Static::Display() {
+	virtual void Display() {
 		if (span>=2) {
 			time++;
 			time%=(span-1);
@@ -599,7 +599,7 @@ public:
 	}
 
 protected: //functions
-	virtual void Mirror::Display() {
+	virtual void Display() {
 		rotation2++;
 		if (rotation2>=7) {
 			rotation2=0;
@@ -710,7 +710,7 @@ public:
 	}
 
 protected: //functions
-	virtual void Tee::Display() {
+	virtual void Display() {
 		rotation2++;
 		if (rotation2>=7) {
 			rotation2=0;
@@ -890,7 +890,7 @@ public:
 	virtual bool ShootLeft() {SetRotation(0); return ATile::ShootLeft();}
 
 protected: //functions
-	virtual void EnemyTank::Display() {
+	virtual void Display() {
 		int rotate=rand()%1000;
 		if (rotate==0) RotateRight();	//make tanks rotate randomly
 		else if (rotate==1) RotateLeft();
@@ -927,7 +927,7 @@ public:
 
 	virtual bool Kill();
 protected: //functions
-	virtual void Nuke::Display() {
+	virtual void Display() {
 		draw->BlitSquare(textures->getNukeSprites(), 0 ,0, x_pos, y_pos);
 	}
 
@@ -949,7 +949,7 @@ public:
 	virtual bool HitRight() {ATile::HitRight(); sound->PlayASound("collapse.wav", COLLAPSE); return Kill();}
 	virtual bool HitBottom() {ATile::HitBottom(); sound->PlayASound("collapse.wav", COLLAPSE); return Kill();}
 protected: //functions
-	virtual void Rusty::Display() {
+	virtual void Display() {
 		if (rotation>=5) {
 			if (turn_right) {rotation++;
 				if (rotation>=9) rotation=5;
@@ -990,7 +990,7 @@ public:
 	virtual bool HitBottom() {ATile::HitBottom(); sound->PlayASound("pop.wav", POP); return Kill();}
 
 protected: //functions
-	virtual void RustyRedBlock::Display() {
+	virtual void Display() {
 		draw->BlitSquare(textures->getRedblockSprites(), 1 ,0, x_pos, y_pos);
 	}
 
@@ -1014,7 +1014,7 @@ public:
 
 
 protected: //functions
-	virtual void EnemyNuke::Display() {
+	virtual void Display() {
 		draw->BlitSquare(textures->getNukeSprites(), 1 ,0, x_pos, y_pos);
 	}
 
@@ -1037,7 +1037,7 @@ public:
 	}
 
 protected: //functions
-	virtual void Message::Display() {
+	virtual void Display() {
 		draw->BlitSquare(textures->getMessageSprite(), rotation%14 ,rotation/14, x_pos, y_pos);
 	}
 
@@ -1061,7 +1061,7 @@ public:
 	}
 
 protected: //functions
-	virtual void BarsVert::Display() {
+	virtual void Display() {
 
 		draw->BlitSquare(textures->getBarSprites(), 0 ,0, x_pos, y_pos);
 	}
@@ -1092,7 +1092,7 @@ public:
 	}
 
 protected: //functions
-	virtual void BarsHoriz::Display() {
+	virtual void Display() {
 
 		draw->BlitSquare(textures->getBarSprites(), 1 ,0, x_pos, y_pos);
 	}
@@ -1126,7 +1126,7 @@ public:
 	}
 
 protected: //functions
-	virtual void BarsCross::Display() {
+	virtual void Display() {
 
 		draw->BlitSquare(textures->getBarSprites(), 2 ,0, x_pos, y_pos);
 	}
@@ -1171,7 +1171,7 @@ public:
 	virtual bool HitBottom() {sound->PlayASound("donk.wav", DONK); return Mirror::HitBottom();}
 
 protected: //functions
-	virtual void Triangle::Display() {
+	virtual void Display() {
 		draw->BlitSquare(textures->getMirrorSprites(), rotation%4 , 5, x_pos, y_pos);
 	};
 
@@ -1209,7 +1209,7 @@ public:
 	}
 
 protected: //functions
-	virtual void RustyTriangle::Display() {
+	virtual void Display() {
 		draw->BlitSquare(textures->getMirrorSprites(), rotation%4 , 6, x_pos, y_pos);
 	};
 
@@ -1240,7 +1240,7 @@ public:
 	}
 
 protected: //functions
-	virtual void RustyBarsVert::Display() {
+	virtual void Display() {
 
 		draw->BlitSquare(textures->getBarSprites(), 0 ,1, x_pos, y_pos);
 	}
@@ -1272,7 +1272,7 @@ public:
 	}
 
 protected: //functions
-	virtual void RustyBarsHoriz::Display() {
+	virtual void Display() {
 
 		draw->BlitSquare(textures->getBarSprites(), 1 ,1, x_pos, y_pos);
 	}
@@ -1299,7 +1299,7 @@ public:
 	virtual bool HitBottom() {ATile::HitBottom(); sound->PlayASound("pop.wav", POP); return Kill();}
 
 protected: //functions
-	virtual void RustyWhiteBlock::Display() {
+	virtual void Display() {
 		draw->BlitSquare(textures->getRedblockSprites(), 3 ,0, x_pos, y_pos);
 	}
 

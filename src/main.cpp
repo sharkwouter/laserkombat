@@ -37,6 +37,10 @@ void handleInput(std::vector<Input> input) {
                 board->Previous(); break;
             case Input::EXIT:
                 running = false; break;
+            case Input::HELP:
+            case Input::ANY:
+                // Not handled here
+                break;
             }
         }
     }

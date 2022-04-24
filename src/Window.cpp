@@ -40,7 +40,7 @@ std::vector<Input> Window::getInput() {
     while(SDL_PollEvent(&event)) {
         switch (event.type) {
             case SDL_QUIT:
-                input.push_back(Input::EXIT);
+                exit(0);
                 break;
             case SDL_KEYDOWN:
                 input.push_back(getInputForKeyboardKey(event.key.keysym.sym));
@@ -198,7 +198,7 @@ void Window::closeDisconnectedGameControllers() {
 }
 
 void Window::closeAllGameControllers() {
-    for (int i = 0; i < gameControllers.size(); i++) {
+    for (unsigned int i = 0; i < gameControllers.size(); i++) {
         SDL_Log("Removing controller: %s", SDL_GameControllerName(gameControllers[i]));
         SDL_GameControllerClose(gameControllers[i]);
         gameControllers[i] = NULL;
