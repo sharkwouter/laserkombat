@@ -2,6 +2,8 @@
 
 #include <SDL.h>
 
+#include "utils.h"
+
 Board::Board(Draw * draw, Textures * textures, Sound * sound) : help(true), cols(COLUMNS), rows(ROWS), tank_x(0), tank_y(0), level(0), draw(draw), textures(textures), sound(sound) {
 	CreateArray();
 	LoadLevel();	
@@ -88,11 +90,12 @@ bool Board::Previous()
 bool Board::LoadLevel() {
 	level++;
 
-	std::string filename = "assets/levels/level";
+	std::string filename = "level";
 	filename += std::string(3 - std::min(3, int(std::to_string(level).length())), '0') + std::to_string(level);
 	filename += ".lvl";
+	std::string path = getAssetPath("levels", filename);
 
-	FILE *file=fopen(filename.c_str(), "rb");
+	FILE *file=fopen(path.c_str(), "rb");
 	if (file) {
 		int size= fread( &origin_x, sizeof(origin_y), 1, file);
 		if (size) size= fread( &origin_y, sizeof(origin_x), 1, file);

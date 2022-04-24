@@ -1,5 +1,7 @@
 #include "Textures.h"
 
+#include "utils.h"
+
 Textures::Textures(SDL_Renderer * renderer) : renderer(renderer) {
     if (!load()) {
         exit(4);
@@ -44,7 +46,7 @@ bool Textures::load() {
 }
 
 SDL_Texture * Textures::loadImage(const std::string &filename) {
-    std::string path = "assets/images/" + filename;
+    std::string path = getAssetPath("images", filename);
     uint32_t colorKey;
     SDL_Surface *surface = SDL_LoadBMP(path.c_str());
     if (!surface) {

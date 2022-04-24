@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "utils.h"
+
 Sound::Sound() : sound(0), maxx(SoundPriority::NOPLAY) {
     SDL_AudioSpec * spec = new SDL_AudioSpec{};
     spec->freq = 22050;
@@ -49,7 +51,7 @@ void Sound::PlaySound(const char* name) {
     std::string file = name; 
     if(!sounds.count(file)) {
         Wav * wav = new Wav{};
-        std::string path = "assets/sounds/" + file;
+        std::string path = getAssetPath("sounds", file);
         SDL_LoadWAV(path.c_str(), &wav->spec, &wav->buffer, &wav->length);
         sounds[file] = std::move(wav);
     }
@@ -57,4 +59,3 @@ void Sound::PlaySound(const char* name) {
     SDL_QueueAudio(deviceId, sounds[file]->buffer, sounds[file]->length);
     SDL_PauseAudioDevice(deviceId, 0);
 }
-
