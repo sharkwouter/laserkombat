@@ -1,6 +1,10 @@
 #include <SDL.h>
 #include <vector>
 
+#ifdef NXDK
+    #include <hal/video.h>
+#endif
+
 #include "Window.h"
 #include "Textures.h"
 #include "Sound.h"
@@ -44,6 +48,10 @@ void handleInput(std::vector<Input> input) {
 }
 
 int main(int, char**) {
+    #ifdef NXDK
+        XVideoSetMode(WINDOW_WIDTH, WINDOW_HEIGHT, 32, REFRESH_DEFAULT);
+    #endif
+
     Window window(TITLE, WINDOW_WIDTH, WINDOW_HEIGHT);
     Draw * draw = new Draw(window.renderer);
     Textures * textures = new Textures(window.renderer);

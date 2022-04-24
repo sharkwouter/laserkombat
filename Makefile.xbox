@@ -11,5 +11,6 @@ SRCS = $(CURDIR)/src/main.cpp \
 NXDK_CXXFLAGS += -I $(CURDIR)/include
 NXDK_SDL = y
 NXDK_CXX = y
+DEBUG = y
 
 include $(NXDK_DIR)/Makefile
