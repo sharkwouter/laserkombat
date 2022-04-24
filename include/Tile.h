@@ -27,7 +27,7 @@ class Tile
 {
 	friend class ATile;
 public:
-	Tile(int x, int y, Draw * draw, Textures * textures, Sound * sound, Board * board, int r=0) : x_pos(x), y_pos(y), deadBlock(0), willKillFlag(0), draw(draw), textures(textures), sound(sound), board(board) {
+	Tile(int x, int y, Draw * draw, Textures * textures, Sound * sound, Board * board, int r=0) : x_pos(x), y_pos(y), draw(draw), textures(textures), sound(sound), board(board) {
 		SetRotation(r);
 		FiringUp=FiringDown=FiringLeft=FiringRight=Firing=0;
 		WasHitLeft=WasHitRight=WasHitTop=WasHitBottom=WasHit=0;
@@ -42,7 +42,7 @@ public:
 	void SetXY(SDL_Point xy) {x_pos=xy.x, y_pos=xy.y;}
 	SDL_Point getXY() {return {x_pos, y_pos};}
 
-	virtual void SetOtherBlocks (unsigned int around) {}
+	virtual void SetOtherBlocks (unsigned int) {}
 
 	virtual bool Kill();
 	virtual bool KillOver();
@@ -56,7 +56,7 @@ public:
 		return BlockType::NONE;
 	}
 
-	virtual bool BlockOver(Tile* &block, Tile* &ground)
+	virtual bool BlockOver(Tile* &, Tile* &ground)
 	{
 		if (ground) ground->ClearOver();
 		return false;
@@ -93,10 +93,10 @@ public:
 		return true;
 	}
 
-	virtual bool LookLeft(BlockType type, int dist) {return false;}
-	virtual bool LookTop(BlockType type, int dist) {return false;}
-	virtual bool LookRight(BlockType type, int dist) {return false;}
-	virtual bool LookBottom(BlockType type, int dist) {return false;}
+	virtual bool LookLeft(BlockType, int) {return false;}
+	virtual bool LookTop(BlockType, int) {return false;}
+	virtual bool LookRight(BlockType, int) {return false;}
+	virtual bool LookBottom(BlockType, int) {return false;}
 
 
 	virtual bool SeeMeUp(BlockType type, int dist);
@@ -176,7 +176,7 @@ protected: //functions
 	Blocks GetBlocks();
 	Blocks GetGrounds();
 	Tile*& GetGround();
-	Tile* Tile::GetBlock();
+	Tile* GetBlock();
 
 	bool RightBlock(Tile** p);
 	bool LeftBlock(Tile** p);
@@ -188,7 +188,7 @@ protected: //functions
 	bool TopGround(Tile** p);
 	bool BottomGround(Tile** p);
 
-	void DisplayBeam(int type) {
+	void DisplayBeam(int) {
 
 		// if (type) {
 		if (HadFiredLeft||WasHitLeft)
@@ -223,8 +223,8 @@ private: // functions
 	//Set for killing, just not immediatly.
 
 private: //members
-	int willKillFlag;
-	Tile* deadBlock;
+	int willKillFlag = 0;
+	Tile* deadBlock = NULL;
 
 
 };
@@ -403,7 +403,7 @@ protected: //functions
 	virtual int BeamState() {
 		return 0;
 	}
-	virtual void Tank::Display() {
+	virtual void Display() {
 		draw->BlitSquare(textures->getTankSprites(), rotation%4 ,rotation/4, x_pos, y_pos);
 	}
 	virtual bool MoveUp() {
@@ -441,7 +441,7 @@ public:
 	virtual BlockType GetBlockType() {
 		return BlockType::REDBLOCK;
 	}
-	virtual bool SetRotation(int r) {
+	virtual bool SetRotation(int) {
 		rotation=0;
 		return false;
 	}
@@ -472,7 +472,7 @@ public:
 	virtual BlockType GetBlockType() {
 		return BlockType::WHITEBLOCK;
 	}
-	virtual bool SetRotation(int r) {
+	virtual bool SetRotation(int) {
 		rotation=2;
 		return false;
 	}
@@ -570,10 +570,10 @@ protected: //functions
 	virtual bool PushTop() {return false;}
 	virtual bool PushBottom() {return false;}
 
-	virtual bool HitLeft() {sound->PlayASound("donk.wav", DONK); return span=1;}
-	virtual bool HitRight() {sound->PlayASound("donk.wav", DONK); return span=1;}
-	virtual bool HitTop() {sound->PlayASound("donk.wav", DONK); return span=1;}
-	virtual bool HitBottom() {sound->PlayASound("donk.wav", DONK); return span=1;}
+	virtual bool HitLeft() {sound->PlayASound("donk.wav", DONK); return (span=1);}
+	virtual bool HitRight() {sound->PlayASound("donk.wav", DONK); return (span=1);}
+	virtual bool HitTop() {sound->PlayASound("donk.wav", DONK); return (span=1);}
+	virtual bool HitBottom() {sound->PlayASound("donk.wav", DONK); return (span=1);}
 
 
 
@@ -879,10 +879,10 @@ public:
 		return BlockType::ENEMYTANK;
 	}
 
-	virtual bool LookLeft(BlockType type, int dist) {ShootLeft(); return true;}
-	virtual bool LookTop(BlockType type, int dist) {ShootUp(); return true;}
-	virtual bool LookRight(BlockType type, int dist) {ShootRight(); return true;}
-	virtual bool LookBottom(BlockType type, int dist) {ShootDown(); return true;}
+	virtual bool LookLeft(BlockType, int) {ShootLeft(); return true;}
+	virtual bool LookTop(BlockType, int) {ShootUp(); return true;}
+	virtual bool LookRight(BlockType, int) {ShootRight(); return true;}
+	virtual bool LookBottom(BlockType, int) {ShootDown(); return true;}
 
 	virtual bool ShootUp() {SetRotation(1); return ATile::ShootUp();}
 	virtual bool ShootDown() {SetRotation(3); return ATile::ShootDown();}
@@ -980,7 +980,7 @@ public:
 	virtual BlockType GetBlockType() {
 		return BlockType::REDBLOCK;
 	}
-	virtual bool SetRotation(int r) {
+	virtual bool SetRotation(int) {
 		rotation=1;
 		return false;
 	}
@@ -1007,10 +1007,10 @@ public:
 
 	}
 
-	virtual bool LookLeft(BlockType type, int dist) {if (!dist) Kill(); return true;}
-	virtual bool LookTop(BlockType type, int dist) {if (!dist) Kill(); return true;}
-	virtual bool LookRight(BlockType type, int dist) {if (!dist) Kill(); return true;}
-	virtual bool LookBottom(BlockType type, int dist) {if (!dist) Kill(); return true;}
+	virtual bool LookLeft(BlockType, int dist) {if (!dist) Kill(); return true;}
+	virtual bool LookTop(BlockType, int dist) {if (!dist) Kill(); return true;}
+	virtual bool LookRight(BlockType, int dist) {if (!dist) Kill(); return true;}
+	virtual bool LookBottom(BlockType, int dist) {if (!dist) Kill(); return true;}
 
 
 protected: //functions
@@ -1055,7 +1055,7 @@ public:
 		SetRotation(0);
 
 	}
-	virtual bool SetRotation(int r) {
+	virtual bool SetRotation(int) {
 		rotation=0;
 		return false;
 	}
@@ -1086,7 +1086,7 @@ public:
 		SetRotation(0);
 
 	}
-	virtual bool SetRotation(int r) {
+	virtual bool SetRotation(int) {
 		rotation=0;
 		return false;
 	}
@@ -1102,9 +1102,9 @@ protected: //functions
 	virtual bool HitRight() {Tile::HitRight(); return ShootLeft();}
 
 	virtual bool LookLeft(BlockType type, int dist) {SeeMeRight(type, ++dist); return true;}
-	virtual bool LookTop(BlockType type, int dist) {return false;}
+	virtual bool LookTop(BlockType, int) {return false;}
 	virtual bool LookRight(BlockType type, int dist) {SeeMeLeft(type, ++dist); return true;}
-	virtual bool LookBottom(BlockType type, int dist) {return false;}
+	virtual bool LookBottom(BlockType, int) {return false;}
 
 protected: //members
 private: // functions
@@ -1120,7 +1120,7 @@ public:
 		SetRotation(0);
 
 	}
-	virtual bool SetRotation(int r) {
+	virtual bool SetRotation(int) {
 		rotation=0;
 		return false;
 	}

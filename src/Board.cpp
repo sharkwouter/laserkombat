@@ -4,7 +4,7 @@
 
 #include "utils.h"
 
-Board::Board(Draw * draw, Textures * textures, Sound * sound) : help(true), cols(COLUMNS), rows(ROWS), tank_x(0), tank_y(0), level(0), draw(draw), textures(textures), sound(sound) {
+Board::Board(Draw * draw, Textures * textures, Sound * sound) : help(true), rows(ROWS), cols(COLUMNS), tank_x(0), tank_y(0), level(0), draw(draw), textures(textures), sound(sound) {
 	CreateArray();
 	LoadLevel();	
 }

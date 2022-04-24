@@ -17,7 +17,7 @@ inline constexpr int BEAM_PERSISTANCE = 4;		//beam lasts for this many 0.025 sec
 
 inline constexpr int COLOR_DEPTH = 16;
 
-inline constexpr char* NAME = "TANK";
-inline constexpr char* TITLE = "Laser Kombat";
+inline constexpr char* NAME = (char*) "TANK";
+inline constexpr char* TITLE = (char*) "Laser Kombat";
 
 #endif // CONSTANTS_H

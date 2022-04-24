@@ -168,13 +168,13 @@ private: //data
 	bool defeated;
 	bool finished;
 
-	Draw * draw;
-	Textures * textures;
-	Sound * sound;
-
 	int rows, cols;
 	int tank_x, tank_y, origin_x, origin_y;
 	int level;
+
+	Draw * draw;
+	Textures * textures;
+	Sound * sound;
 
 	BlockType groundTypeArray[COLUMNS][ROWS];
 	BlockType blockTypeArray[COLUMNS][ROWS];

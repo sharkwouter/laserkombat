@@ -26,7 +26,6 @@ void Tile::AddDead(Tile* tile) {
  
 bool Tile::Kill() {
 	if (!board->array[x_pos][y_pos]->block) return true;
-	Tile* temp=board->array[x_pos][y_pos]->block;
 	board->array[x_pos][y_pos]->block=NULL;
 	//Schedule for deletion
 	board->array[x_pos][y_pos]->ground->AddDead(this);
@@ -35,7 +34,6 @@ bool Tile::Kill() {
 
 bool Tile::KillOver() {
 	if (!board->array[x_pos][y_pos]->over) return true;
-	Tile* temp=board->array[x_pos][y_pos]->over;
 	board->array[x_pos][y_pos]->over=NULL;
 	//Schedule for deletion
 	board->array[x_pos][y_pos]->ground->AddDead(this);
@@ -74,7 +72,6 @@ void Tile::ClearOver() {//make sure the over layer is clear
 
 bool Nuke::Kill() {
 	ATile::Kill();
-	int rr=0;
 	Blocks blocks=GetGrounds();
 
 	if (blocks.left) blocks.left->SetRotation(333);
