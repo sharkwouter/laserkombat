@@ -45,6 +45,7 @@ bool Sound::PlayASound(const char* name, SoundPriority priority)
 
 void Sound::PlaySound(const char* name) {
     if(!name) {
+        SDL_PauseAudioDevice(deviceId, 1);
         SDL_ClearQueuedAudio(deviceId);
         return;
     }
