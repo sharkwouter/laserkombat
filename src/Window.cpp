@@ -1,5 +1,7 @@
 #include "Window.h"
 
+#include <climits>
+
 #ifdef NXDK
     #include <hal/video.h>
 #endif
@@ -40,13 +42,18 @@ std::vector<Input> Window::getInput() {
     while(SDL_PollEvent(&event)) {
         switch (event.type) {
             case SDL_QUIT:
-                exit(0);
+                input.push_back(Input::CLOSE);
                 break;
             case SDL_KEYDOWN:
                 input.push_back(getInputForKeyboardKey(event.key.keysym.sym));
                 break;
             case SDL_CONTROLLERBUTTONDOWN:
                 input.push_back(getInputForControllerButton(event.cbutton.button));
+                break;
+            case SDL_CONTROLLERAXISMOTION: {
+                    Input direction = getInputForControllerAxis(event.caxis.axis, event.caxis.value);
+                    if(direction != Input::NONE) input.push_back(direction);
+                }
                 break;
             case SDL_CONTROLLERDEVICEADDED:
                 openGameController(event.cdevice.which);
@@ -168,6 +175,47 @@ Input Window::getInputForControllerButton(Uint8 button) {
 
         default:
             input = Input::ANY;
+            break;
+    }
+
+    return input;
+}
+
+Input Window::getInputForControllerAxis(Uint32 axis, Sint16 value) {
+    Input input = Input::NONE;
+
+    switch (axis) {
+        case SDL_CONTROLLER_AXIS_LEFTX:
+            if (value > (SHRT_MAX*stick_deadzone_multiplier)) {
+                if (this->returned_to_horizontal_center) {
+                    input = Input::RIGHT;
+                    this->returned_to_horizontal_center = false;
+                }
+            } else if (value < (SHRT_MIN*stick_deadzone_multiplier)) {
+                if(this->returned_to_horizontal_center) {
+                    input = Input::LEFT;
+                    this->returned_to_horizontal_center = false;
+                }
+            } else {
+                this->returned_to_horizontal_center = true;
+            }
+            break;
+        case SDL_CONTROLLER_AXIS_LEFTY:
+            if (value > (SHRT_MAX*stick_deadzone_multiplier)) {
+                if(this->returned_to_vertical_center) {
+                    input = Input::DOWN;
+                    this->returned_to_vertical_center = false;
+                }
+            } else if (value < (SHRT_MIN*stick_deadzone_multiplier)) {
+                if(this->returned_to_vertical_center) {
+                    input = Input::UP;
+                    this->returned_to_vertical_center = false;
+                }
+            } else {
+                this->returned_to_vertical_center = true;
+            }
+            break;
+        default:
             break;
     }
 

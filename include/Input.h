@@ -12,7 +12,9 @@ enum class Input {
     PREVIOUSLEVEL,
     HELP,
     EXIT,
-    ANY
+    CLOSE,
+    ANY,
+    NONE
 };
 
 #endif // INPUT_H

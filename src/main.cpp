@@ -14,7 +14,7 @@ bool running = false;
 void handleInput(std::vector<Input> input) {
     for (Input i: input) {
         int any_ret;
-        if ((any_ret=board->AnyKey(i))==666) {
+        if (i == Input::CLOSE || (any_ret=board->AnyKey(i))==666) {
             running = false;
         } else if (any_ret) {
             switch (i)
@@ -39,6 +39,8 @@ void handleInput(std::vector<Input> input) {
                 running = false; break;
             case Input::HELP:
             case Input::ANY:
+            case Input::NONE:
+            case Input::CLOSE:
                 // Not handled here
                 break;
             }
