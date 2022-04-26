@@ -128,7 +128,8 @@ public:
 
 	virtual void Update() {
 		Display();
-		DisplayBeam(BeamState());
+		BeamState();
+		DisplayBeam();
 		if (Firing) Firing=FiringRight=FiringLeft=FiringUp=FiringDown=false;
 		moved=false;
 	}
@@ -156,7 +157,8 @@ public: // members
 
 protected: //functions
 	virtual void Display() {
-		DisplayBeam(BeamState());
+		BeamState();
+		DisplayBeam();
 		draw->BlackSquare(x_pos, y_pos);
 	}
 	virtual int BeamState();
@@ -188,9 +190,7 @@ protected: //functions
 	bool TopGround(Tile** p);
 	bool BottomGround(Tile** p);
 
-	void DisplayBeam(int) {
-
-		// if (type) {
+	void DisplayBeam() {
 		if (HadFiredLeft||WasHitLeft)
 			draw->BlitSquare(textures->getBeamSprites(), 0 ,1, x_pos, y_pos);
 		if (HadFiredUp||WasHitTop)
@@ -199,7 +199,6 @@ protected: //functions
 			draw->BlitSquare(textures->getBeamSprites(), 2 ,1, x_pos, y_pos);
 		if (HadFiredDown||WasHitBottom)
 			draw->BlitSquare(textures->getBeamSprites(), 3 ,1, x_pos, y_pos);
-		// }
 	}
 
 	virtual bool MoveUp();
