@@ -24,7 +24,8 @@ bool Textures::load() {
         tankSprites = loadImage("tank.bmp");
         teeSprites = loadImage("tee.bmp");
 
-        mainSprite = loadImage("main.bmp");
+        mainKeysSprite = loadImage("maink.bmp");
+        mainBlocksSprite = loadImage("mainb.bmp");
         messageSprite = loadImage("message.bmp");
         waterSprite = loadImage("water.bmp");
 
@@ -39,7 +40,8 @@ bool Textures::load() {
             staticSprites != nullptr &&
             tankSprites != nullptr &&
             teeSprites != nullptr &&
-            mainSprite != nullptr &&
+            mainKeysSprite != nullptr &&
+            mainBlocksSprite != nullptr &&
             messageSprite != nullptr &&
             waterSprite != nullptr;
 

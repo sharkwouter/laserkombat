@@ -4,7 +4,7 @@
 
 #include "utils.h"
 
-Board::Board(Draw * draw, Textures * textures, Sound * sound) : help(true), rows(ROWS), cols(COLUMNS), tank_x(0), tank_y(0), level(0), draw(draw), textures(textures), sound(sound) {
+Board::Board(Draw * draw, Textures * textures, Sound * sound) : help_keys(true), help_blocks(false), rows(ROWS), cols(COLUMNS), tank_x(0), tank_y(0), level(0), draw(draw), textures(textures), sound(sound) {
 	CreateArray();
 	LoadLevel();	
 }
@@ -226,7 +226,8 @@ void Board::Animate() {
 			if (array[j][i]->over) {array[j][i]->over->Update();};
 		}
 	}
-	DisplayHelp();
+	DisplayKeysHelp();
+	DisplayBlocksHelp();
 	draw->Flip();
 	AfterAnimate();
 }
@@ -298,8 +299,10 @@ void Board::FillDefault()
 }
 
 int Board::AnyKey(Input key) {
-	if (key==Input::HELP&&!help) {help=true; return 0;}
-	if (help) {help=false; return 0;}
+	if (key==Input::HELPKEYS&&!help_keys) {help_keys=true;help_blocks=false; return 0;}
+	if (key==Input::HELPBLOCKS&&!help_blocks) {help_blocks=true;help_keys=false; return 0;}
+	if (help_keys) {help_keys=false; return 0;}
+	if (help_blocks) {help_blocks=false; return 0;}
 	if (key==Input::EXIT) return 666;
 	if (finished&&key==Input::RESTART) return 666;
 	if (died&&key==Input::FIRE) {Restart(); return 0;}
@@ -334,8 +337,14 @@ void Board::Delay()
 	seconds_ago= current_time;
 }
 
-void Board::DisplayHelp()
+void Board::DisplayKeysHelp()
 {
-	if (!help) return;
-	draw->BlitOther(textures->getMainSprite(), 0, 0, 120, 40, 560, 520);
+	if (!help_keys) return;
+	draw->BlitOther(textures->getMainKeysSprite(), 0, 0, 120, 40, 560, 520);
+}
+
+void Board::DisplayBlocksHelp()
+{
+	if (!help_blocks) return;
+	draw->BlitOther(textures->getMainBlocksSprite(), 0, 0, 120, 40, 560, 520);
 }

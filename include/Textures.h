@@ -24,7 +24,8 @@ public:
     SDL_Texture * getTankSprites() { return tankSprites; };
     SDL_Texture * getTeeSprites() { return teeSprites; };
 
-    SDL_Texture * getMainSprite() { return mainSprite; };
+    SDL_Texture * getMainKeysSprite() { return mainKeysSprite; };
+    SDL_Texture * getMainBlocksSprite() { return mainBlocksSprite; };
     SDL_Texture * getMessageSprite() { return messageSprite; };
     SDL_Texture * getWaterSprite() { return waterSprite; };
 
@@ -43,7 +44,8 @@ private:
     SDL_Texture * tankSprites;
     SDL_Texture * teeSprites;
 
-    SDL_Texture * mainSprite;
+    SDL_Texture * mainKeysSprite;
+    SDL_Texture * mainBlocksSprite;
     SDL_Texture * messageSprite;
     SDL_Texture * waterSprite;
 

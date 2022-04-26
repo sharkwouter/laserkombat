@@ -71,33 +71,26 @@ Input Window::getInputForKeyboardKey(SDL_Keycode key) {
     Input input;
 
     switch (key) {
-        case SDLK_a:
         case SDLK_LEFT:
             input = Input::LEFT;
             break;
 
-        case SDLK_w:
         case SDLK_UP:
             input = Input::UP;
             break;
 
-        case SDLK_d:
         case SDLK_RIGHT:
             input = Input::RIGHT;
             break;
 
-        case SDLK_s:
         case SDLK_DOWN:
             input = Input::DOWN;
             break;
 
         case SDLK_SPACE:
-        case SDLK_LCTRL:
-        case SDLK_RCTRL:
             input = Input::FIRE;
             break;
 
-        case SDLK_r:
         case SDLK_RETURN:
         case SDLK_RETURN2:
             input = Input::RESTART;
@@ -112,8 +105,11 @@ Input Window::getInputForKeyboardKey(SDL_Keycode key) {
             break;
 
         case SDLK_F1:
-        case SDLK_h:
-            input = Input::HELP;
+            input = Input::HELPKEYS;
+            break;
+
+        case SDLK_F2:
+            input = Input::HELPBLOCKS;
             break;
 
         case SDLK_ESCAPE:
@@ -166,7 +162,7 @@ Input Window::getInputForControllerButton(Uint8 button) {
             break;
 
         case SDL_CONTROLLER_BUTTON_Y:
-            input = Input::HELP;
+            input = Input::HELPKEYS;
             break;
 
         case SDL_CONTROLLER_BUTTON_BACK:

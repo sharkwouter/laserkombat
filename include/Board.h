@@ -159,11 +159,13 @@ private:
 	bool MoveRight();
 	bool MoveLeft();
 
-	void DisplayHelp();
+	void DisplayKeysHelp();
+	void DisplayBlocksHelp();
 
 private: //data
 
-	bool help;
+	bool help_keys;
+	bool help_blocks;
 	bool died;
 	bool defeated;
 	bool finished;
