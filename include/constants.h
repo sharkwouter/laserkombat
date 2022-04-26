@@ -18,8 +18,6 @@ inline constexpr int IMAGE_WIDTH = 40;
 
 inline constexpr int BEAM_PERSISTANCE = 4;		//beam lasts for this many 0.025 second intervals
 
-inline constexpr int COLOR_DEPTH = 16;
-
 inline constexpr char* NAME = (char*) "TANK";
 inline constexpr char* TITLE = (char*) "Laser Kombat";
 
