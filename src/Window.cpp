@@ -104,6 +104,18 @@ Input Window::getInputForKeyboardKey(SDL_Keycode key) {
             input = Input::NEXTLEVEL;
             break;
 
+        case SDLK_u:
+            input = Input::UNDO;
+            break;
+
+        case SDLK_s:
+            input = Input::SAVESTATE;
+            break;
+
+        case SDLK_r:
+            input = Input::RESTORESTATE;
+            break;
+
         case SDLK_F1:
             input = Input::HELPKEYS;
             break;
