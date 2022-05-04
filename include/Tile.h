@@ -539,6 +539,9 @@ public:
 		SetRotation(r);
 
 	}
+	virtual BlockType GetBlockType() {
+		return BlockType::STATIC;
+	}
 	virtual bool SetRotation(int r) {
 		if (r>8) r-=4;
 		rotation=r;
@@ -589,6 +592,9 @@ public:
 	Mirror(int x, int y, Draw * draw, Textures * textures, Sound * sound, Board * board, int r=0) : ATile(x,y,draw,textures,sound,board,r), rotation2(0){
 		SetRotation(r);
 
+	}
+	virtual BlockType GetBlockType() {
+		return BlockType::MIRROR;
 	}
 	virtual bool SetRotation(int r) {
 		rotation=r;
@@ -706,7 +712,13 @@ public:
 		SetRotation(r);
 
 	}
-
+	virtual BlockType GetBlockType() {
+		return BlockType::TEE;
+	}
+	virtual bool SetRotation(int r) {
+		rotation=r;
+		return true;
+	}
 protected: //functions
 	virtual void Display() {
 		rotation2++;
@@ -923,6 +935,10 @@ public:
 	virtual bool HitRight() {ATile::HitRight(); Kill(); return true;}
 	virtual bool HitBottom() {ATile::HitBottom(); Kill(); return true;}
 
+	virtual BlockType GetBlockType() {
+		return BlockType::NUKE;
+	}
+
 	virtual bool Kill();
 protected: //functions
 	virtual void Display() {
@@ -946,6 +962,10 @@ public:
 	virtual bool HitTop() {ATile::HitTop(); sound->PlayASound("collapse.wav", COLLAPSE); return Kill();}
 	virtual bool HitRight() {ATile::HitRight(); sound->PlayASound("collapse.wav", COLLAPSE); return Kill();}
 	virtual bool HitBottom() {ATile::HitBottom(); sound->PlayASound("collapse.wav", COLLAPSE); return Kill();}
+
+	virtual BlockType GetBlockType() {
+		return BlockType::RUSTY;
+	}
 protected: //functions
 	virtual void Display() {
 		if (rotation>=5) {
@@ -976,7 +996,7 @@ public:
 
 	}
 	virtual BlockType GetBlockType() {
-		return BlockType::REDBLOCK;
+		return BlockType::RUSTYREDBLOCK;
 	}
 	virtual bool SetRotation(int) {
 		rotation=1;
@@ -1010,6 +1030,9 @@ public:
 	virtual bool LookRight(BlockType, int dist) {if (!dist) Kill(); return true;}
 	virtual bool LookBottom(BlockType, int dist) {if (!dist) Kill(); return true;}
 
+	virtual BlockType GetBlockType() {
+		return BlockType::ENEMYNUKE;
+	}
 
 protected: //functions
 	virtual void Display() {
@@ -1028,6 +1051,9 @@ public:
 	Message(int x, int y, Draw * draw, Textures * textures, Sound * sound, Board * board, int r=0) : Static(x,y,draw,textures,sound,board,r) {
 		SetRotation(r);
 
+	}
+	virtual BlockType GetBlockType() {
+		return BlockType::NONE;
 	}
 	virtual bool SetRotation(int r) {
 		rotation=r;
@@ -1052,6 +1078,9 @@ public:
 	  Static(x,y,draw,textures,sound,board,r) {
 		SetRotation(0);
 
+	}
+	virtual BlockType GetBlockType() {
+		return BlockType::BARSVERT;
 	}
 	virtual bool SetRotation(int) {
 		rotation=0;
@@ -1083,6 +1112,9 @@ public:
 	  BarsVert(x,y,draw,textures,sound,board,r) {
 		SetRotation(0);
 
+	}
+	virtual BlockType GetBlockType() {
+		return BlockType::BARSHORIZ;
 	}
 	virtual bool SetRotation(int) {
 		rotation=0;
@@ -1118,6 +1150,9 @@ public:
 		SetRotation(0);
 
 	}
+	virtual BlockType GetBlockType() {
+		return BlockType::BARSCROSS;
+	}
 	virtual bool SetRotation(int) {
 		rotation=0;
 		return false;
@@ -1151,6 +1186,9 @@ public:
 	Triangle(int x, int y, Draw * draw, Textures * textures, Sound * sound, Board * board, int r=0) : Mirror(x,y,draw,textures,sound,board,r) {
 		SetRotation(r);
 
+	}
+	virtual BlockType GetBlockType() {
+		return BlockType::TRIANGLE;
 	}
 	virtual bool SetRotation(int r) {
 		rotation=r;
@@ -1206,6 +1244,10 @@ public:
 		sound->PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 
+	virtual BlockType GetBlockType() {
+		return BlockType::RUSTYTRIANGLE;
+	}
+
 protected: //functions
 	virtual void Display() {
 		draw->BlitSquare(textures->getMirrorSprites(), rotation%4 , 6, x_pos, y_pos);
@@ -1235,6 +1277,11 @@ public:
 	virtual bool HitRight() {
 		ATile::HitRight();
 		sound->PlayASound("collapse.wav", COLLAPSE); return Kill();	
+	}
+
+
+	virtual BlockType GetBlockType() {
+		return BlockType::RUSTYBARSVERT;
 	}
 
 protected: //functions
@@ -1269,6 +1316,10 @@ public:
 		sound->PlayASound("collapse.wav", COLLAPSE); return Kill();	
 	}
 
+	virtual BlockType GetBlockType() {
+		return BlockType::RUSTYBARSHORIZ;
+	}
+
 protected: //functions
 	virtual void Display() {
 
@@ -1295,6 +1346,10 @@ public:
 	virtual bool HitTop() {ATile::HitTop(); sound->PlayASound("pop.wav", POP); return Kill();}
 	virtual bool HitRight() {ATile::HitRight(); sound->PlayASound("pop.wav", POP); return Kill();}
 	virtual bool HitBottom() {ATile::HitBottom(); sound->PlayASound("pop.wav", POP); return Kill();}
+
+	virtual BlockType GetBlockType() {
+		return BlockType::RUSTYWHITEBLOCK;
+	}
 
 protected: //functions
 	virtual void Display() {

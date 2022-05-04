@@ -36,10 +36,10 @@ void handleInput(std::vector<Input> input) {
             case Input::PREVIOUSLEVEL:
                 board->Previous(); break;
             case Input::SAVESTATE:
-                SDL_Log("Save pressed");
+                board->Save();
                 break;
             case Input::RESTORESTATE:
-                SDL_Log("Restore pressed");
+                board->Restore();
                 break;
             case Input::UNDO:
                 SDL_Log("Undo pressed");

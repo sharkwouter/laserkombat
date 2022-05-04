@@ -11,6 +11,7 @@
 #include "Tile.h"
 #include "Square.h"
 #include "Draw.h"
+#include "RestorePoint.h"
 
 class Board {
 public:
@@ -132,6 +133,9 @@ public:
 	bool Previous();
 	bool swap(int x, int y, int x1, int y1);
 
+	void Save();
+	void Restore();
+
 public:
 	Square* array[COLUMNS][ROWS];
 
@@ -141,7 +145,7 @@ private:
 	void Delay();
 	bool LoadLevel();
 	void FillDefault();
-	void CreateSquare(int x, int y);
+	void CreateSquare(int x, int y, RestorePoint * rp=NULL);
 
 	void YouDied();
 	void YouDefeated();
@@ -150,7 +154,7 @@ private:
 	void SetGroundTypes();
 	unsigned int GetGroundBits(unsigned a[COLUMNS+2][ROWS+2], int x, int y);
 
-	void FillArray(bool credits=false);
+	void FillArray(bool credits=false, RestorePoint * rp=NULL);
 	void ClearArray();
 	void CreateArray();
 
@@ -161,6 +165,8 @@ private:
 
 	void DisplayKeysHelp();
 	void DisplayBlocksHelp();
+
+	void SaveToRestorePoint(RestorePoint * rp);
 
 private: //data
 
@@ -186,6 +192,8 @@ private: //data
 
 	int number_of_enemies;
 	unsigned int seconds_ago;
+
+	RestorePoint restorePoint;
 };
 
 #endif // BOARD_H

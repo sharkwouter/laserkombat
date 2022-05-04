@@ -226,7 +226,7 @@ bool Tile::MoveUp() {
 	Tile* block = NULL; TopBlock(&block);
 	if (block) block->PushBottom();
 	bool ret = board->swap(x_pos, y_pos, x_pos, y_pos-1);
-	if (ret&&GetBlockType()!=BlockType::TANK&&GetBlockType()!=BlockType::WHITEBLOCK)
+	if (ret&&GetBlockType()!=BlockType::TANK&&GetBlockType()!=BlockType::WHITEBLOCK&&GetBlockType()!=BlockType::RUSTYWHITEBLOCK)
 		sound->PlayASound("scrape.wav", SoundPriority::SCRAPE);
 	return moved=ret;
 }
@@ -236,7 +236,7 @@ bool Tile::MoveDown() {
 	Tile* block = NULL; BottomBlock(&block);
 	if (block) block->PushTop();
 	bool ret =board->swap(x_pos, y_pos, x_pos, y_pos+1);
-	if (ret&&GetBlockType()!=BlockType::TANK&&GetBlockType()!=BlockType::WHITEBLOCK)
+	if (ret&&GetBlockType()!=BlockType::TANK&&GetBlockType()!=BlockType::WHITEBLOCK&&GetBlockType()!=BlockType::RUSTYWHITEBLOCK)
 		sound->PlayASound("scrape.wav", SoundPriority::SCRAPE);
 	return moved=ret;
 }
@@ -246,7 +246,7 @@ bool Tile::MoveRight() {
 	Tile* block = NULL; RightBlock(&block);
 	if (block) block->PushLeft();
 	bool ret =board->swap(x_pos, y_pos, x_pos+1, y_pos);
-	if (ret&&GetBlockType()!=BlockType::TANK&&GetBlockType()!=BlockType::WHITEBLOCK)
+	if (ret&&GetBlockType()!=BlockType::TANK&&GetBlockType()!=BlockType::WHITEBLOCK&&GetBlockType()!=BlockType::RUSTYWHITEBLOCK)
 		sound->PlayASound("scrape.wav", SoundPriority::SCRAPE);
 	return moved=ret;
 }
@@ -256,7 +256,7 @@ bool Tile::MoveLeft() {
 	Tile* block = NULL; LeftBlock(&block);
 	if (block) block->PushRight();
 	bool ret =board->swap(x_pos, y_pos, x_pos-1, y_pos);
-	if (ret&&GetBlockType()!=BlockType::TANK&&GetBlockType()!=BlockType::WHITEBLOCK)
+	if (ret&&GetBlockType()!=BlockType::TANK&&GetBlockType()!=BlockType::WHITEBLOCK&&GetBlockType()!=BlockType::RUSTYWHITEBLOCK)
 		sound->PlayASound("scrape.wav", SoundPriority::SCRAPE);
 	return moved=ret;
 }
@@ -268,9 +268,9 @@ bool Water::BlockOver(Tile* &block, Tile* &ground) {
 	// else:
 	Tile* temp = block;
 
-	if (temp->GetBlockType()==BlockType::WHITEBLOCK) return true;
+	if (temp->GetBlockType()==BlockType::WHITEBLOCK||temp->GetBlockType()==BlockType::RUSTYWHITEBLOCK) return true;
 
-	if (temp->GetBlockType()==BlockType::REDBLOCK) {
+	if (temp->GetBlockType()==BlockType::REDBLOCK||temp->GetBlockType()==BlockType::RUSTYREDBLOCK) {
 		ground=new GroundTile(x_pos, y_pos, draw, textures, sound, board, 10);
 		ground->AddDead(this);
 	}

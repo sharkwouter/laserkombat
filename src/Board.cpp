@@ -13,21 +13,23 @@ Board::~Board() {
 	ClearArray();
 }
 
-void Board::FillArray(bool credits)
+void Board::FillArray(bool credits, RestorePoint * rp)
 {
 	ClearArray();
 	if (!credits) {
 		number_of_enemies=0;
 		died=defeated=finished=0;
-		tank_x=origin_x;
-		tank_y=origin_y;
+		if(!rp) {
+			tank_x=origin_x;
+			tank_y=origin_y;
+		}
 	}
 	GroundTile::SetChanged(1);
 
 
 	for (int y=0; y<ROWS; y++) {
 		for (int x=0; x<COLUMNS; x++) {
-			CreateSquare(x, y);
+			CreateSquare(x, y, rp);
 		}
 	}
 	if (!credits) {
@@ -35,13 +37,20 @@ void Board::FillArray(bool credits)
 	}
 }
 
-void Board::CreateSquare(int x, int y)
+void Board::CreateSquare(int x, int y, RestorePoint * rp)
 {
 	if (array[x][y]) return;
 	Tile* ground=NULL;
 	Tile* block=NULL;
-	BlockType type= groundTypeArray[x][y];
-	int r= groundRotationArray[x][y];
+	BlockType type;
+	int r;
+	if(rp) {
+		type = rp->groundTypeArray[x][y];
+		r = rp->groundRotationArray[x][y];
+	} else {
+		type = groundTypeArray[x][y];
+		r = groundRotationArray[x][y];
+	}
 
 	switch(type) {
 	default:
@@ -49,8 +58,13 @@ void Board::CreateSquare(int x, int y)
 	case BlockType::WATER:			ground=	new Water(x, y, draw, textures, sound, this, r); break;
 	}
 
-	type= blockTypeArray[x][y];
-	r= blockRotationArray[x][y];
+	if(rp) {
+		type = rp->blockTypeArray[x][y];
+		r = rp->blockRotationArray[x][y];
+	} else {
+		type = blockTypeArray[x][y];
+		r = blockRotationArray[x][y];
+	}
 
 	switch(type) {
 	default:			            block= NULL; break;
@@ -61,7 +75,7 @@ void Board::CreateSquare(int x, int y)
 	case BlockType::MIRROR:		    block=	new Mirror(x, y, draw, textures, sound, this, r); break;
 	case BlockType::NUKE:			block=	new Nuke(x, y, draw, textures, sound, this, r); break;
 	case BlockType::ENEMYNUKE:		block=	new EnemyNuke(x, y, draw, textures, sound, this, r); break;
-	case BlockType::TANK:			block=	new Tank(x, y, draw, textures, sound, this, r); break;
+	case BlockType::TANK:			block=	new Tank(x, y, draw, textures, sound, this, r); tank_x=x; tank_y=y; break;
 	case BlockType::ENEMYTANK:		block=	new EnemyTank(x, y, draw, textures, sound, this, r); number_of_enemies++; break;
 	case BlockType::STATIC:		    block=	new Static(x, y, draw, textures, sound, this, r); break;
 	case BlockType::RUSTY:			block=	new Rusty(x, y, draw, textures, sound, this, r); break;
@@ -114,6 +128,35 @@ bool Board::LoadLevel() {
 	}
 	else FillDefault();
 	return false;
+}
+
+void Board::Save() {
+	SaveToRestorePoint(&restorePoint);
+}
+
+void Board::SaveToRestorePoint(RestorePoint * rp) {
+	for (int x=0; x<COLUMNS; x++) {
+		for (int y=0; y<ROWS; y++) {
+			if (array[x][y]->ground) {
+				rp->groundTypeArray[x][y] = array[x][y]->ground->GetBlockType();
+				rp->groundRotationArray[x][y] = array[x][y]->ground->GetRotation();
+			} else {
+				rp->groundTypeArray[x][y] = BlockType::NONE;
+				rp->groundRotationArray[x][y] = 33;
+			}
+			if (array[x][y]->block) {
+				rp->blockTypeArray[x][y] = array[x][y]->block->GetBlockType();
+				rp->blockRotationArray[x][y] = array[x][y]->block->GetRotation();
+			} else {
+				rp->blockTypeArray[x][y] = BlockType::NONE;
+				rp->blockRotationArray[x][y] = 0;
+			}
+		}
+	}
+}
+
+void Board::Restore() {
+	FillArray(false, &restorePoint);
 }
 
 void Board::YouDied() {
