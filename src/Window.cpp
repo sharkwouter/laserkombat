@@ -161,6 +161,18 @@ Input Window::getInputForControllerButton(Uint8 button) {
             input = Input::FIRE;
             break;
 
+        case SDL_CONTROLLER_BUTTON_B:
+            input = Input::UNDO;
+            break;
+
+        case SDL_CONTROLLER_BUTTON_X:
+            input = Input::SAVESTATE;
+            break;
+
+        case SDL_CONTROLLER_BUTTON_Y:
+            input = Input::RESTORESTATE;
+            break;
+
         case SDL_CONTROLLER_BUTTON_START:
             input = Input::RESTART;
             break;
@@ -171,10 +183,6 @@ Input Window::getInputForControllerButton(Uint8 button) {
 
         case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
             input = Input::PREVIOUSLEVEL;
-            break;
-
-        case SDL_CONTROLLER_BUTTON_Y:
-            input = Input::HELPKEYS;
             break;
 
         case SDL_CONTROLLER_BUTTON_BACK:
