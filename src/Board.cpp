@@ -362,8 +362,8 @@ int Board::AnyKey(Input key) {
 	if (help_blocks) {help_blocks=false; return 0;}
 	if (key==Input::EXIT) return 666;
 	if (finished&&key==Input::RESTART) return 666;
-	if (died&&key==Input::FIRE) {Restart(); return 0;}
-	if (defeated&&(key==Input::RESTART||key==Input::FIRE)) {LoadLevel(); return 0;}
+	if (died&&key==Input::RESTART) {Restart(); return 0;}
+	if (defeated&&(key==Input::RESTART)) {LoadLevel(); return 0;}
 	else if (defeated) return 0;
 	else if (finished&&key!=Input::PREVIOUSLEVEL) return 0;
 
