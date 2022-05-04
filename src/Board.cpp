@@ -19,7 +19,10 @@ void Board::FillArray(bool credits, RestorePoint * rp)
 	if (!credits) {
 		number_of_enemies=0;
 		died=defeated=finished=0;
-		if(!rp) {
+		if(rp) {
+			tank_x=rp->tank_x;
+			tank_y=rp->tank_y;
+		} else {
 			tank_x=origin_x;
 			tank_y=origin_y;
 		}
@@ -75,7 +78,7 @@ void Board::CreateSquare(int x, int y, RestorePoint * rp)
 	case BlockType::MIRROR:		    block=	new Mirror(x, y, draw, textures, sound, this, r); break;
 	case BlockType::NUKE:			block=	new Nuke(x, y, draw, textures, sound, this, r); break;
 	case BlockType::ENEMYNUKE:		block=	new EnemyNuke(x, y, draw, textures, sound, this, r); break;
-	case BlockType::TANK:			block=	new Tank(x, y, draw, textures, sound, this, r); tank_x=x; tank_y=y; break;
+	case BlockType::TANK:			block=	new Tank(x, y, draw, textures, sound, this, r); break;
 	case BlockType::ENEMYTANK:		block=	new EnemyTank(x, y, draw, textures, sound, this, r); number_of_enemies++; break;
 	case BlockType::STATIC:		    block=	new Static(x, y, draw, textures, sound, this, r); break;
 	case BlockType::RUSTY:			block=	new Rusty(x, y, draw, textures, sound, this, r); break;
@@ -168,6 +171,8 @@ void Board::SaveToRestorePoint(RestorePoint * rp) {
 			}
 		}
 	}
+	rp->tank_x = tank_x;
+	rp->tank_y = tank_y;
 }
 
 void Board::Restore() {

@@ -10,6 +10,9 @@ struct RestorePoint {
 
 	int groundRotationArray[COLUMNS][ROWS];
 	int blockRotationArray[COLUMNS][ROWS];
+
+	int tank_x;
+	int tank_y;
 };
 
 #endif // RESTOREPOINT_H
