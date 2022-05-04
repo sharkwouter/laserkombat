@@ -103,6 +103,7 @@ bool Board::Previous()
 
 bool Board::LoadLevel() {
 	level++;
+	undo_list.clear();
 
 	std::string filename = "level";
 	filename += std::string(3 - std::min(3, int(std::to_string(level).length())), '0') + std::to_string(level);

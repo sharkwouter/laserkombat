@@ -27,6 +27,7 @@ public:
 
 
 	void Restart() {
+		undo_list.clear();
 		FillArray();
 	}
 
