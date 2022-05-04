@@ -134,6 +134,20 @@ void Board::Save() {
 	SaveToRestorePoint(&restorePoint);
 }
 
+void Board::Undo() {
+	if(!undo_list.empty()) {
+		RestorePoint rp = undo_list.back();
+		FillArray(false, &rp);
+		undo_list.pop_back();
+	}
+}
+
+void Board::UpdateUndoList() {
+	RestorePoint rp;
+	SaveToRestorePoint(&rp);
+	undo_list.push_back(rp);
+}
+
 void Board::SaveToRestorePoint(RestorePoint * rp) {
 	for (int x=0; x<COLUMNS; x++) {
 		for (int y=0; y<ROWS; y++) {

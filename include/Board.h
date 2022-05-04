@@ -81,33 +81,34 @@ public:
 	void Right() {	//user presses right arrow, ect.
 		if (!TankExists()) return;
 		if (array[tank_x][tank_y]->block->GetRotation()==2)
-		{MoveRight(); See();}
+		{UpdateUndoList(); MoveRight(); See();}
 		else array[tank_x][tank_y]->block->SetRotation(2);
 		TankExists();
 	}
 	void Left() {
 		if (!TankExists()) return;
 		if (array[tank_x][tank_y]->block->GetRotation()==0)
-			MoveLeft(), See();
+		{UpdateUndoList(); MoveLeft(); See();}
 		else array[tank_x][tank_y]->block->SetRotation(0);
 		TankExists();
 	}
 	void Up() {
 		if (!TankExists()) return;
 		if (array[tank_x][tank_y]->block->GetRotation()==1)
-		{MoveUp(); See();}
+		{UpdateUndoList(); MoveUp(); See();}
 		else array[tank_x][tank_y]->block->SetRotation(1);
 		TankExists();
 	}
 	void Down() {
 		if (!TankExists()) return;
 		if (array[tank_x][tank_y]->block->GetRotation()==3)
-		{MoveDown(); See();}
+		{UpdateUndoList(); MoveDown(); See();}
 		else array[tank_x][tank_y]->block->SetRotation(3);
 		TankExists();
 	}
 	void Fire() {         //user presses fire button
 		if (!TankExists()) return;
+		UpdateUndoList();
 		int rotation= array[tank_x][tank_y]->block->GetRotation();
 		Tile* tank=array[tank_x][tank_y]->block;
 		switch(rotation) {
@@ -135,6 +136,7 @@ public:
 
 	void Save();
 	void Restore();
+	void Undo();
 
 public:
 	Square* array[COLUMNS][ROWS];
@@ -167,6 +169,7 @@ private:
 	void DisplayBlocksHelp();
 
 	void SaveToRestorePoint(RestorePoint * rp);
+	void UpdateUndoList();
 
 private: //data
 
@@ -194,6 +197,8 @@ private: //data
 	unsigned int seconds_ago;
 
 	RestorePoint restorePoint;
+
+	std::vector<RestorePoint> undo_list;
 };
 
 #endif // BOARD_H

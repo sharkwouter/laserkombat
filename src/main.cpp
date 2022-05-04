@@ -42,7 +42,7 @@ void handleInput(std::vector<Input> input) {
                 board->Restore();
                 break;
             case Input::UNDO:
-                SDL_Log("Undo pressed");
+                board->Undo();
                 break;
             case Input::EXIT:
                 running = false; break;
