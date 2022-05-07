@@ -125,6 +125,15 @@ bool Board::LoadLevel() {
 		if (size==COLUMNS*ROWS) size= fread(groundRotationArray, sizeof(int), COLUMNS*ROWS, file);
 		if (size==COLUMNS*ROWS) size= fread(blockTypeArray, sizeof(BlockType), COLUMNS*ROWS, file);
 		if (size==COLUMNS*ROWS) size= fread(blockRotationArray, sizeof(int), COLUMNS*ROWS, file);
+		if (size==COLUMNS*ROWS) {
+			int duplicateObjectArray[COLUMNS][ROWS]; // This array has 1 for each water tile and numbers for object. No idea what for
+			size= fread(duplicateObjectArray, sizeof(int), COLUMNS*ROWS, file);
+		}
+		if (size==COLUMNS*ROWS) {
+			fread(&description, sizeof(description), 1, file);
+			fread(&author, sizeof(author), 1, file);
+			SDL_Log("Description: %s\nAuthor: %s", description, author);
+		}
 		
 		fclose(file);
 		FillArray(false);

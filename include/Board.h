@@ -197,6 +197,9 @@ private: //data
 	int groundRotationArray[COLUMNS][ROWS];
 	int blockRotationArray[COLUMNS][ROWS];
 
+	char description[256];
+	char author[256];
+
 	int number_of_enemies;
 	unsigned int seconds_ago;
 
