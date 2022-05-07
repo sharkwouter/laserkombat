@@ -107,7 +107,6 @@ bool Board::Previous()
 bool Board::LoadLevel() {
 	level++;
 	undo_list.clear();
-	info = true;
 
 	std::string filename = "level";
 	filename += std::string(3 - std::min(3, int(std::to_string(level).length())), '0') + std::to_string(level);
@@ -116,6 +115,7 @@ bool Board::LoadLevel() {
 
 	FILE *file=fopen(path.c_str(), "rb");
 	if (file) {
+		info = true;
 		int size= fread( &origin_x, sizeof(origin_y), 1, file);
 		if (size) size= fread( &origin_y, sizeof(origin_x), 1, file);
 		origin_x%=COLUMNS;
@@ -368,7 +368,7 @@ int Board::AnyKey(Input key) {
 	if (key==Input::HELPBLOCKS&&!help_blocks) {help_blocks=true;help_keys=false; return 0;}
 	if (help_keys) {help_keys=false; return 0;}
 	if (help_blocks) {help_blocks=false; return 0;}
-	if (info &&key!=Input::PREVIOUSLEVEL&&key!=Input::NEXTLEVEL) {info=false; return 0;}
+	if (info&&!finished&&key!=Input::PREVIOUSLEVEL&&key!=Input::NEXTLEVEL) {info=false; return 0;}
 	if (key==Input::EXIT) return 666;
 	if (finished&&key==Input::RESTART) return 666;
 	if (died&&key==Input::RESTART) {Restart(); return 0;}
