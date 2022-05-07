@@ -27,6 +27,7 @@ bool Textures::load() {
         mainKeysSprite = loadImage("maink.bmp");
         mainBlocksSprite = loadImage("mainb.bmp");
         messageSprite = loadImage("message.bmp");
+        levelInfoSprite = loadImage("levelinfo.bmp");
         waterSprite = loadImage("water.bmp");
 
         return
@@ -43,6 +44,7 @@ bool Textures::load() {
             mainKeysSprite != nullptr &&
             mainBlocksSprite != nullptr &&
             messageSprite != nullptr &&
+            levelInfoSprite != nullptr &&
             waterSprite != nullptr;
 
 }

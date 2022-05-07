@@ -107,6 +107,7 @@ bool Board::Previous()
 bool Board::LoadLevel() {
 	level++;
 	undo_list.clear();
+	info = true;
 
 	std::string filename = "level";
 	filename += std::string(3 - std::min(3, int(std::to_string(level).length())), '0') + std::to_string(level);
@@ -291,6 +292,7 @@ void Board::Animate() {
 	}
 	DisplayKeysHelp();
 	DisplayBlocksHelp();
+	DisplayLevelInfo();
 	draw->Flip();
 	AfterAnimate();
 }
@@ -366,6 +368,7 @@ int Board::AnyKey(Input key) {
 	if (key==Input::HELPBLOCKS&&!help_blocks) {help_blocks=true;help_keys=false; return 0;}
 	if (help_keys) {help_keys=false; return 0;}
 	if (help_blocks) {help_blocks=false; return 0;}
+	if (info &&key!=Input::PREVIOUSLEVEL&&key!=Input::NEXTLEVEL) {info=false; return 0;}
 	if (key==Input::EXIT) return 666;
 	if (finished&&key==Input::RESTART) return 666;
 	if (died&&key==Input::RESTART) {Restart(); return 0;}
@@ -410,4 +413,18 @@ void Board::DisplayBlocksHelp()
 {
 	if (!help_blocks) return;
 	draw->BlitOther(textures->getMainBlocksSprite(), 0, 0, 120, 40, 560, 520);
+}
+
+void Board::DisplayLevelInfo()
+{
+	if (help_keys || help_blocks || finished ||!info) return;
+	draw->BlitOther(textures->getLevelInfoSprite(), 0, 0, 240, 220, 320, 160);
+
+	char * level_string = (char*) malloc(sizeof(char));
+	sprintf(level_string, "%03d", level);
+	for(int i=0; i<3; i++) {
+		int number = level_string[i] - 48; // 48 is the ASCII value of 0
+		draw->BlitOther(textures->getLevelInfoSprite(), number*17, 160, 240+171+i*16, 220+18, 16, 23);
+	}
+	free(level_string);
 }

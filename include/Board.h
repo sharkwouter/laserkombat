@@ -28,6 +28,7 @@ public:
 
 	void Restart() {
 		undo_list.clear();
+		info = true;
 		FillArray();
 	}
 
@@ -168,6 +169,7 @@ private:
 
 	void DisplayKeysHelp();
 	void DisplayBlocksHelp();
+	void DisplayLevelInfo();
 
 	void SaveToRestorePoint(RestorePoint * rp);
 	void UpdateUndoList();
@@ -176,6 +178,7 @@ private: //data
 
 	bool help_keys;
 	bool help_blocks;
+	bool info;
 	bool died;
 	bool defeated;
 	bool finished;
