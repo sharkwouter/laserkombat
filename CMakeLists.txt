@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 3.16)
 
 project(laserkombat)
 
-find_package(SDL2 REQUIRED)
+include(FindPkgConfig)
+pkg_search_module(SDL2 REQUIRED sdl2)
+pkg_search_module(SDL2_TTF REQUIRED SDL2_ttf)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -33,9 +35,10 @@ endif()
 include_directories(
     ${PROJECT_SOURCE_DIR}/include
     ${SDL2_INCLUDE_DIRS}
+    ${SDL2_TTF_INCLUDE_DIRS}
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARIES})
 
 if(VITA)
     include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)

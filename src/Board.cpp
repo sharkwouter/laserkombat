@@ -132,7 +132,6 @@ bool Board::LoadLevel() {
 		if (size==COLUMNS*ROWS) {
 			fread(&description, sizeof(description), 1, file);
 			fread(&author, sizeof(author), 1, file);
-			SDL_Log("Description: %s\nAuthor: %s", description, author);
 		}
 		
 		fclose(file);
@@ -429,11 +428,13 @@ void Board::DisplayLevelInfo()
 	if (help_keys || help_blocks || finished ||!info) return;
 	draw->BlitOther(textures->getLevelInfoSprite(), 0, 0, 240, 220, 320, 160);
 
-	char * level_string = (char*) malloc(sizeof(char));
+	char level_string[4];
 	sprintf(level_string, "%03d", level);
 	for(int i=0; i<3; i++) {
-		int number = level_string[i] - 48; // 48 is the ASCII value of 0
+		int number = level_string[i] - '0';
 		draw->BlitOther(textures->getLevelInfoSprite(), number*17, 160, 240+171+i*16, 220+18, 16, 23);
 	}
-	free(level_string);
+
+	draw->BlitText(description, 240+160, 220+59);
+	draw->BlitText(author, 240+160, 220+114);
 }

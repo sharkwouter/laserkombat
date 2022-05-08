@@ -2,6 +2,7 @@
 #define BOARD_H
 
 #include <vector>
+#include <SDL_ttf.h>
 
 #include "constants.h"
 #include "Input.h"

@@ -6,6 +6,8 @@
     #include <hal/video.h>
 #endif
 
+#include <SDL_ttf.h>
+
 Window::Window(const std::string &title, int width, int height) {
     #ifdef NXDK
         XVideoSetMode(width, height, 16, REFRESH_DEFAULT);
@@ -16,16 +18,21 @@ Window::Window(const std::string &title, int width, int height) {
         exit(1);
     }
 
+    if (TTF_Init() == -1){
+        SDL_LogCritical(SDL_LOG_CATEGORY_SYSTEM, "Couldn't init SDL_ttf: %s", TTF_GetError());
+        exit(2);
+    }
+
     window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_RESIZABLE);
     if (this->window == nullptr) {
         SDL_LogCritical(SDL_LOG_CATEGORY_SYSTEM, "Couldn't create window: %s", SDL_GetError());
-        exit(2);
+        exit(3);
     }
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (this->renderer == nullptr) {
         SDL_LogCritical(SDL_LOG_CATEGORY_RENDER, "Couldn't create renderer: %s", SDL_GetError());
-        exit(3);
+        exit(4);
     }
 }
 

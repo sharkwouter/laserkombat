@@ -9,7 +9,21 @@ Textures::Textures(SDL_Renderer * renderer) : renderer(renderer) {
 }
 
 Textures::~Textures() {
+    SDL_DestroyTexture(barSprites);
+    SDL_DestroyTexture(beamSprites);
+    SDL_DestroyTexture(groundSprites);
+    SDL_DestroyTexture(mirrorSprites);
+    SDL_DestroyTexture(nukeSprites);
+    SDL_DestroyTexture(redblockSprites);
+    SDL_DestroyTexture(rustySprites);
+    SDL_DestroyTexture(staticSprites);
+    SDL_DestroyTexture(tankSprites);
 
+    SDL_DestroyTexture(mainKeysSprite);
+    SDL_DestroyTexture(mainBlocksSprite);
+    SDL_DestroyTexture(messageSprite);
+    SDL_DestroyTexture(levelInfoSprite);
+    SDL_DestroyTexture(waterSprite);
 }
 
 bool Textures::load() {
@@ -68,6 +82,7 @@ SDL_Texture * Textures::loadImage(const std::string &filename) {
     if (!texture) {
         SDL_LogCritical(SDL_LOG_CATEGORY_RENDER, "Failed to load texture from surface for image %s: %s", path.c_str(), SDL_GetError());
     }
+    SDL_FreeSurface(surface);
 
     return texture;
 }
