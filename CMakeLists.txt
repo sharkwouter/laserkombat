@@ -24,12 +24,14 @@ else()
     add_executable(${PROJECT_NAME} ${SOURCES})
 endif()
 
+# Link SDL2main for systems which need it
 if(WIN32 OR PSP)
     target_link_libraries(${PROJECT_NAME} PRIVATE SDL2main)
 endif()
 
+# Link statically for systems which need it
 if(MINGW OR VITA)
-    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2-static)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_STATIC_LIBRARIES} ${SDL2_TTF_STATIC_LIBRARIES})
 endif()
 
 include_directories(
