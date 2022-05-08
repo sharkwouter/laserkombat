@@ -29,9 +29,10 @@ if(WIN32 OR PSP)
     target_link_libraries(${PROJECT_NAME} PRIVATE SDL2main)
 endif()
 
-# Link statically for systems which need it
 if(MINGW OR VITA)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_STATIC_LIBRARIES} ${SDL2_TTF_STATIC_LIBRARIES})
+else()
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARIES})
 endif()
 
 include_directories(
@@ -39,8 +40,6 @@ include_directories(
     ${SDL2_INCLUDE_DIRS}
     ${SDL2_TTF_INCLUDE_DIRS}
 )
-
-target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARIES})
 
 if(VITA)
     include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
