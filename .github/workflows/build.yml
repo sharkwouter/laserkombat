@@ -61,35 +61,13 @@ jobs:
             assets
             COPYING
 
-  Vita:
-    runs-on: ubuntu-latest
-    container: gnuton/vitasdk-docker:latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y pkgconf
-      - name: Build
-        run: |
-          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="${VITASDK}/share/vita.toolchain.cmake" .
-          make
-      - name: Publish artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: laserkombat-vita
-          path: |
-            laserkombat.vpk
-            COPYING
-
   Release:
-    needs: [Linux, Windows, Vita]
+    needs: [Linux, Windows]
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        build: [linux, windows, vita]
+        build: [linux, windows]
     steps:
     - name: Extract tag name
       if: startsWith(github.ref, 'refs/tags/')
