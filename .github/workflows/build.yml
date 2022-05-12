@@ -63,14 +63,15 @@ jobs:
 
   Vita:
     runs-on: ubuntu-latest
-    container: gnuton/vitasdk-docker:latest
+    container: vitasdk/buildscripts:latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y pkgconf
+          apk add bash pkgconf curl cmake make
+          vdpm sdl2
+          vdpm sdl2_ttf
       - name: Build
         run: |
           cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="${VITASDK}/share/vita.toolchain.cmake" .
