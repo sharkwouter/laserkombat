@@ -72,6 +72,8 @@ jobs:
           apk add bash pkgconf curl cmake make
           vdpm sdl2
           vdpm sdl2_ttf
+          vdpm freetype
+          vdpm zlib
       - name: Build
         run: |
           cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="${VITASDK}/share/vita.toolchain.cmake" .
