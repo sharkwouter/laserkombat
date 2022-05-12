@@ -414,27 +414,35 @@ void Board::Delay()
 void Board::DisplayKeysHelp()
 {
 	if (!help_keys) return;
-	draw->BlitOther(textures->getMainKeysSprite(), 0, 0, 120, 40, 560, 520);
+	int width, height;
+	SDL_QueryTexture(textures->getMainKeysSprite(), NULL, NULL, &width, &height);
+	draw->BlitOther(textures->getMainKeysSprite(), 0, 0, (WINDOW_WIDTH-width)/2, (WINDOW_HEIGHT-height)/2, width, height);
 }
 
 void Board::DisplayBlocksHelp()
 {
 	if (!help_blocks) return;
-	draw->BlitOther(textures->getMainBlocksSprite(), 0, 0, 120, 40, 560, 520);
+	int width, height;
+	SDL_QueryTexture(textures->getMainBlocksSprite(), NULL, NULL, &width, &height);
+	draw->BlitOther(textures->getMainBlocksSprite(), 0, 0, (WINDOW_WIDTH-width)/2, (WINDOW_HEIGHT-height)/2, width, height);
 }
 
 void Board::DisplayLevelInfo()
 {
 	if (help_keys || help_blocks || finished ||!info) return;
-	draw->BlitOther(textures->getLevelInfoSprite(), 0, 0, 240, 220, 320, 160);
+	int width = 320;
+	int height = 160;
+	int x =(WINDOW_WIDTH-width)/2;
+	int y =(WINDOW_HEIGHT-height)/2;
+	draw->BlitOther(textures->getLevelInfoSprite(), 0, 0, x, y, width, height);
 
 	char level_string[4];
 	sprintf(level_string, "%03d", level);
 	for(int i=0; i<3; i++) {
 		int number = level_string[i] - '0';
-		draw->BlitOther(textures->getLevelInfoSprite(), number*17, 160, 240+171+i*16, 220+18, 16, 23);
+		draw->BlitOther(textures->getLevelInfoSprite(), number*17, 160, x+171+i*16, y+18, 16, 23);
 	}
 
-	draw->BlitText(description, 240+160, 220+59);
-	draw->BlitText(author, 240+160, 220+114);
+	draw->BlitText(description, x+160, y+59);
+	draw->BlitText(author, x+160, y+114);
 }

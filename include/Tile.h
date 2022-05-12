@@ -512,7 +512,7 @@ public:
 		chop=!chop;
 		if (chop) {
 			static_rotation++;
-			static_rotation%=40;
+			static_rotation%=IMAGE_WIDTH;
 		}
 	}
 

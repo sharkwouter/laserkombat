@@ -1,20 +1,17 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#if defined(NXDK)
-    inline constexpr int WINDOW_WIDTH = 640;
-    inline constexpr int WINDOW_HEIGHT = 480;
-#elif defined(__vita__)
-    inline constexpr int WINDOW_WIDTH = 960;
-    inline constexpr int WINDOW_HEIGHT = 544;
+#if defined(NXDK) || defined(__vita__)
+    inline constexpr int IMAGE_WIDTH = 32;
 #else
-    inline constexpr int WINDOW_WIDTH = 800;
-    inline constexpr int WINDOW_HEIGHT = 600;
+    inline constexpr int IMAGE_WIDTH = 40;
 #endif
 
 inline constexpr int COLUMNS = 20;
 inline constexpr int ROWS = 15;
-inline constexpr int IMAGE_WIDTH = 40;
+
+inline constexpr int WINDOW_WIDTH = COLUMNS*IMAGE_WIDTH;
+inline constexpr int WINDOW_HEIGHT = ROWS*IMAGE_WIDTH;
 
 inline constexpr int BEAM_PERSISTANCE = 4;		//beam lasts for this many 0.025 second intervals
 
