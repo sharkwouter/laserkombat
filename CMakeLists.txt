@@ -15,21 +15,25 @@ file(GLOB SOURCES
 )
 
 if(WIN32)
-    add_executable(${PROJECT_NAME} WIN32 ${SOURCES})
-    if(MINGW)
-        set(CMAKE_CXX_FLAGS "-static ${CMAKE_CXX_FLAGS}")
-        target_link_libraries(${PROJECT_NAME} PRIVATE mingw32)
-    endif()
+    add_executable(${PROJECT_NAME} WIN32 ${SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/platform/windows/appicon.rc)
 else()
     add_executable(${PROJECT_NAME} ${SOURCES})
 endif()
 
 # Link SDL2main for systems which need it
-if(WIN32 OR PSP)
+if(WIN32)
     target_link_libraries(${PROJECT_NAME} PRIVATE SDL2main)
 endif()
 
-if(MINGW OR VITA)
+# Set the build static option
+SET(BUILD_STATIC_DEFAULT OFF)
+if(WIN32 OR VITA)
+    SET(BUILD_STATIC_DEFAULT ON)
+endif()
+option(BUILD_STATIC "Build a static binary" ${BUILD_STATIC_DEFAULT})
+
+if(BUILD_STATIC)
+    set(CMAKE_CXX_FLAGS "-static ${CMAKE_CXX_FLAGS}")
     target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_STATIC_LIBRARIES} ${SDL2_TTF_STATIC_LIBRARIES})
 else()
     target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARIES})
