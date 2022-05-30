@@ -289,7 +289,6 @@ void Board::Animate() {
 	Delay();
 	SetGroundTypes(); //Make ground tiles all line up nice
 
-	if (!array) return;
 	for (int i=0; i<ROWS; i++) {
 		for (int j=0; j<COLUMNS; j++) {
 			if (!array[j][i]) continue;
