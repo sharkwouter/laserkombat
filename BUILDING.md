@@ -61,6 +61,7 @@ Then the game can be started through `laserkombat.exe`. It should be in `C:\msys
 
 Install the following packages through HaikuDepot or `pkgman install` in Terminal:
 
+* `cmake`
 * `gcc`
 * `libsdl2`
 * `libsdl2_devel`
