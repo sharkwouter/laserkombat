@@ -294,11 +294,11 @@ protected: //functions
 
 			for (int i=0; i<4; i++) {
 				draw->BlitOther(textures->getGroundSprites(),
-					corners[i]*IMAGE_WIDTH + ((i==0||i==3)?0:(IMAGE_WIDTH/2)),
-					3*IMAGE_WIDTH + ((i<2)?0:(IMAGE_WIDTH/2)),
-					x_pos*IMAGE_WIDTH + ((i==0||i==3)?0:(IMAGE_WIDTH/2)),
-					y_pos*IMAGE_WIDTH + ((i<2)?0:(IMAGE_WIDTH/2)),
-					IMAGE_WIDTH/2, IMAGE_WIDTH/2);
+					corners[i]*BLOCK_SIZE + ((i==0||i==3)?0:(BLOCK_SIZE/2)),
+					3*BLOCK_SIZE + ((i<2)?0:(BLOCK_SIZE/2)),
+					x_pos*BLOCK_SIZE + ((i==0||i==3)?0:(BLOCK_SIZE/2)),
+					y_pos*BLOCK_SIZE + ((i<2)?0:(BLOCK_SIZE/2)),
+					BLOCK_SIZE/2, BLOCK_SIZE/2);
 			}
 		}
 	}
@@ -512,7 +512,7 @@ public:
 		chop=!chop;
 		if (chop) {
 			static_rotation++;
-			static_rotation%=40;
+			static_rotation%=BLOCK_SIZE;
 		}
 	}
 
@@ -522,7 +522,7 @@ protected: //functions
 			GroundTile::Display();
 			return;
 		}
-		draw->BlitSquare(textures->getWaterSprite(), static_rotation%10 ,static_rotation/10, x_pos, y_pos);
+		draw->BlitWater(textures->getWaterSprite(), static_rotation, x_pos, y_pos);
 	}
 protected: //members
 

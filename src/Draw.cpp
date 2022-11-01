@@ -6,7 +6,7 @@
 Draw::Draw(SDL_Renderer * renderer) : renderer(renderer) {
     animation = 0;
     renderTarget = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
-                                 SDL_TEXTUREACCESS_TARGET, IMAGE_WIDTH*COLUMNS, IMAGE_WIDTH*ROWS);
+                                 SDL_TEXTUREACCESS_TARGET, BLOCK_SIZE*COLUMNS, BLOCK_SIZE*ROWS);
     font = TTF_OpenFont(getAssetPath("fonts", "FreeSans.ttf").c_str(), 14);
 }
 
@@ -16,13 +16,43 @@ Draw::~Draw() {
 }
 
 void Draw::BlitSquare(SDL_Texture * texture, int x, int y, int dx, int dy) {
-    x *= IMAGE_WIDTH;
-    y *= IMAGE_WIDTH;
-    dx *= IMAGE_WIDTH;
-    dy *= IMAGE_WIDTH;
-    SDL_Rect sr={x,y,IMAGE_WIDTH, IMAGE_WIDTH};
-    SDL_Rect dr={dx,dy,IMAGE_WIDTH, IMAGE_WIDTH};
+    x *= BLOCK_SIZE;
+    y *= BLOCK_SIZE;
+    dx *= BLOCK_SIZE;
+    dy *= BLOCK_SIZE;
+    SDL_Rect sr={x,y,BLOCK_SIZE, BLOCK_SIZE};
+    SDL_Rect dr={dx,dy,BLOCK_SIZE, BLOCK_SIZE};
     SDL_RenderCopy(renderer, texture, &sr, &dr);
+}
+
+void Draw::BlitWater(SDL_Texture * texture, int rotation, int dx, int dy) {
+    SDL_Rect sr, dr;
+    dx *= BLOCK_SIZE;
+    dy *= BLOCK_SIZE;
+    for (int i = 0; i < 4; i++){
+        switch (i)
+        {
+        case 0:
+            sr = {0,0,rotation, rotation};
+            dr = {dx, dy, rotation, rotation};
+            break;
+        case 1:
+            sr = {rotation, 0,BLOCK_SIZE-rotation, rotation};
+            dr = {dx+rotation, dy, BLOCK_SIZE-rotation, rotation};
+            break;
+        case 2:
+            sr = {0,rotation,rotation, BLOCK_SIZE-rotation};
+            dr = {dx, dy+rotation, rotation, BLOCK_SIZE-rotation};
+            break;
+        case 3:
+            sr = {rotation,rotation,BLOCK_SIZE-rotation, BLOCK_SIZE-rotation};
+            dr = {dx+rotation, dy+rotation, BLOCK_SIZE-rotation, BLOCK_SIZE-rotation};
+            break;
+        default:
+            break;
+        }
+        SDL_RenderCopy(renderer, texture, &sr, &dr);
+    }
 }
 
 void Draw::BlitOther(SDL_Texture * texture, int x, int y, int dx, int dy, int w, int h) {
@@ -32,9 +62,9 @@ void Draw::BlitOther(SDL_Texture * texture, int x, int y, int dx, int dy, int w,
 }
 
 void Draw::BlackSquare(int x, int y) {
-    x *= IMAGE_WIDTH;
-    y *= IMAGE_WIDTH;
-    SDL_Rect r={x,y,IMAGE_WIDTH,IMAGE_WIDTH};
+    x *= BLOCK_SIZE;
+    y *= BLOCK_SIZE;
+    SDL_Rect r={x,y,BLOCK_SIZE,BLOCK_SIZE};
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderFillRect(renderer, &r);
 }
