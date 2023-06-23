@@ -12,14 +12,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y cmake libsdl2-dev libsdl2-ttf-dev
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Build
         run: |
           cmake -DCMAKE_BUILD_TYPE=Release .
           make
           strip --strip-unneeded laserkombat
       - name: Publish artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: laserkombat-linux
           path: |
@@ -46,7 +46,7 @@ jobs:
             mingw-w64-x86_64-SDL2_ttf
           update: true
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Build
         run: |
           cmake -DCMAKE_BUILD_TYPE=Release -G "MinGW Makefiles" .
@@ -69,7 +69,7 @@ jobs:
       matrix:
         build: [linux, windows]
     steps:
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
     - name: Zip artifacts
       run: |
         zip -r laserkombat-${{matrix.build}}.zip laserkombat-${{matrix.build}}
