@@ -12,14 +12,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y cmake libsdl2-dev libsdl2-ttf-dev
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
       - name: Build
         run: |
           cmake -DCMAKE_BUILD_TYPE=Release .
           make
           strip --strip-unneeded laserkombat
       - name: Publish artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v7
         with:
           name: laserkombat-linux
           path: |
@@ -46,14 +46,14 @@ jobs:
             mingw-w64-x86_64-SDL2_ttf
           update: true
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
       - name: Build
         run: |
           cmake -DCMAKE_BUILD_TYPE=Release -G "MinGW Makefiles" .
           cmake --build .
           strip --strip-unneeded laserkombat.exe
       - name: Publish artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v7
         with:
           name: laserkombat-windows
           path: |
@@ -69,12 +69,12 @@ jobs:
       matrix:
         build: [linux, windows]
     steps:
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v8
     - name: Zip artifacts
       run: |
         zip -r laserkombat-${{matrix.build}}.zip laserkombat-${{matrix.build}}
     - name: Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v3
       with:
         files: laserkombat-${{matrix.build}}.zip
         tag_name: ${{ github.ref_name }}
