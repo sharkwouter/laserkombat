@@ -10,7 +10,6 @@ Textures::Textures(SDL_Renderer * renderer) : renderer(renderer) {
 
 Textures::~Textures() {
     SDL_DestroyTexture(barSprites);
-    SDL_DestroyTexture(beamSprites);
     SDL_DestroyTexture(groundSprites);
     SDL_DestroyTexture(mirrorSprites);
     SDL_DestroyTexture(nukeSprites);
@@ -28,7 +27,6 @@ Textures::~Textures() {
 
 bool Textures::load() {
         barSprites = loadImage("bar.bmp");
-        beamSprites = loadImage("beam.bmp");
         groundSprites = loadImage("ground.bmp");
         mirrorSprites = loadImage("mirror.bmp");
         nukeSprites= loadImage("nuke.bmp");
@@ -46,7 +44,6 @@ bool Textures::load() {
 
         return
             barSprites != nullptr &&
-            beamSprites != nullptr &&
             groundSprites != nullptr &&
             mirrorSprites != nullptr &&
             nukeSprites != nullptr &&

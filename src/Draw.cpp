@@ -69,6 +69,42 @@ void Draw::BlackSquare(int x, int y) {
     SDL_RenderFillRect(renderer, &r);
 }
 
+void Draw::BlitBeam(int rotation, int x, int y) {
+    x *= BLOCK_SIZE;
+    y *= BLOCK_SIZE;
+    SDL_Rect r={0, 0, 0, 0};
+    switch(rotation) {
+        case 0:
+            r.x = x;
+            r.y = y + (BLOCK_SIZE / 2) - 1;
+            r.w = BLOCK_SIZE / 2 ;
+            r.h = 2;
+            break;
+        case 1:
+            r.x = x + (BLOCK_SIZE / 2) - 1;
+            r.y = y;
+            r.w = 2;
+            r.h = BLOCK_SIZE / 2;
+            break;
+        case 2:
+            r.x = x + BLOCK_SIZE / 2;
+            r.y = y + (BLOCK_SIZE / 2) - 1;
+            r.w = BLOCK_SIZE / 2;
+            r.h = 2;
+            break;
+        case 3:
+            r.x = x + (BLOCK_SIZE / 2) - 1;
+            r.y = y + (BLOCK_SIZE / 2);
+            r.w = 2;
+            r.h = BLOCK_SIZE;
+            break;
+        default:
+            return;
+    }
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_RenderFillRect(renderer, &r);
+}
+
 void Draw::BlitText(char * text, int x, int y) {
     SDL_Surface * surface = TTF_RenderText_Solid(font, text, {0, 255, 0, 255});
     if (surface == NULL) {

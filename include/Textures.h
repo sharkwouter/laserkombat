@@ -14,7 +14,6 @@ public:
     bool load();
 
     SDL_Texture * getBarSprites() { return barSprites; };
-    SDL_Texture * getBeamSprites() { return beamSprites; };
     SDL_Texture * getGroundSprites() { return groundSprites; };
     SDL_Texture * getMirrorSprites() { return mirrorSprites; };
     SDL_Texture * getNukeSprites() { return nukeSprites; };
@@ -35,7 +34,6 @@ private:
     SDL_Renderer * renderer;
 
     SDL_Texture * barSprites;
-    SDL_Texture * beamSprites;
     SDL_Texture * groundSprites;
     SDL_Texture * mirrorSprites;
     SDL_Texture * nukeSprites;

@@ -192,13 +192,13 @@ protected: //functions
 
 	void DisplayBeam() {
 		if (HadFiredLeft||WasHitLeft)
-			draw->BlitSquare(textures->getBeamSprites(), 0 ,1, x_pos, y_pos);
+			draw->BlitBeam(0, x_pos, y_pos);
 		if (HadFiredUp||WasHitTop)
-			draw->BlitSquare(textures->getBeamSprites(), 1 ,1, x_pos, y_pos);
+			draw->BlitBeam(1, x_pos, y_pos);
 		if (HadFiredRight||WasHitRight)
-			draw->BlitSquare(textures->getBeamSprites(), 2 ,1, x_pos, y_pos);
+			draw->BlitBeam(2, x_pos, y_pos);
 		if (HadFiredDown||WasHitBottom)
-			draw->BlitSquare(textures->getBeamSprites(), 3 ,1, x_pos, y_pos);
+			draw->BlitBeam(3, x_pos, y_pos);
 	}
 
 	virtual bool MoveUp();
