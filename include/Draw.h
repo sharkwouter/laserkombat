@@ -25,7 +25,9 @@ public:
 
 private:
     SDL_Renderer * renderer;
-    TTF_Font * font;
+    TTF_Font * font_custom;
+    TTF_Font * font_text;
+    TTF_Font * font_title;
 };
 
 #endif // DRAW_H

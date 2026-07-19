@@ -193,7 +193,7 @@ void Board::YouDied() {
 	for (int y=ROWS/2-2, yy=0; y<ROWS/2+1; y++, yy++) {
 		for (int x=COLUMNS/2-3, xx=0; x<COLUMNS/2+3; x++, xx++) {
 			Tile* temp=array[x][y]->over;
-			array[x][y]->over=new Message(x,y,draw,textures,sound,this,yy*14+xx);
+			array[x][y]->over=new MessageDied(x,y,draw,textures,sound,this,yy*14+xx);
 			if (temp) array[x][y]->ground->AddDead(temp);
 		}
 	}
@@ -208,7 +208,7 @@ void Board::YouDefeated() {
 	for (int y=ROWS/2-2, yy=0; y<ROWS/2+1; y++, yy++) {
 		for (int x=COLUMNS/2-4, xx=6; x<COLUMNS/2+4; x++, xx++) {
 			Tile* temp=array[x][y]->over;
-			array[x][y]->over=new Message(x,y,draw,textures,sound,this, yy*14+xx);
+			array[x][y]->over=new MessageDefeated(x,y,draw,textures,sound,this, yy*14+xx);
 			if (temp) array[x][y]->ground->AddDead(temp);
 		}
 	}
@@ -219,7 +219,7 @@ void Board::Credits() {
 	for (int y=ROWS/2-5, yy=3; y<ROWS/2+6; y++, yy++) {
 		for (int x=COLUMNS/2-7, xx=0; x<COLUMNS/2+7; x++, xx++) {
 			Tile* temp=array[x][y]->over;
-			array[x][y]->over=new Message(x,y,draw,textures,sound,this,yy*14+xx);
+			array[x][y]->over=new MessageCredits(x,y,draw,textures,sound,this,yy*14+xx);
 			if (temp) array[x][y]->ground->AddDead(temp);
 		}
 	}

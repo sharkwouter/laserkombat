@@ -1045,10 +1045,60 @@ private: //members
 
 };
 
-class Message : public Static
+class MessageDied : public Static
 {
 public:
-	Message(int x, int y, Draw * draw, Textures * textures, Sound * sound, Board * board, int r=0) : Static(x,y,draw,textures,sound,board,r) {
+	MessageDied(int x, int y, Draw * draw, Textures * textures, Sound * sound, Board * board, int r=0) : Static(x,y,draw,textures,sound,board,r) {
+
+	}
+	virtual BlockType GetBlockType() {
+		return BlockType::NONE;
+	}
+
+protected: //functions
+	virtual void Display() {
+		// draw->BlitSquare(textures->getMessageSprite(), rotation%14 ,rotation/14, x_pos, y_pos);
+		const char * messages[] = {
+			"Press Enter to restart",
+			"U to undo move"
+		};
+		draw->BlitMessage("You Died", messages, 2);
+	}
+
+protected: //members
+private: // functions
+private: //members
+
+};
+
+class MessageDefeated : public Static
+{
+public:
+	MessageDefeated(int x, int y, Draw * draw, Textures * textures, Sound * sound, Board * board, int r=0) : Static(x,y,draw,textures,sound,board,r) {
+
+	}
+	virtual BlockType GetBlockType() {
+		return BlockType::NONE;
+	}
+
+protected: //functions
+	virtual void Display() {
+		const char * messages[] = {
+			"Press Enter to continue",
+		};
+		draw->BlitMessage("You Defeated Your Enemies!", messages, 1);
+	}
+
+protected: //members
+private: // functions
+private: //members
+
+};
+
+class MessageCredits : public Static
+{
+public:
+	MessageCredits(int x, int y, Draw * draw, Textures * textures, Sound * sound, Board * board, int r=0) : Static(x,y,draw,textures,sound,board,r) {
 		SetRotation(r);
 
 	}
@@ -1062,12 +1112,7 @@ public:
 
 protected: //functions
 	virtual void Display() {
-		// draw->BlitSquare(textures->getMessageSprite(), rotation%14 ,rotation/14, x_pos, y_pos);
-		const char * messages[] = {
-			"Press Enter to restart",
-			"U to undo move"
-		};
-		draw->BlitMessage("You Died", messages, 2);
+		draw->BlitSquare(textures->getMessageSprite(), rotation%14 ,rotation/14, x_pos, y_pos);
 	}
 
 protected: //members

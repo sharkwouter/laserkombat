@@ -5,11 +5,15 @@
 
 Draw::Draw(SDL_Renderer * renderer) : renderer(renderer) {
     animation = 0;
-    font = TTF_OpenFont(getAssetPath("fonts", "FreeSans.ttf").c_str(), 14);
+    font_custom = TTF_OpenFont(getAssetPath("fonts", "FreeSans.ttf").c_str(), 14);
+    font_text = TTF_OpenFont(getAssetPath("fonts", "FreeSerifItalic.ttf").c_str(), 24);
+    font_title = TTF_OpenFont(getAssetPath("fonts", "FreeSerifItalic.ttf").c_str(), 28);
 }
 
 Draw::~Draw() {
-    TTF_CloseFont(font);
+    TTF_CloseFont(font_custom);
+    TTF_CloseFont(font_text);
+    TTF_CloseFont(font_title);
 }
 
 void Draw::BlitSquare(SDL_Texture * texture, int x, int y, int dx, int dy) {
@@ -93,7 +97,7 @@ void Draw::BlitBeam(int rotation, int x, int y) {
 void Draw::BlitMessage(const char *title, const char **lines, int line_count) {
     int widest_line = 0;
     int text_height = 0;
-    SDL_Surface * title_surface = TTF_RenderText_Solid(font, title, {0, 0, 0, 255});
+    SDL_Surface * title_surface = TTF_RenderText_Solid(font_title, title, {0, 0, 0, 255});
     if (title_surface == NULL) {
         SDL_Log("Couldn't create surface for text %s: %s", title, TTF_GetError());
         return;
@@ -112,7 +116,7 @@ void Draw::BlitMessage(const char *title, const char **lines, int line_count) {
     // Draw each line of text
     SDL_Texture ** line_textures = (SDL_Texture **) SDL_calloc(line_count, sizeof(SDL_Texture *));
     for (int i = 0; i < line_count; i++) {
-        SDL_Surface * surface = TTF_RenderText_Solid(font, lines[i], {0, 0, 0, 255});
+        SDL_Surface * surface = TTF_RenderText_Solid(font_text, lines[i], {0, 0, 0, 255});
         if (surface == NULL) {
             SDL_Log("Couldn't create surface for line %s: %s", lines[i], TTF_GetError());
             return;
@@ -208,7 +212,7 @@ void Draw::BlitMessageBox(SDL_Rect *box) {
 }
 
 void Draw::BlitText(char * text, int x, int y) {
-    SDL_Surface * surface = TTF_RenderText_Solid(font, text, {0, 255, 0, 255});
+    SDL_Surface * surface = TTF_RenderText_Solid(font_custom, text, {0, 255, 0, 255});
     if (surface == NULL) {
         SDL_Log("Couldn't create surface for text %s: %s", text, TTF_GetError());
         return;
