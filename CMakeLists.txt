@@ -27,7 +27,7 @@ endif()
 
 # Set the build static option
 SET(BUILD_STATIC_DEFAULT OFF)
-if(WIN32 OR VITA)
+if(WIN32 OR VITA OR PSP)
     SET(BUILD_STATIC_DEFAULT ON)
 endif()
 option(BUILD_STATIC "Build a static binary" ${BUILD_STATIC_DEFAULT})
@@ -57,6 +57,28 @@ if(VITA)
         FILE COPYING COPYING
         FILE assets assets
     )
+elseif(PSP)
+    create_pbp_file(
+        TARGET ${PROJECT_NAME}
+        ICON_PATH NULL
+        BACKGROUND_PATH NULL
+        PREVIEW_PATH NULL
+        TITLE "Laser Kombat"
+        VERSION 01.00
+    )
+    file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/assets)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/assets/fonts ${CMAKE_CURRENT_BINARY_DIR}/assets/fonts)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/assets/images16x16 ${CMAKE_CURRENT_BINARY_DIR}/assets/images)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/assets/levels ${CMAKE_CURRENT_BINARY_DIR}/assets/levels)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/assets/sounds ${CMAKE_CURRENT_BINARY_DIR}/assets/sounds)
 else()
     file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
 endif()
