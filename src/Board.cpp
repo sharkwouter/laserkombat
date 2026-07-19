@@ -293,7 +293,17 @@ void Board::Animate() {
 		for (int j=0; j<COLUMNS; j++) {
 			if (!array[j][i]) continue;
 			if (array[j][i]->ground) {array[j][i]->ground->Update();};
+		}
+	}
+	for (int i=0; i<ROWS; i++) {
+		for (int j=0; j<COLUMNS; j++) {
+			if (!array[j][i]) continue;
 			if (array[j][i]->block) {array[j][i]->block->Update();};
+		}
+	}
+	for (int i=0; i<ROWS; i++) {
+		for (int j=0; j<COLUMNS; j++) {
+			if (!array[j][i]) continue;
 			if (array[j][i]->over) {array[j][i]->over->Update();};
 		}
 	}
