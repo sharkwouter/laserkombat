@@ -1063,7 +1063,7 @@ public:
 protected: //functions
 	virtual void Display() {
 		// draw->BlitSquare(textures->getMessageSprite(), rotation%14 ,rotation/14, x_pos, y_pos);
-		char * messages[] = {
+		const char * messages[] = {
 			"Press Enter to restart",
 			"U to undo move"
 		};

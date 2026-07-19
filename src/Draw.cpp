@@ -90,7 +90,7 @@ void Draw::BlitBeam(int rotation, int x, int y) {
     SDL_RenderFillRect(renderer, &r);
 }
 
-void Draw::BlitMessage(const char *title, char **lines, size_t line_count) {
+void Draw::BlitMessage(const char *title, const char **lines, int line_count) {
     int widest_line = 0;
     int text_height = 0;
     SDL_Surface * title_surface = TTF_RenderText_Solid(font, title, {0, 0, 0, 255});
@@ -130,67 +130,18 @@ void Draw::BlitMessage(const char *title, char **lines, size_t line_count) {
     }
 
     // Draw outside box
-    SDL_Rect box = {(COLUMNS * BLOCK_SIZE / 2) - ((widest_line + BLOCK_SIZE) / 2), (ROWS * BLOCK_SIZE / 2) - ((text_height + BLOCK_SIZE) / 2), widest_line + BLOCK_SIZE, text_height + BLOCK_SIZE};
-    box.x = 0;
-    box.y = 0;
-    SDL_SetRenderDrawColor(renderer, 87, 247, 249, 255);
+    SDL_Rect box = {(COLUMNS * BLOCK_SIZE / 2) - ((widest_line + BLOCK_SIZE / 2) / 2), (ROWS * BLOCK_SIZE / 2) - ((text_height + BLOCK_SIZE / 2) / 2), widest_line + BLOCK_SIZE / 2, text_height + BLOCK_SIZE / 2};
+    BlitMessageBox(&box);
 
-    // Top 2 lines
-    SDL_RenderDrawLine(renderer, box.x, box.y, box.x + box.w - 1, box.y);
-    SDL_RenderDrawLine(renderer, box.x, box.y + 1, box.x + box.w - 2, box.y + 1);
-
-    // Left 2 lines
-    SDL_RenderDrawLine(renderer, box.x, box.y + 2, box.x, box.y + box.h - 1);
-    SDL_RenderDrawLine(renderer, box.x + 1, box.y + 2, box.x + 1, box.y + box.h - 2);
-
-    SDL_SetRenderDrawColor(renderer, 2, 59, 60, 255);
-    // Bottom 2 lines
-    SDL_RenderDrawLine(renderer, box.x + 1, box.y + box.h - 1, box.x + box.w, box.y + box.h - 1);
-    SDL_RenderDrawLine(renderer, box.x, box.y + box.h, box.x + box.w, box.y + box.h);
-
-    // Right 2 lines
-    SDL_RenderDrawLine(renderer, box.x + box.w - 1, box.y + 1, box.x + box.w - 1, box.y + box.h - 2);
-    SDL_RenderDrawLine(renderer, box.x + box.w, box.y, box.x + box.w, box.y + box.h - 2);
-
-    SDL_SetRenderDrawColor(renderer, 3, 103, 107, 255);
-    for (int i = 0; i < 4; i++){
-        SDL_Rect current_line_box = {
-            box.x + 2 + i,
-            box.y + 2 + i,
-            box.w - 3 - (i * 2),
-            box.h - 3 - (i * 2),
-        };
-        SDL_RenderDrawRect(renderer, &current_line_box);
-    }
-
-    // Render inside lines
-    SDL_SetRenderDrawColor(renderer, 2, 59, 60, 255);
-    SDL_RenderDrawLine(renderer, box.x + 6, box.y + 6, box.x + box.w - 6, box.y + 6);
-    SDL_RenderDrawLine(renderer, box.x + 6, box.y + 7, box.x + 6, box.y + box.h - 6);
-
-    SDL_SetRenderDrawColor(renderer, 87, 247, 249, 255);
-    SDL_RenderDrawLine(renderer, box.x + 7, box.y + box.h - 6, box.x + box.w - 6, box.y + box.h - 6);
-    SDL_RenderDrawLine(renderer, box.x + box.w - 6, box.y + 7, box.x + box.w - 6, box.y + box.h - 7);
-
-    // Render background
-    SDL_SetRenderDrawColor(renderer, 3, 103, 107, 255);
-    SDL_Rect background_rect = {
-        box.x + 7,
-        box.y + 7,
-        box.w - 13,
-        box.h - 13
-    };
-    SDL_RenderFillRect(renderer, &background_rect);
-    
     // Draw text
-    SDL_Rect title_rect = {background_rect.w / 2, BLOCK_SIZE / 2, 0, 0};
+    SDL_Rect title_rect = {box.x  + box.w / 2, box.y + BLOCK_SIZE / 4, 0, 0};
     SDL_QueryTexture(title_texture, NULL, NULL, &title_rect.w, &title_rect.h);
     title_rect.x -= title_rect.w / 2;
     SDL_RenderCopy(renderer, title_texture, NULL, &title_rect);
 
     int current_text_y = title_rect.y + title_rect.h;
     for (int i = 0; i < line_count; i++) {
-        SDL_Rect line_rect = {background_rect.w / 2, current_text_y, 0, 0};
+        SDL_Rect line_rect = {box.x + box.w / 2, current_text_y, 0, 0};
         SDL_QueryTexture(line_textures[i], NULL, NULL, &line_rect.w, &line_rect.h);
         line_rect.x -= line_rect.w / 2;
         current_text_y += line_rect.h;
@@ -203,6 +154,57 @@ void Draw::BlitMessage(const char *title, char **lines, size_t line_count) {
         SDL_DestroyTexture(line_textures[i]);
     }
     free(line_textures);
+}
+
+void Draw::BlitMessageBox(SDL_Rect *box) {
+    SDL_SetRenderDrawColor(renderer, 87, 247, 249, 255);
+
+    // Top 2 lines
+    SDL_RenderDrawLine(renderer, box->x, box->y, box->x + box->w - 1, box->y);
+    SDL_RenderDrawLine(renderer, box->x, box->y + 1, box->x + box->w - 2, box->y + 1);
+
+    // Left 2 lines
+    SDL_RenderDrawLine(renderer, box->x, box->y + 2, box->x, box->y + box->h - 1);
+    SDL_RenderDrawLine(renderer, box->x + 1, box->y + 2, box->x + 1, box->y + box->h - 2);
+
+    SDL_SetRenderDrawColor(renderer, 2, 59, 60, 255);
+    // Bottom 2 lines
+    SDL_RenderDrawLine(renderer, box->x + 1, box->y + box->h - 1, box->x + box->w, box->y + box->h - 1);
+    SDL_RenderDrawLine(renderer, box->x, box->y + box->h, box->x + box->w, box->y + box->h);
+
+    // Right 2 lines
+    SDL_RenderDrawLine(renderer, box->x + box->w - 1, box->y + 1, box->x + box->w - 1, box->y + box->h - 2);
+    SDL_RenderDrawLine(renderer, box->x + box->w, box->y, box->x + box->w, box->y + box->h - 2);
+
+    SDL_SetRenderDrawColor(renderer, 3, 103, 107, 255);
+    for (int i = 0; i < 4; i++){
+        SDL_Rect current_line_box = {
+            box->x + 2 + i,
+            box->y + 2 + i,
+            box->w - 3 - (i * 2),
+            box->h - 3 - (i * 2),
+        };
+        SDL_RenderDrawRect(renderer, &current_line_box);
+    }
+
+    // Render inside lines
+    SDL_SetRenderDrawColor(renderer, 2, 59, 60, 255);
+    SDL_RenderDrawLine(renderer, box->x + 6, box->y + 6, box->x + box->w - 6, box->y + 6);
+    SDL_RenderDrawLine(renderer, box->x + 6, box->y + 7, box->x + 6, box->y + box->h - 6);
+
+    SDL_SetRenderDrawColor(renderer, 87, 247, 249, 255);
+    SDL_RenderDrawLine(renderer, box->x + 7, box->y + box->h - 6, box->x + box->w - 6, box->y + box->h - 6);
+    SDL_RenderDrawLine(renderer, box->x + box->w - 6, box->y + 7, box->x + box->w - 6, box->y + box->h - 7);
+
+    // Render background
+    SDL_SetRenderDrawColor(renderer, 3, 103, 107, 255);
+    SDL_Rect background_rect = {
+        box->x + 7,
+        box->y + 7,
+        box->w - 13,
+        box->h - 13
+    };
+    SDL_RenderFillRect(renderer, &background_rect);
 }
 
 void Draw::BlitText(char * text, int x, int y) {
