@@ -1112,7 +1112,16 @@ public:
 
 protected: //functions
 	virtual void Display() {
-		draw->BlitSquare(textures->getMessageSprite(), rotation%14 ,rotation/14, x_pos, y_pos);
+		if (LARGE_TEXTURES_SUPPORTED) {
+			draw->BlitSquare(textures->getMessageSprite(), rotation%14 ,rotation/14, x_pos, y_pos);
+		} else {
+			const char * messages[] = {
+				"David Dewey",
+				"Ash Gilmore",
+				"Wouter Wijsman"
+			};
+			draw->BlitMessage("Credits", messages, 3);
+		}
 	}
 
 protected: //members

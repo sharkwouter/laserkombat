@@ -177,7 +177,7 @@ private:
 
 private: //data
 
-	bool help_keys;
+	bool help_keys = LARGE_TEXTURES_SUPPORTED;
 	bool help_blocks;
 	bool info;
 	bool died;

@@ -4,7 +4,7 @@
 
 #include "utils.h"
 
-Board::Board(Draw * draw, Textures * textures, Sound * sound) : help_keys(true), help_blocks(false), rows(ROWS), cols(COLUMNS), tank_x(0), tank_y(0), level(0), draw(draw), textures(textures), sound(sound) {
+Board::Board(Draw * draw, Textures * textures, Sound * sound) : help_blocks(false), rows(ROWS), cols(COLUMNS), tank_x(0), tank_y(0), level(0), draw(draw), textures(textures), sound(sound) {
 	CreateArray();
 	LoadLevel();	
 }
@@ -381,8 +381,8 @@ void Board::FillDefault()
 }
 
 int Board::AnyKey(Input key) {
-	if (key==Input::HELPKEYS&&!help_keys) {help_keys=true;help_blocks=false; return 0;}
-	if (key==Input::HELPBLOCKS&&!help_blocks) {help_blocks=true;help_keys=false; return 0;}
+	if (key==Input::HELPKEYS&&!help_keys&&LARGE_TEXTURES_SUPPORTED) {help_keys=true;help_blocks=false; return 0;}
+	if (key==Input::HELPBLOCKS&&!help_blocks&&LARGE_TEXTURES_SUPPORTED) {help_blocks=true;help_keys=false; return 0;}
 	if (help_keys) {help_keys=false; return 0;}
 	if (help_blocks) {help_blocks=false; return 0;}
 	if (info&&!finished&&key!=Input::PREVIOUSLEVEL&&key!=Input::NEXTLEVEL) {info=false; return 0;}

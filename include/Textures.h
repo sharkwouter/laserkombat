@@ -26,7 +26,6 @@ public:
     SDL_Texture * getMainKeysSprite() { return mainKeysSprite; };
     SDL_Texture * getMainBlocksSprite() { return mainBlocksSprite; };
     SDL_Texture * getMessageSprite() { return messageSprite; };
-    SDL_Texture * getLevelInfoSprite() { return levelInfoSprite; };
     SDL_Texture * getWaterSprite() { return waterSprite; };
 
 private:
@@ -46,7 +45,6 @@ private:
     SDL_Texture * mainKeysSprite;
     SDL_Texture * mainBlocksSprite;
     SDL_Texture * messageSprite;
-    SDL_Texture * levelInfoSprite;
     SDL_Texture * waterSprite;
 
     SDL_Texture * loadImage(const std::string &filename);

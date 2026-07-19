@@ -1,6 +1,7 @@
 #include "Textures.h"
 
 #include "utils.h"
+#include "constants.h"
 
 Textures::Textures(SDL_Renderer * renderer) : renderer(renderer) {
     if (!load()) {
@@ -17,12 +18,13 @@ Textures::~Textures() {
     SDL_DestroyTexture(rustySprites);
     SDL_DestroyTexture(staticSprites);
     SDL_DestroyTexture(tankSprites);
-
-    SDL_DestroyTexture(mainKeysSprite);
-    SDL_DestroyTexture(mainBlocksSprite);
-    SDL_DestroyTexture(messageSprite);
-    SDL_DestroyTexture(levelInfoSprite);
     SDL_DestroyTexture(waterSprite);
+
+    if (LARGE_TEXTURES_SUPPORTED) {
+        SDL_DestroyTexture(mainKeysSprite);
+        SDL_DestroyTexture(mainBlocksSprite);
+        SDL_DestroyTexture(messageSprite);
+    }
 }
 
 bool Textures::load() {
@@ -35,12 +37,13 @@ bool Textures::load() {
         staticSprites = loadImage("static.bmp");
         tankSprites = loadImage("tank.bmp");
         teeSprites = loadImage("tee.bmp");
-
-        mainKeysSprite = loadImage("maink.bmp");
-        mainBlocksSprite = loadImage("mainb.bmp");
-        messageSprite = loadImage("message.bmp");
-        levelInfoSprite = loadImage("levelinfo.bmp");
         waterSprite = loadImage("water.bmp");
+
+        if (LARGE_TEXTURES_SUPPORTED) {
+            mainKeysSprite = loadImage("maink.bmp");
+            mainBlocksSprite = loadImage("mainb.bmp");
+            messageSprite = loadImage("message.bmp");
+        }
 
         return
             barSprites != nullptr &&
@@ -52,11 +55,10 @@ bool Textures::load() {
             staticSprites != nullptr &&
             tankSprites != nullptr &&
             teeSprites != nullptr &&
-            mainKeysSprite != nullptr &&
-            mainBlocksSprite != nullptr &&
-            messageSprite != nullptr &&
-            levelInfoSprite != nullptr &&
-            waterSprite != nullptr;
+            waterSprite != nullptr &&
+            (mainKeysSprite != nullptr || !LARGE_TEXTURES_SUPPORTED) &&
+            (mainBlocksSprite != nullptr || !LARGE_TEXTURES_SUPPORTED) &&
+            (messageSprite != nullptr || !LARGE_TEXTURES_SUPPORTED);
 
 }
 
