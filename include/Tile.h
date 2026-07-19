@@ -1062,7 +1062,12 @@ public:
 
 protected: //functions
 	virtual void Display() {
-		draw->BlitSquare(textures->getMessageSprite(), rotation%14 ,rotation/14, x_pos, y_pos);
+		// draw->BlitSquare(textures->getMessageSprite(), rotation%14 ,rotation/14, x_pos, y_pos);
+		char * messages[] = {
+			"Press Enter to restart",
+			"U to undo move"
+		};
+		draw->BlitMessage("You Died", messages, 2);
 	}
 
 protected: //members

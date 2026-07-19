@@ -15,6 +15,7 @@ public:
     void BlitOther(SDL_Texture * texture, int x, int y, int dx, int dy, int w, int h);
     void BlackSquare(int x, int y);
     void BlitBeam(int rotation, int x, int y);
+    void BlitMessage(const char * title, char ** lines, size_t line_count);
     
     void BlitText(char * text, int x, int y);
     void Flip();
