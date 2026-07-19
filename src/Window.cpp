@@ -8,6 +8,8 @@
 
 #include <SDL_ttf.h>
 
+#include "constants.h"
+
 Window::Window(const std::string &title, int width, int height) {
     #ifdef NXDK
         XVideoSetMode(width, height, 16, REFRESH_DEFAULT);
@@ -34,6 +36,8 @@ Window::Window(const std::string &title, int width, int height) {
         SDL_LogCritical(SDL_LOG_CATEGORY_RENDER, "Couldn't create renderer: %s", SDL_GetError());
         exit(4);
     }
+
+    SDL_RenderSetLogicalSize(renderer, COLUMNS * BLOCK_SIZE, ROWS * BLOCK_SIZE);
 }
 
 Window::~Window() {

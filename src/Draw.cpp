@@ -26,32 +26,20 @@ void Draw::BlitSquare(SDL_Texture * texture, int x, int y, int dx, int dy) {
 }
 
 void Draw::BlitWater(SDL_Texture * texture, int rotation, int dx, int dy) {
-    SDL_Rect sr, dr;
+    // Slow down the water by half for small block sizes
+    if (BLOCK_SIZE < 20) {
+        rotation /= 2;
+    }
+    rotation = rotation % BLOCK_SIZE;
     dx *= BLOCK_SIZE;
     dy *= BLOCK_SIZE;
-    for (int i = 0; i < 4; i++){
-        switch (i)
-        {
-        case 0:
-            sr = {0,0,rotation, rotation};
-            dr = {dx, dy, rotation, rotation};
-            break;
-        case 1:
-            sr = {rotation, 0,BLOCK_SIZE-rotation, rotation};
-            dr = {dx+rotation, dy, BLOCK_SIZE-rotation, rotation};
-            break;
-        case 2:
-            sr = {0,rotation,rotation, BLOCK_SIZE-rotation};
-            dr = {dx, dy+rotation, rotation, BLOCK_SIZE-rotation};
-            break;
-        case 3:
-            sr = {rotation,rotation,BLOCK_SIZE-rotation, BLOCK_SIZE-rotation};
-            dr = {dx+rotation, dy+rotation, BLOCK_SIZE-rotation, BLOCK_SIZE-rotation};
-            break;
-        default:
-            break;
-        }
-        SDL_RenderCopy(renderer, texture, &sr, &dr);
+    SDL_Rect dr={dx + rotation, dy, BLOCK_SIZE - rotation, BLOCK_SIZE};
+    SDL_Rect sr={0, 0, BLOCK_SIZE - rotation, BLOCK_SIZE};
+    SDL_RenderCopy(renderer, texture, &sr, &dr);
+    if (rotation > 0) {
+        SDL_Rect dr2={dx, dy, rotation, BLOCK_SIZE};
+        SDL_Rect sr2={BLOCK_SIZE - rotation, 0, rotation, BLOCK_SIZE};
+        SDL_RenderCopy(renderer, texture, &sr2, &dr2);
     }
 }
 

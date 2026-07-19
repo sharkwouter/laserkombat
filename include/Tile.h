@@ -512,7 +512,7 @@ public:
 		chop=!chop;
 		if (chop) {
 			static_rotation++;
-			static_rotation%=BLOCK_SIZE;
+			static_rotation%=BLOCK_SIZE * 2;
 		}
 	}
 
