@@ -1057,11 +1057,17 @@ public:
 
 protected: //functions
 	virtual void Display() {
-		// draw->BlitSquare(textures->getCreditsSprite(), rotation%14 ,rotation/14, x_pos, y_pos);
-		const char * messages[] = {
-			"Press Enter to restart",
-			"U to undo move"
-		};
+		#ifdef __PSP__
+			const char * messages[] = {
+				"Press X to restart",
+				"O to undo move"
+			};
+		#else
+			const char * messages[] = {
+				"Press Enter to restart",
+				"U to undo move"
+			};
+		#endif
 		draw->BlitMessage("You Died", messages, 2);
 	}
 
@@ -1083,9 +1089,15 @@ public:
 
 protected: //functions
 	virtual void Display() {
-		const char * messages[] = {
-			"Press Enter to continue",
-		};
+		#ifdef __PSP__
+			const char * messages[] = {
+				"Press X to continue",
+			};
+		#else
+			const char * messages[] = {
+				"Press Enter to continue",
+			};
+		#endif
 		draw->BlitMessage("You Defeated Your Enemies!", messages, 1);
 	}
 
