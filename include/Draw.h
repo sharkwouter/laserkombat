@@ -17,8 +17,9 @@ public:
     void BlitBeam(int rotation, int x, int y);
     void BlitMessage(const char * title, const char ** lines, int line_count);
     void BlitMessageBox(SDL_Rect * box);
+    void BlitLevelInfo(int level, char * description, char * author);
     
-    void BlitText(char * text, int x, int y);
+    void BlitText(char * text, TTF_Font * font, int x, int y, SDL_Color color={0, 0, 0, 255});
     void Flip();
 
     int animation;
@@ -28,6 +29,7 @@ private:
     TTF_Font * font_custom;
     TTF_Font * font_text;
     TTF_Font * font_title;
+    TTF_Font * font_title_italic;
 };
 
 #endif // DRAW_H

@@ -14,9 +14,9 @@
     inline constexpr int WINDOW_HEIGHT = 272;
     inline constexpr int BLOCK_SIZE = 16;
 #else
-    inline constexpr int WINDOW_WIDTH = 800;
-    inline constexpr int WINDOW_HEIGHT = 600;
-    inline constexpr int BLOCK_SIZE = 40;
+    inline constexpr int WINDOW_WIDTH = 480;
+    inline constexpr int WINDOW_HEIGHT = 272;
+    inline constexpr int BLOCK_SIZE = 16;
 #endif
 
 inline constexpr int COLUMNS = 20;

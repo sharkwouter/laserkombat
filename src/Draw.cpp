@@ -7,13 +7,15 @@ Draw::Draw(SDL_Renderer * renderer) : renderer(renderer) {
     animation = 0;
     font_custom = TTF_OpenFont(getAssetPath("fonts", "FreeSans.ttf").c_str(), 14);
     font_text = TTF_OpenFont(getAssetPath("fonts", "FreeSerifItalic.ttf").c_str(), 24);
-    font_title = TTF_OpenFont(getAssetPath("fonts", "FreeSerifItalic.ttf").c_str(), 28);
+    font_title = TTF_OpenFont(getAssetPath("fonts", "FreeSerif.ttf").c_str(), 30);
+    font_title_italic = TTF_OpenFont(getAssetPath("fonts", "FreeSerifItalic.ttf").c_str(), 28);
 }
 
 Draw::~Draw() {
     TTF_CloseFont(font_custom);
     TTF_CloseFont(font_text);
     TTF_CloseFont(font_title);
+    TTF_CloseFont(font_title_italic);
 }
 
 void Draw::BlitSquare(SDL_Texture * texture, int x, int y, int dx, int dy) {
@@ -97,7 +99,7 @@ void Draw::BlitBeam(int rotation, int x, int y) {
 void Draw::BlitMessage(const char *title, const char **lines, int line_count) {
     int widest_line = 0;
     int text_height = 0;
-    SDL_Surface * title_surface = TTF_RenderText_Solid(font_title, title, {0, 0, 0, 255});
+    SDL_Surface * title_surface = TTF_RenderText_Solid(font_title_italic, title, {0, 0, 0, 255});
     if (title_surface == NULL) {
         SDL_Log("Couldn't create surface for text %s: %s", title, TTF_GetError());
         return;
@@ -134,11 +136,11 @@ void Draw::BlitMessage(const char *title, const char **lines, int line_count) {
     }
 
     // Draw outside box
-    SDL_Rect box = {(COLUMNS * BLOCK_SIZE / 2) - ((widest_line + BLOCK_SIZE / 2) / 2), (ROWS * BLOCK_SIZE / 2) - ((text_height + BLOCK_SIZE / 2) / 2), widest_line + BLOCK_SIZE / 2, text_height + BLOCK_SIZE / 2};
+    SDL_Rect box = {(COLUMNS * BLOCK_SIZE / 2) - ((widest_line + 20) / 2), (ROWS * BLOCK_SIZE / 2) - ((text_height + 20) / 2), widest_line + 20, text_height + 20};
     BlitMessageBox(&box);
 
     // Draw text
-    SDL_Rect title_rect = {box.x  + box.w / 2, box.y + BLOCK_SIZE / 4, 0, 0};
+    SDL_Rect title_rect = {box.x  + box.w / 2, box.y + 10, 0, 0};
     SDL_QueryTexture(title_texture, NULL, NULL, &title_rect.w, &title_rect.h);
     title_rect.x -= title_rect.w / 2;
     SDL_RenderCopy(renderer, title_texture, NULL, &title_rect);
@@ -211,8 +213,52 @@ void Draw::BlitMessageBox(SDL_Rect *box) {
     SDL_RenderFillRect(renderer, &background_rect);
 }
 
-void Draw::BlitText(char * text, int x, int y) {
-    SDL_Surface * surface = TTF_RenderText_Solid(font_custom, text, {0, 255, 0, 255});
+void Draw::BlitLevelInfo(int level, char *description, char *author) {
+    // Draw outside box
+    SDL_Rect box = {(COLUMNS * BLOCK_SIZE / 2) - 153, (ROWS * BLOCK_SIZE / 2) - 73, 306, 146};
+    BlitMessageBox(&box);
+
+    // Generate level text
+    char level_string[10];
+	SDL_snprintf(level_string, 10, "Level %03d", level);
+    BlitText(level_string, font_title, box.x + (box.w / 2), box.y + 22, {0, 0, 0, 255});
+
+    BlitText((char *) "Author", font_title, box.x + (box.w / 2), box.y + 80, {0, 0, 0, 255});
+
+    // Draw black boxes
+    SDL_Rect description_background = {box.x + 11, box.y + 43, box.w - (11 * 2), 20};
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderFillRect(renderer, &description_background);
+
+    SDL_SetRenderDrawColor(renderer, 2, 59, 60, 255);
+    SDL_RenderDrawLine(renderer, description_background.x - 1, description_background.y - 1, description_background.x + description_background.w, description_background.y - 1);
+    SDL_RenderDrawLine(renderer, description_background.x - 1, description_background.y, description_background.x - 1, description_background.y + description_background.h);
+
+    SDL_SetRenderDrawColor(renderer, 87, 247, 249, 255);
+    SDL_RenderDrawLine(renderer, description_background.x, description_background.y + description_background.h, description_background.x + description_background.w, description_background.y + description_background.h);
+    SDL_RenderDrawLine(renderer, description_background.x + description_background.w, description_background.y, description_background.x + description_background.w, description_background.y + description_background.h);
+
+
+    SDL_Rect author_background = {box.x + 52, box.y + 98, box.w - (52 * 2), 20};
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderFillRect(renderer, &author_background);
+
+    SDL_SetRenderDrawColor(renderer, 2, 59, 60, 255);
+    SDL_RenderDrawLine(renderer, author_background.x - 1, author_background.y - 1, author_background.x + author_background.w, author_background.y - 1);
+    SDL_RenderDrawLine(renderer, author_background.x - 1, author_background.y, author_background.x - 1, author_background.y + author_background.h);
+
+    SDL_SetRenderDrawColor(renderer, 87, 247, 249, 255);
+    SDL_RenderDrawLine(renderer, author_background.x, author_background.y + author_background.h, author_background.x + author_background.w, author_background.y + author_background.h);
+    SDL_RenderDrawLine(renderer, author_background.x + author_background.w, author_background.y, author_background.x + author_background.w, author_background.y + author_background.h);
+
+
+    // Draw info from level file
+	BlitText(description, font_custom, (COLUMNS * BLOCK_SIZE / 2), (ROWS * BLOCK_SIZE / 2) - 21, {0, 255, 0, 255});
+	BlitText(author, font_custom, (COLUMNS * BLOCK_SIZE / 2), (ROWS * BLOCK_SIZE / 2) + 34, {0, 255, 0, 255});
+}
+
+void Draw::BlitText(char * text, TTF_Font * font, int x, int y, SDL_Color color) {
+    SDL_Surface * surface = TTF_RenderText_Solid(font, text, color);
     if (surface == NULL) {
         SDL_Log("Couldn't create surface for text %s: %s", text, TTF_GetError());
         return;
@@ -225,6 +271,7 @@ void Draw::BlitText(char * text, int x, int y) {
     }
 
     if (texture) {
+        SDL_SetTextureScaleMode(texture, SDL_ScaleModeNearest);
         SDL_Rect rect = {x, y, 0, 0};
         SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
         rect.x -= rect.w/2;
