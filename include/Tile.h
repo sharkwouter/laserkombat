@@ -1057,7 +1057,7 @@ public:
 
 protected: //functions
 	virtual void Display() {
-		// draw->BlitSquare(textures->getMessageSprite(), rotation%14 ,rotation/14, x_pos, y_pos);
+		// draw->BlitSquare(textures->getCreditsSprite(), rotation%14 ,rotation/14, x_pos, y_pos);
 		const char * messages[] = {
 			"Press Enter to restart",
 			"U to undo move"
@@ -1113,7 +1113,7 @@ public:
 protected: //functions
 	virtual void Display() {
 		if (LARGE_TEXTURES_SUPPORTED) {
-			draw->BlitSquare(textures->getMessageSprite(), rotation%14 ,rotation/14, x_pos, y_pos);
+			draw->BlitSquare(textures->getCreditsSprite(), rotation%14 ,rotation/14, x_pos, y_pos);
 		} else {
 			const char * messages[] = {
 				"David Dewey",

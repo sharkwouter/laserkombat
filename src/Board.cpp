@@ -216,7 +216,7 @@ void Board::YouDefeated() {
 }
 
 void Board::Credits() {
-	for (int y=ROWS/2-5, yy=3; y<ROWS/2+6; y++, yy++) {
+	for (int y=ROWS/2-5, yy=0; y<ROWS/2+6; y++, yy++) {
 		for (int x=COLUMNS/2-7, xx=0; x<COLUMNS/2+7; x++, xx++) {
 			Tile* temp=array[x][y]->over;
 			array[x][y]->over=new MessageCredits(x,y,draw,textures,sound,this,yy*14+xx);

@@ -23,7 +23,7 @@ Textures::~Textures() {
     if (LARGE_TEXTURES_SUPPORTED) {
         SDL_DestroyTexture(mainKeysSprite);
         SDL_DestroyTexture(mainBlocksSprite);
-        SDL_DestroyTexture(messageSprite);
+        SDL_DestroyTexture(creditsSprite);
     }
 }
 
@@ -42,7 +42,7 @@ bool Textures::load() {
         if (LARGE_TEXTURES_SUPPORTED) {
             mainKeysSprite = loadImage("maink.bmp");
             mainBlocksSprite = loadImage("mainb.bmp");
-            messageSprite = loadImage("message.bmp");
+            creditsSprite = loadImage("credits.bmp");
         }
 
         return
@@ -58,7 +58,7 @@ bool Textures::load() {
             waterSprite != nullptr &&
             (mainKeysSprite != nullptr || !LARGE_TEXTURES_SUPPORTED) &&
             (mainBlocksSprite != nullptr || !LARGE_TEXTURES_SUPPORTED) &&
-            (messageSprite != nullptr || !LARGE_TEXTURES_SUPPORTED);
+            (creditsSprite != nullptr || !LARGE_TEXTURES_SUPPORTED);
 
 }
 

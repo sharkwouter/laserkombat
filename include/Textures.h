@@ -22,11 +22,11 @@ public:
     SDL_Texture * getStaticSprites() { return staticSprites; };
     SDL_Texture * getTankSprites() { return tankSprites; };
     SDL_Texture * getTeeSprites() { return teeSprites; };
+    SDL_Texture * getWaterSprite() { return waterSprite; };
 
     SDL_Texture * getMainKeysSprite() { return mainKeysSprite; };
     SDL_Texture * getMainBlocksSprite() { return mainBlocksSprite; };
-    SDL_Texture * getMessageSprite() { return messageSprite; };
-    SDL_Texture * getWaterSprite() { return waterSprite; };
+    SDL_Texture * getCreditsSprite() { return creditsSprite; };
 
 private:
 
@@ -44,7 +44,7 @@ private:
 
     SDL_Texture * mainKeysSprite;
     SDL_Texture * mainBlocksSprite;
-    SDL_Texture * messageSprite;
+    SDL_Texture * creditsSprite;
     SDL_Texture * waterSprite;
 
     SDL_Texture * loadImage(const std::string &filename);
