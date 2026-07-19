@@ -23,7 +23,6 @@ public:
 
 private:
     SDL_Renderer * renderer;
-    SDL_Texture * renderTarget;
     TTF_Font * font;
 };
 

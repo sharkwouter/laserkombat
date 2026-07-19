@@ -5,13 +5,10 @@
 
 Draw::Draw(SDL_Renderer * renderer) : renderer(renderer) {
     animation = 0;
-    renderTarget = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
-                                 SDL_TEXTUREACCESS_TARGET, BLOCK_SIZE*COLUMNS, BLOCK_SIZE*ROWS);
     font = TTF_OpenFont(getAssetPath("fonts", "FreeSans.ttf").c_str(), 14);
 }
 
 Draw::~Draw() {
-    SDL_DestroyTexture(renderTarget);
     TTF_CloseFont(font);
 }
 
@@ -117,8 +114,7 @@ void Draw::BlitText(char * text, int x, int y) {
 }
 
 void Draw::Flip() {
-    SDL_SetRenderTarget(renderer, NULL);
-    SDL_RenderCopy(renderer, renderTarget, NULL, NULL);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderPresent(renderer);
-    SDL_SetRenderTarget(renderer, renderTarget);
+    SDL_RenderClear(renderer);
 }
