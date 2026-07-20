@@ -6,3 +6,4 @@ bin/
 *.obj
 *.cpp.d
 *.pdb
+.DS_Store
