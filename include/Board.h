@@ -184,7 +184,6 @@ private: //data
 	bool defeated;
 	bool finished;
 
-	int rows, cols;
 	int tank_x, tank_y, origin_x, origin_y;
 	int level;
 
