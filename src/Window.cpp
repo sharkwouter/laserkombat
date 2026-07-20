@@ -151,7 +151,7 @@ Input Window::getInputForKeyboardKey(SDL_Keycode key) {
 }
 
 Input Window::getInputForControllerButton(Uint8 button) {
-    Input input;
+    Input input = Input::NONE;
 
     switch (button) {
         case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
@@ -199,7 +199,9 @@ Input Window::getInputForControllerButton(Uint8 button) {
             break;
 
         case SDL_CONTROLLER_BUTTON_BACK:
-            input = Input::EXIT;
+            #ifndef __PSP__
+                input = Input::EXIT;
+            #endif
             break;
 
         default:
