@@ -12,6 +12,10 @@ Draw::Draw(SDL_Renderer * renderer) : renderer(renderer) {
 }
 
 Draw::~Draw() {
+    SDL_DestroyTexture(level_text);
+    SDL_DestroyTexture(author_text);
+    SDL_DestroyTexture(author_info_text);
+    SDL_DestroyTexture(description_text);
     TTF_CloseFont(font_custom);
     TTF_CloseFont(font_text);
     TTF_CloseFont(font_title);
@@ -219,11 +223,41 @@ void Draw::BlitLevelInfo(int level, char *description, char *author) {
     BlitMessageBox(&box);
 
     // Generate level text
-    char level_string[10];
-	SDL_snprintf(level_string, 10, "Level %03d", level);
-    BlitText(level_string, font_title, box.x + (box.w / 2), box.y + 22, {0, 0, 0, 255});
+    if (level != last_level || level_text == NULL) {
+        if (level_text) {
+            SDL_DestroyTexture(level_text);
+        }
+        if (description_text) {
+            SDL_DestroyTexture(description_text);
+        }
+        if (author_info_text) {
+            SDL_DestroyTexture(author_info_text);
+        }
 
-    BlitText((char *) "Author", font_title, box.x + (box.w / 2), box.y + 80, {0, 0, 0, 255});
+        char level_string[10];
+        SDL_snprintf(level_string, 10, "Level %03d", level);
+        level_text = stringToTexture(renderer, level_string, font_title, {0, 0, 0, 255});
+
+        description_text = stringToTexture(renderer, description, font_custom, {0, 255, 0, 255});
+        author_info_text = stringToTexture(renderer, author, font_custom, {0, 255, 0, 255});
+
+        last_level = level;
+    }
+    if (!author_text) {
+        author_text = stringToTexture(renderer, (char *) "Author", font_title, {0, 0, 0, 255});
+    }
+
+    SDL_Rect level_rect = {box.x + (box.w / 2), box.y + 22, 0, 0};
+    SDL_QueryTexture(level_text, NULL, NULL, &level_rect.w, &level_rect.h);
+    level_rect.x -= level_rect.w/2;
+    level_rect.y -= level_rect.h/2;
+    SDL_RenderCopy(renderer, level_text, NULL, &level_rect);
+
+    SDL_Rect author_rect = {box.x + (box.w / 2), box.y + 80, 0, 0};
+    SDL_QueryTexture(author_text, NULL, NULL, &author_rect.w, &author_rect.h);
+    author_rect.x -= author_rect.w/2;
+    author_rect.y -= author_rect.h/2;
+    SDL_RenderCopy(renderer, author_text, NULL, &author_rect);    
 
     // Draw black boxes
     SDL_Rect description_background = {box.x + 11, box.y + 43, box.w - (11 * 2), 20};
@@ -253,25 +287,22 @@ void Draw::BlitLevelInfo(int level, char *description, char *author) {
 
 
     // Draw info from level file
-	BlitText(description, font_custom, (COLUMNS * BLOCK_SIZE / 2), (ROWS * BLOCK_SIZE / 2) - 21, {0, 255, 0, 255});
-	BlitText(author, font_custom, (COLUMNS * BLOCK_SIZE / 2), (ROWS * BLOCK_SIZE / 2) + 34, {0, 255, 0, 255});
+    SDL_Rect description_rect = {(COLUMNS * BLOCK_SIZE / 2), (ROWS * BLOCK_SIZE / 2) - 21, 0, 0};
+    SDL_QueryTexture(description_text, NULL, NULL, &description_rect.w, &description_rect.h);
+    description_rect.x -= description_rect.w/2;
+    description_rect.y -= description_rect.h/2;
+    SDL_RenderCopy(renderer, description_text, NULL, &description_rect);
+
+    SDL_Rect author_info_rect = {(COLUMNS * BLOCK_SIZE / 2), (ROWS * BLOCK_SIZE / 2) + 34, 0, 0};
+    SDL_QueryTexture(author_info_text, NULL, NULL, &author_info_rect.w, &author_info_rect.h);
+    author_info_rect.x -= author_info_rect.w/2;
+    author_info_rect.y -= author_info_rect.h/2;
+    SDL_RenderCopy(renderer, author_info_text, NULL, &author_info_rect);
 }
 
 void Draw::BlitText(char * text, TTF_Font * font, int x, int y, SDL_Color color) {
-    SDL_Surface * surface = TTF_RenderText_Solid(font, text, color);
-    if (surface == NULL) {
-        SDL_Log("Couldn't create surface for text %s: %s", text, TTF_GetError());
-        return;
-    }
-
-    SDL_Texture * texture = NULL;
-    if (surface) {
-        texture = SDL_CreateTextureFromSurface(renderer, surface);
-        SDL_FreeSurface(surface);
-    }
-
+    SDL_Texture * texture = stringToTexture(renderer, text, font, color);
     if (texture) {
-        SDL_SetTextureScaleMode(texture, SDL_ScaleModeNearest);
         SDL_Rect rect = {x, y, 0, 0};
         SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
         rect.x -= rect.w/2;
@@ -281,10 +312,24 @@ void Draw::BlitText(char * text, TTF_Font * font, int x, int y, SDL_Color color)
     }
 }
 
-
-
 void Draw::Flip() {
     SDL_RenderPresent(renderer);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
+}
+
+SDL_Texture * Draw::stringToTexture(SDL_Renderer * renderer, char * text, TTF_Font * font, SDL_Color color) {
+    SDL_Surface * surface = TTF_RenderText_Solid(font, text, color);
+    if (surface == NULL) {
+        SDL_Log("Couldn't create surface for text %s: %s", text, TTF_GetError());
+        return NULL;
+    }
+    SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer, surface);
+    if (texture == NULL) {
+        SDL_Log("Couldn't create texture for text %s: %s", text, TTF_GetError());
+        SDL_FreeSurface(surface);
+        return NULL;
+    }
+    SDL_SetTextureScaleMode(texture, SDL_ScaleModeNearest);
+    return texture;
 }

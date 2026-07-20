@@ -30,6 +30,14 @@ private:
     TTF_Font * font_text;
     TTF_Font * font_title;
     TTF_Font * font_title_italic;
+
+    int last_level = 0;
+    SDL_Texture * level_text = NULL;
+    SDL_Texture * author_text = NULL;
+    SDL_Texture * author_info_text = NULL;
+    SDL_Texture * description_text = NULL;
+
+    SDL_Texture * stringToTexture(SDL_Renderer * renderer, char * text, TTF_Font * font, SDL_Color color);
 };
 
 #endif // DRAW_H
