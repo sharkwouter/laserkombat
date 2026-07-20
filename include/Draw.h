@@ -22,6 +22,10 @@ public:
     void BlitText(char * text, TTF_Font * font, int x, int y, SDL_Color color={0, 0, 0, 255});
     void Flip();
 
+    #if __PSP__
+        void BlitFrame(SDL_Texture * logoSprite);
+    #endif
+
     int animation;
 
 private:

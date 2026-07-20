@@ -28,6 +28,10 @@ public:
     SDL_Texture * getMainBlocksSprite() { return mainBlocksSprite; };
     SDL_Texture * getCreditsSprite() { return creditsSprite; };
 
+    #ifdef __PSP__
+        SDL_Texture * getLogoSprite() { return logoSprite; };
+    #endif
+
 private:
 
     SDL_Renderer * renderer;
@@ -41,11 +45,15 @@ private:
     SDL_Texture * staticSprites;
     SDL_Texture * tankSprites;
     SDL_Texture * teeSprites;
+    SDL_Texture * waterSprite;
 
     SDL_Texture * mainKeysSprite;
     SDL_Texture * mainBlocksSprite;
     SDL_Texture * creditsSprite;
-    SDL_Texture * waterSprite;
+
+    #ifdef __PSP__
+        SDL_Texture * logoSprite;
+    #endif
 
     SDL_Texture * loadImage(const std::string &filename);
 };

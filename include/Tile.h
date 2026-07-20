@@ -1059,7 +1059,7 @@ protected: //functions
 	virtual void Display() {
 		#ifdef __PSP__
 			const char * messages[] = {
-				"Press X to restart",
+				"Press Start to restart",
 				"O to undo move"
 			};
 		#else
@@ -1091,7 +1091,7 @@ protected: //functions
 	virtual void Display() {
 		#ifdef __PSP__
 			const char * messages[] = {
-				"Press X to continue",
+				"Press Start to continue",
 			};
 		#else
 			const char * messages[] = {

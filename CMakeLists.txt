@@ -60,7 +60,7 @@ if(VITA)
 elseif(PSP)
     create_pbp_file(
         TARGET ${PROJECT_NAME}
-        ICON_PATH NULL
+        ICON_PATH ${CMAKE_SOURCE_DIR}/platform/psp/ICON0.PNG
         BACKGROUND_PATH NULL
         PREVIEW_PATH NULL
         TITLE "Laser Kombat"

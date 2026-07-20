@@ -27,8 +27,8 @@ void Draw::BlitSquare(SDL_Texture * texture, int x, int y, int dx, int dy) {
     y *= BLOCK_SIZE;
     dx *= BLOCK_SIZE;
     dy *= BLOCK_SIZE;
-    SDL_Rect sr={x,y,BLOCK_SIZE, BLOCK_SIZE};
-    SDL_Rect dr={dx,dy,BLOCK_SIZE, BLOCK_SIZE};
+    SDL_Rect sr={x, y, BLOCK_SIZE, BLOCK_SIZE};
+    SDL_Rect dr={dx + OFFSET_X, dy + OFFSET_Y, BLOCK_SIZE, BLOCK_SIZE};
     SDL_RenderCopy(renderer, texture, &sr, &dr);
 }
 
@@ -40,26 +40,26 @@ void Draw::BlitWater(SDL_Texture * texture, int rotation, int dx, int dy) {
     rotation = rotation % BLOCK_SIZE;
     dx *= BLOCK_SIZE;
     dy *= BLOCK_SIZE;
-    SDL_Rect dr={dx + rotation, dy, BLOCK_SIZE - rotation, BLOCK_SIZE};
+    SDL_Rect dr={dx + rotation + OFFSET_X, dy + OFFSET_Y, BLOCK_SIZE - rotation, BLOCK_SIZE};
     SDL_Rect sr={0, 0, BLOCK_SIZE - rotation, BLOCK_SIZE};
     SDL_RenderCopy(renderer, texture, &sr, &dr);
     if (rotation > 0) {
-        SDL_Rect dr2={dx, dy, rotation, BLOCK_SIZE};
+        SDL_Rect dr2={dx + OFFSET_X, dy + OFFSET_Y, rotation, BLOCK_SIZE};
         SDL_Rect sr2={BLOCK_SIZE - rotation, 0, rotation, BLOCK_SIZE};
         SDL_RenderCopy(renderer, texture, &sr2, &dr2);
     }
 }
 
 void Draw::BlitOther(SDL_Texture * texture, int x, int y, int dx, int dy, int w, int h) {
-    SDL_Rect sr={x,y,w,h};
-    SDL_Rect dr={dx,dy,w, h};
+    SDL_Rect sr={x, y, w, h};
+    SDL_Rect dr={dx + OFFSET_X, dy + OFFSET_Y, w, h};
     SDL_RenderCopy(renderer, texture, &sr, &dr);
 }
 
 void Draw::BlackSquare(int x, int y) {
     x *= BLOCK_SIZE;
     y *= BLOCK_SIZE;
-    SDL_Rect r={x,y,BLOCK_SIZE,BLOCK_SIZE};
+    SDL_Rect r={x + OFFSET_X, y + OFFSET_Y, BLOCK_SIZE, BLOCK_SIZE};
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderFillRect(renderer, &r);
 }
@@ -70,26 +70,26 @@ void Draw::BlitBeam(int rotation, int x, int y) {
     SDL_Rect r={0, 0, 0, 0};
     switch(rotation) {
         case 0:
-            r.x = x;
-            r.y = y + (BLOCK_SIZE / 2) - 1;
-            r.w = BLOCK_SIZE / 2 ;
+            r.x = x + OFFSET_X;
+            r.y = y + (BLOCK_SIZE / 2) - 1 + OFFSET_Y;
+            r.w = BLOCK_SIZE / 2;
             r.h = 2;
             break;
         case 1:
-            r.x = x + (BLOCK_SIZE / 2) - 1;
-            r.y = y;
+            r.x = x + (BLOCK_SIZE / 2) - 1 + OFFSET_X;
+            r.y = y + OFFSET_Y;
             r.w = 2;
             r.h = BLOCK_SIZE / 2;
             break;
         case 2:
-            r.x = x + BLOCK_SIZE / 2;
-            r.y = y + (BLOCK_SIZE / 2) - 1;
+            r.x = x + BLOCK_SIZE / 2 + OFFSET_X;
+            r.y = y + (BLOCK_SIZE / 2) - 1 + OFFSET_Y;
             r.w = BLOCK_SIZE / 2;
             r.h = 2;
             break;
         case 3:
-            r.x = x + (BLOCK_SIZE / 2) - 1;
-            r.y = y + (BLOCK_SIZE / 2);
+            r.x = x + (BLOCK_SIZE / 2) - 1 + OFFSET_X;
+            r.y = y + (BLOCK_SIZE / 2) + OFFSET_Y;
             r.w = 2;
             r.h = BLOCK_SIZE;
             break;
@@ -140,7 +140,7 @@ void Draw::BlitMessage(const char *title, const char **lines, int line_count) {
     }
 
     // Draw outside box
-    SDL_Rect box = {(COLUMNS * BLOCK_SIZE / 2) - ((widest_line + 20) / 2), (ROWS * BLOCK_SIZE / 2) - ((text_height + 20) / 2), widest_line + 20, text_height + 20};
+    SDL_Rect box = {(WINDOW_WIDTH / 2) - ((widest_line + 20) / 2), (WINDOW_HEIGHT / 2) - ((text_height + 20) / 2), widest_line + 20, text_height + 20};
     BlitMessageBox(&box);
 
     // Draw text
@@ -219,7 +219,7 @@ void Draw::BlitMessageBox(SDL_Rect *box) {
 
 void Draw::BlitLevelInfo(int level, char *description, char *author) {
     // Draw outside box
-    SDL_Rect box = {(COLUMNS * BLOCK_SIZE / 2) - 153, (ROWS * BLOCK_SIZE / 2) - 73, 306, 146};
+    SDL_Rect box = {(WINDOW_WIDTH / 2) - 153, (WINDOW_HEIGHT / 2) - 73, 306, 146};
     BlitMessageBox(&box);
 
     // Generate level text
@@ -272,7 +272,6 @@ void Draw::BlitLevelInfo(int level, char *description, char *author) {
     SDL_RenderDrawLine(renderer, description_background.x, description_background.y + description_background.h, description_background.x + description_background.w, description_background.y + description_background.h);
     SDL_RenderDrawLine(renderer, description_background.x + description_background.w, description_background.y, description_background.x + description_background.w, description_background.y + description_background.h);
 
-
     SDL_Rect author_background = {box.x + 52, box.y + 98, box.w - (52 * 2), 20};
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderFillRect(renderer, &author_background);
@@ -287,13 +286,13 @@ void Draw::BlitLevelInfo(int level, char *description, char *author) {
 
 
     // Draw info from level file
-    SDL_Rect description_rect = {(COLUMNS * BLOCK_SIZE / 2), (ROWS * BLOCK_SIZE / 2) - 21, 0, 0};
+    SDL_Rect description_rect = {(WINDOW_WIDTH / 2), (WINDOW_HEIGHT / 2) - 21, 0, 0};
     SDL_QueryTexture(description_text, NULL, NULL, &description_rect.w, &description_rect.h);
     description_rect.x -= description_rect.w/2;
     description_rect.y -= description_rect.h/2;
     SDL_RenderCopy(renderer, description_text, NULL, &description_rect);
 
-    SDL_Rect author_info_rect = {(COLUMNS * BLOCK_SIZE / 2), (ROWS * BLOCK_SIZE / 2) + 34, 0, 0};
+    SDL_Rect author_info_rect = {(WINDOW_WIDTH / 2), (WINDOW_HEIGHT / 2) + 34, 0, 0};
     SDL_QueryTexture(author_info_text, NULL, NULL, &author_info_rect.w, &author_info_rect.h);
     author_info_rect.x -= author_info_rect.w/2;
     author_info_rect.y -= author_info_rect.h/2;
@@ -314,9 +313,29 @@ void Draw::BlitText(char * text, TTF_Font * font, int x, int y, SDL_Color color)
 
 void Draw::Flip() {
     SDL_RenderPresent(renderer);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    #ifdef __PSP__
+        SDL_SetRenderDrawColor(renderer, 3, 103, 107, 255);
+    #else
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    #endif
     SDL_RenderClear(renderer);
 }
+
+#if __PSP__
+    void Draw::BlitFrame(SDL_Texture * logoSprite) {
+        SDL_SetRenderDrawColor(renderer, 2, 59, 60, 255);
+        SDL_RenderDrawLine(renderer, OFFSET_X - 1, OFFSET_Y - 1, COLUMNS * BLOCK_SIZE + OFFSET_X, OFFSET_Y - 1);
+        SDL_RenderDrawLine(renderer, OFFSET_X - 1, OFFSET_Y, OFFSET_X - 1, ROWS * BLOCK_SIZE + OFFSET_Y);
+
+        SDL_SetRenderDrawColor(renderer, 87, 247, 249, 255);
+        SDL_RenderDrawLine(renderer, COLUMNS * BLOCK_SIZE + OFFSET_X, OFFSET_Y, COLUMNS * BLOCK_SIZE + OFFSET_X, ROWS * BLOCK_SIZE + OFFSET_Y);
+
+        SDL_Rect logo_rect = {COLUMNS * BLOCK_SIZE + OFFSET_X, 5, 0, 0};
+        SDL_QueryTexture(logoSprite, NULL, NULL, &logo_rect.w, &logo_rect.h);
+        logo_rect.x -= logo_rect.w;
+        SDL_RenderCopy(renderer, logoSprite, NULL, &logo_rect);
+    }
+#endif
 
 SDL_Texture * Draw::stringToTexture(SDL_Renderer * renderer, char * text, TTF_Font * font, SDL_Color color) {
     SDL_Surface * surface = TTF_RenderText_Solid(font, text, color);

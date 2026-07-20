@@ -37,7 +37,9 @@ Window::Window(const std::string &title, int width, int height) {
         exit(4);
     }
 
-    SDL_RenderSetLogicalSize(renderer, COLUMNS * BLOCK_SIZE, ROWS * BLOCK_SIZE);
+    #ifndef __PSP__
+        SDL_RenderSetLogicalSize(renderer, COLUMNS * BLOCK_SIZE, ROWS * BLOCK_SIZE);
+    #endif
 }
 
 Window::~Window() {

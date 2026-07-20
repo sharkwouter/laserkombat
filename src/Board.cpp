@@ -310,6 +310,9 @@ void Board::Animate() {
 	DisplayKeysHelp();
 	DisplayBlocksHelp();
 	DisplayLevelInfo();
+	#ifdef __PSP__
+		draw->BlitFrame(textures->getLogoSprite());
+	#endif
 	draw->Flip();
 	AfterAnimate();
 }
