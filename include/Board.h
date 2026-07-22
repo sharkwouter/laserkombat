@@ -168,6 +168,7 @@ private:
 	bool MoveRight();
 	bool MoveLeft();
 
+	void DisplayFrame();
 	void DisplayKeysHelp();
 	void DisplayBlocksHelp();
 	void DisplayLevelInfo();

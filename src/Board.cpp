@@ -287,6 +287,9 @@ bool Board::MoveDown()
 
 void Board::Animate() {
 	Delay();
+	if (DRAW_FRAME) {
+		DisplayFrame();
+	}
 	SetGroundTypes(); //Make ground tiles all line up nice
 
 	for (int i=0; i<ROWS; i++) {
@@ -310,9 +313,6 @@ void Board::Animate() {
 	DisplayKeysHelp();
 	DisplayBlocksHelp();
 	DisplayLevelInfo();
-	#ifdef __PSP__
-		draw->BlitFrame(textures->getLogoSprite());
-	#endif
 	draw->Flip();
 	AfterAnimate();
 }
@@ -421,6 +421,11 @@ void Board::Delay()
 		SDL_Delay(sleep);
 	}
 	seconds_ago= current_time;
+}
+
+void Board::DisplayFrame()
+{
+	draw->BlitFrame(textures->getLogoSprite());
 }
 
 void Board::DisplayKeysHelp()

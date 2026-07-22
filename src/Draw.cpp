@@ -313,29 +313,38 @@ void Draw::BlitText(char * text, TTF_Font * font, int x, int y, SDL_Color color)
 
 void Draw::Flip() {
     SDL_RenderPresent(renderer);
-    #ifdef __PSP__
+    if (DRAW_FRAME) {
         SDL_SetRenderDrawColor(renderer, 3, 103, 107, 255);
-    #else
+    } else {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    #endif
+    }
     SDL_RenderClear(renderer);
 }
 
-#if __PSP__
-    void Draw::BlitFrame(SDL_Texture * logoSprite) {
-        SDL_SetRenderDrawColor(renderer, 2, 59, 60, 255);
-        SDL_RenderDrawLine(renderer, OFFSET_X - 1, OFFSET_Y - 1, COLUMNS * BLOCK_SIZE + OFFSET_X, OFFSET_Y - 1);
-        SDL_RenderDrawLine(renderer, OFFSET_X - 1, OFFSET_Y, OFFSET_X - 1, ROWS * BLOCK_SIZE + OFFSET_Y);
+void Draw::BlitFrame(SDL_Texture * logoSprite) {
+    SDL_SetRenderDrawColor(renderer, 2, 59, 60, 255);
+    SDL_RenderDrawLine(renderer, OFFSET_X - 1, OFFSET_Y - 1, COLUMNS * BLOCK_SIZE + OFFSET_X, OFFSET_Y - 1);
+    SDL_RenderDrawLine(renderer, OFFSET_X - 1, OFFSET_Y, OFFSET_X - 1, ROWS * BLOCK_SIZE + OFFSET_Y);
 
-        SDL_SetRenderDrawColor(renderer, 87, 247, 249, 255);
-        SDL_RenderDrawLine(renderer, COLUMNS * BLOCK_SIZE + OFFSET_X, OFFSET_Y, COLUMNS * BLOCK_SIZE + OFFSET_X, ROWS * BLOCK_SIZE + OFFSET_Y);
+    SDL_SetRenderDrawColor(renderer, 87, 247, 249, 255);
+    SDL_RenderDrawLine(renderer, COLUMNS * BLOCK_SIZE + OFFSET_X, OFFSET_Y, COLUMNS * BLOCK_SIZE + OFFSET_X, ROWS * BLOCK_SIZE + OFFSET_Y);
+    SDL_RenderDrawLine(renderer, OFFSET_X, ROWS * BLOCK_SIZE + OFFSET_Y, COLUMNS * BLOCK_SIZE + OFFSET_X, ROWS * BLOCK_SIZE + OFFSET_Y);
 
-        SDL_Rect logo_rect = {COLUMNS * BLOCK_SIZE + OFFSET_X, 5, 0, 0};
-        SDL_QueryTexture(logoSprite, NULL, NULL, &logo_rect.w, &logo_rect.h);
-        logo_rect.x -= logo_rect.w;
-        SDL_RenderCopy(renderer, logoSprite, NULL, &logo_rect);
+
+    SDL_Rect logo_rect = {COLUMNS * BLOCK_SIZE + OFFSET_X, 0, 0, 0};
+    SDL_QueryTexture(logoSprite, NULL, NULL, &logo_rect.w, &logo_rect.h);
+    if (OFFSET_Y < logo_rect.h && WINDOW_HEIGHT - (ROWS * BLOCK_SIZE + OFFSET_Y) < logo_rect.h) {
+        // Do not draw logo if there is no room for it
+        return;
     }
-#endif
+    logo_rect.x -= logo_rect.w;
+    if (OFFSET_Y < logo_rect.h) {
+        logo_rect.y = (ROWS * BLOCK_SIZE) + ((WINDOW_HEIGHT - (ROWS * BLOCK_SIZE)) / 2) - (logo_rect.h / 2);
+    } else {
+        logo_rect.y = OFFSET_Y / 2 - logo_rect.h / 2;
+    }
+    SDL_RenderCopy(renderer, logoSprite, NULL, &logo_rect);
+}
 
 SDL_Texture * Draw::stringToTexture(SDL_Renderer * renderer, char * text, TTF_Font * font, SDL_Color color) {
     SDL_Surface * surface = TTF_RenderText_Solid(font, text, color);

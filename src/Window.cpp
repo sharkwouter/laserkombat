@@ -37,9 +37,9 @@ Window::Window(const std::string &title, int width, int height) {
         exit(4);
     }
 
-    #ifndef __PSP__
+    if (!DRAW_FRAME) {
         SDL_RenderSetLogicalSize(renderer, COLUMNS * BLOCK_SIZE, ROWS * BLOCK_SIZE);
-    #endif
+    }
 }
 
 Window::~Window() {
@@ -196,12 +196,6 @@ Input Window::getInputForControllerButton(Uint8 button) {
 
         case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
             input = Input::PREVIOUSLEVEL;
-            break;
-
-        case SDL_CONTROLLER_BUTTON_BACK:
-            #ifndef __PSP__
-                input = Input::EXIT;
-            #endif
             break;
 
         default:
