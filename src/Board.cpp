@@ -145,6 +145,10 @@ bool Board::LoadLevel() {
 }
 
 void Board::Save() {
+	if (!TankExists()) return;
+	if (died) return;
+	if (defeated) return;
+	if (finished) return;
 	SaveToRestorePoint(&restorePoint);
 	save_point_created = true;
 }
