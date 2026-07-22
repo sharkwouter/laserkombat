@@ -204,6 +204,8 @@ private: //data
 	int number_of_enemies;
 	unsigned int seconds_ago;
 
+	bool save_point_created = false;
+
 	RestorePoint restorePoint;
 
 	std::vector<RestorePoint> undo_list;

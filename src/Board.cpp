@@ -107,6 +107,7 @@ bool Board::Previous()
 bool Board::LoadLevel() {
 	level++;
 	undo_list.clear();
+	save_point_created = false;
 
 	std::string filename = "level";
 	filename += std::string(3 - std::min(3, int(std::to_string(level).length())), '0') + std::to_string(level);
@@ -145,6 +146,7 @@ bool Board::LoadLevel() {
 
 void Board::Save() {
 	SaveToRestorePoint(&restorePoint);
+	save_point_created = true;
 }
 
 void Board::Undo() {
@@ -185,7 +187,9 @@ void Board::SaveToRestorePoint(RestorePoint * rp) {
 }
 
 void Board::Restore() {
-	FillArray(false, &restorePoint);
+	if (save_point_created) {
+		FillArray(false, &restorePoint);
+	}
 }
 
 void Board::YouDied() {
