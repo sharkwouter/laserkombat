@@ -26,6 +26,7 @@ jobs:
             laserkombat
             assets
             COPYING
+
   Windows:
     runs-on: windows-latest
     defaults:
@@ -61,13 +62,36 @@ jobs:
             assets
             COPYING
 
+  PSP:
+    runs-on: ubuntu-latest
+    container: pspdev/pspdev:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Build
+        run: |
+          mkdir laserkombat && cd laserkombat
+          psp-cmake -DCMAKE_BUILD_TYPE=Release ..
+          make
+          cp ../COPYING ./
+          psp-create-license-directory sdl2 sdl2-ttf
+      - name: Publish artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: laserkombat-psp
+          path: |
+            laserkombat/EBOOT.PBP
+            laserkombat/assets
+            laserkombat/COPYING
+            laserkombat/third-party-licenses
+
   Release:
-    needs: [Linux, Windows]
+    needs: [Linux, Windows, PSP]
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        build: [linux, windows]
+        build: [linux, windows, psp]
     steps:
     - uses: actions/download-artifact@v8
     - name: Zip artifacts
