@@ -81,4 +81,17 @@ elseif(PSP)
         ${CMAKE_SOURCE_DIR}/assets/sounds ${CMAKE_CURRENT_BINARY_DIR}/assets/sounds)
 else()
     file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
+        file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/assets)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/assets/fonts ${CMAKE_CURRENT_BINARY_DIR}/assets/fonts)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/assets/images ${CMAKE_CURRENT_BINARY_DIR}/assets/images)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/assets/levels ${CMAKE_CURRENT_BINARY_DIR}/assets/levels)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/assets/sounds ${CMAKE_CURRENT_BINARY_DIR}/assets/sounds)
 endif()
