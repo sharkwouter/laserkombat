@@ -11,7 +11,7 @@ inline constexpr int ROWS = 15;
     inline constexpr int OFFSET_X = 0;
     inline constexpr int OFFSET_Y = 0;
     inline constexpr bool LARGE_TEXTURES_SUPPORTED = true;
-    inline constexpr bool DRAW_FRAME = true;
+    inline constexpr bool DRAW_FRAME = false;
 #elif defined(__vita__)
     inline constexpr int BLOCK_SIZE = 40;
     inline constexpr int WINDOW_WIDTH = 960;
@@ -19,7 +19,7 @@ inline constexpr int ROWS = 15;
     inline constexpr int OFFSET_X = 0;
     inline constexpr int OFFSET_Y = 0;
     inline constexpr bool LARGE_TEXTURES_SUPPORTED = true;
-    inline constexpr bool DRAW_FRAME = true;
+    inline constexpr bool DRAW_FRAME = false;
 #elif defined(__PSP__)
     inline constexpr int BLOCK_SIZE = 16;
     inline constexpr int WINDOW_WIDTH = 480;
