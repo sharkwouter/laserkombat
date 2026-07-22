@@ -28,9 +28,7 @@ public:
     SDL_Texture * getMainBlocksSprite() { return mainBlocksSprite; };
     SDL_Texture * getCreditsSprite() { return creditsSprite; };
 
-    #ifdef __PSP__
-        SDL_Texture * getLogoSprite() { return logoSprite; };
-    #endif
+    SDL_Texture * getLogoSprite() { return logoSprite; };
 
 private:
 
@@ -51,9 +49,7 @@ private:
     SDL_Texture * mainBlocksSprite;
     SDL_Texture * creditsSprite;
 
-    #ifdef __PSP__
-        SDL_Texture * logoSprite;
-    #endif
+    SDL_Texture * logoSprite = nullptr;
 
     SDL_Texture * loadImage(const std::string &filename);
 };

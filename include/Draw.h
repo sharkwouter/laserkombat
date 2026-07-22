@@ -19,12 +19,11 @@ public:
     void BlitMessageBox(SDL_Rect * box);
     void BlitLevelInfo(int level, char * description, char * author);
     
+    // This draws a frame around the rendered game, only applies to certain platforms
+    void BlitFrame(SDL_Texture * logoSprite);
+
     void BlitText(char * text, TTF_Font * font, int x, int y, SDL_Color color={0, 0, 0, 255});
     void Flip();
-
-    #if __PSP__
-        void BlitFrame(SDL_Texture * logoSprite);
-    #endif
 
     int animation;
 

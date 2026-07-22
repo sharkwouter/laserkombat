@@ -26,9 +26,9 @@ Textures::~Textures() {
         SDL_DestroyTexture(creditsSprite);
     }
 
-    #ifdef __PSP__
+    if (DRAW_FRAME) {
         SDL_DestroyTexture(logoSprite);
-    #endif
+    }
 }
 
 bool Textures::load() {
@@ -49,12 +49,12 @@ bool Textures::load() {
             creditsSprite = loadImage("credits.bmp");
         }
 
-        #ifdef __PSP__
+        if (DRAW_FRAME) {
             logoSprite = loadImage("logo.bmp");
             if (logoSprite == nullptr) {
                 return false;
             }
-        #endif
+        }
 
         return
             barSprites != nullptr &&
