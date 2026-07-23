@@ -28,27 +28,36 @@ EOF
 }
 
 get_dependencies ( ) {
-  echo "$(pacman -Qi ${1}|grep "^Depends On"|cut -d':' -f 2-|xargs echo)"
+  echo "$(pacman -Qi ${1}|grep "^Depends On"|cut -d':' -f 2-|grep -v python|grep -v tzdata|xargs echo)"
 }
 
 copy_license_directory ( ) {
-	if [ -d "/mingw64/share/licenses/${1}" ]; then
-		if [ ! -d "${LICENSE_DIRECTORY}/${1}" ]; then
-			echo "Adding license for ${1} to ${LICENSE_DIRECTORY}"
+	ORIGINAL_DIRECTORY="$(pacman -Ql ${1}| grep '/licenses/.*/$'|cut -f2 -d ' ')"
+  if [ -z "${ORIGINAL_DIRECTORY}" ]; then
+    echo "No licenses directory found for dependency ${1}. File list:"
+    pacman -Ql ${1}
+    echo "Please add license manually if required by the type of license."
+    return
+  fi
+  ORIGINAL_DIRECTORY="${ORIGINAL_DIRECTORY::-1}"
+  DIRECTORY_NAME="$(echo ${ORIGINAL_DIRECTORY}|rev|cut -f1 -d'/'|rev)"
+	if [ -d "${ORIGINAL_DIRECTORY}" ]; then
+		if [ ! -d "${LICENSE_DIRECTORY}/${DIRECTORY_NAME}" ]; then
+			echo "Adding license for ${1} to ${LICENSE_DIRECTORY}/${DIRECTORY_NAME}"
+    else
+			echo "Directory for ${1}, ${LICENSE_DIRECTORY}/${DIRECTORY_NAME}, already exists"
+      return
 		fi
-		cp -rf "/mingw64/share/licenses//${1}" "${LICENSE_DIRECTORY}/"
+		cp -rf "${ORIGINAL_DIRECTORY}" "${LICENSE_DIRECTORY}/"
 		for dependency in $(get_dependencies "${1}"); do
 			if [ "${dependency}" == "None" ]; then
 				continue
 			fi
-			if [ ! -d "${LICENSE_DIRECTORY}/${dependency}" ]; then
-				echo "Found dependency ${dependency} for ${1}"
-			fi
+      echo "Found dependency ${dependency} for ${1}"
 			copy_license_directory "${dependency}"
 		done
 	else
 		echo "Failed to find license for library ${1}"
-		EXIT_CODE=2
 	fi
 }
 
