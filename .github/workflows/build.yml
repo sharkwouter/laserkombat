@@ -57,6 +57,7 @@ jobs:
           cmake --build .
           strip --strip-unneeded laserkombat.exe
           cp ../COPYING ./
+          ../platform/windows/create-license-directory.sh mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_ttf
       - name: Publish artifacts
         uses: actions/upload-artifact@v7
         with:
@@ -65,6 +66,7 @@ jobs:
             laserkombat/laserkombat.exe
             laserkombat/assets
             laserkombat/COPYING
+            laserkombat/third-party-licenses
 
   PSP:
     runs-on: ubuntu-latest
