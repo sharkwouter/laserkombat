@@ -15,17 +15,19 @@ jobs:
         uses: actions/checkout@v7
       - name: Build
         run: |
-          cmake -DCMAKE_BUILD_TYPE=Release .
+          mkdir laserkombat && cd laserkombat
+          cmake -DCMAKE_BUILD_TYPE=Release ..
           make
           strip --strip-unneeded laserkombat
+          cp ../COPYING ./
       - name: Publish artifacts
         uses: actions/upload-artifact@v7
         with:
           name: laserkombat-linux
           path: |
-            laserkombat
-            assets
-            COPYING
+            laserkombat/laserkombat
+            laserkombat/assets
+            laserkombat/COPYING
 
   Windows:
     runs-on: windows-latest
@@ -50,17 +52,19 @@ jobs:
         uses: actions/checkout@v7
       - name: Build
         run: |
-          cmake -DCMAKE_BUILD_TYPE=Release -G "MinGW Makefiles" .
+          mkdir laserkombat && cd laserkombat
+          cmake -DCMAKE_BUILD_TYPE=Release -G "MinGW Makefiles" ..
           cmake --build .
           strip --strip-unneeded laserkombat.exe
+          cp ../COPYING ./
       - name: Publish artifacts
         uses: actions/upload-artifact@v7
         with:
           name: laserkombat-windows
           path: |
-            laserkombat.exe
-            assets
-            COPYING
+            laserkombat/laserkombat.exe
+            laserkombat/assets
+            laserkombat/COPYING
 
   PSP:
     runs-on: ubuntu-latest
